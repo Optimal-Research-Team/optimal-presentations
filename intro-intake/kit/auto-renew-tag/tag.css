@@ -1,0 +1,47 @@
+/* ===========================================================================
+   AUTO-RENEW TAG — styles. Paste this whole block at the END of the deck's
+   main style block in index.html, just before its closing tag. It only targets
+   .dk-tag and .dk-tag-dot, so it cannot restyle anything else.
+
+   Motion follows the Optimal deck rule: one easing curve, no bounce, no
+   spring. The tag is visible by default — if the script is missing, it
+   simply shows statically. The script adds .is-in, which runs the entrance.
+   =========================================================================== */
+
+/* Entrance: 640ms rise, held back 780ms so it lands after the price has. */
+.dk-tag.is-in {
+  animation: dk-tag-in 640ms cubic-bezier(.2, .7, .2, 1) 780ms both;
+}
+@keyframes dk-tag-in {
+  from { opacity: 0; transform: translateY(10px) scale(.96); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* The dot, and a slow halo pulse that marks the tag as an ongoing fact.
+   --dot and --halo are set inline on the tag (tag.html) per surface. */
+.dk-tag-dot {
+  position: relative; flex: none; width: 12px; height: 12px; border-radius: 50%;
+  background: var(--dot, #A9C7A3);
+}
+.dk-tag-dot::after {
+  content: ""; position: absolute; inset: -6px; border-radius: 50%;
+  border: 2px solid var(--halo, rgba(169, 199, 163, .75));
+  animation: dk-pulse 2.6s cubic-bezier(.2, .7, .2, 1) infinite;
+}
+@keyframes dk-pulse {
+  0%   { transform: scale(.5);  opacity: .9; }
+  65%  { transform: scale(1.4); opacity: 0; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+
+/* Print / PDF export: static and fully visible. */
+@media print {
+  .dk-tag, .dk-tag.is-in { animation: none !important; opacity: 1 !important; transform: none !important; }
+  .dk-tag-dot::after { animation: none !important; opacity: 0; }
+}
+
+/* Reduced motion: no pulse, entrance effectively instant. */
+@media (prefers-reduced-motion: reduce) {
+  .dk-tag.is-in { animation-duration: .01s; animation-delay: 0s; }
+  .dk-tag-dot::after { animation: none; opacity: 0; }
+}

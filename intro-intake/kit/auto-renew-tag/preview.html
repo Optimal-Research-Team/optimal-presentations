@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Auto-renew tag — preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Castoro:ital@0;1&family=Public+Sans:wght@400;600;700&display=swap">
+<style>
+  html, body { margin: 0; background: #FFFCF7; font-family: 'Public Sans', system-ui, sans-serif; color: #040504; -webkit-font-smoothing: antialiased; }
+  .wrap { width: 1920px; padding: 88px 120px; box-sizing: border-box; }
+  .eyebrow { font-size: 24px; font-weight: 600; letter-spacing: .24em; text-transform: uppercase; color: #1A500F; }
+  h1 { margin: 24px 0 56px; font-family: Castoro, serif; font-weight: 400; font-size: 76px; line-height: 1.05; letter-spacing: -.03em; }
+  h1 em { font-style: italic; }
+  .panel { border-radius: 8px; padding: 56px 80px; box-sizing: border-box; margin-bottom: 40px; }
+  .panel.dark { background: linear-gradient(160deg, #2C4E25 0%, #1C3118 100%); color: #FFFCF7; box-shadow: 0 4px 25px rgba(0,0,0,.16); }
+  .panel.light { border: 1px solid rgba(44,78,37,.4); background: #FFFFFF; }
+  .label { font-size: 24px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; }
+  .dark .label { color: rgba(255,252,247,.7); } .light .label { color: #75726B; }
+  .price { margin-top: 26px; font-family: Castoro, serif; font-size: 128px; letter-spacing: -.04em; line-height: .95; }
+  .light .price { color: #1A500F; }
+  .price span { font-size: 48px; letter-spacing: -.02em; }
+  .cadence { margin: 26px 0 0; font-size: 30px; line-height: 1.45; }
+  .dark .cadence { color: rgba(255,252,247,.9); } .light .cadence { color: #3F443C; }
+  .note { font-size: 24px; color: #75726B; letter-spacing: -.01em; }
+
+  /* ---- the kit's own styles, verbatim from tag.css ---- */
+/* ===========================================================================
+   AUTO-RENEW TAG — styles. Paste this whole block at the END of the deck's
+   main style block in index.html, just before its closing tag. It only targets
+   .dk-tag and .dk-tag-dot, so it cannot restyle anything else.
+
+   Motion follows the Optimal deck rule: one easing curve, no bounce, no
+   spring. The tag is visible by default — if the script is missing, it
+   simply shows statically. The script adds .is-in, which runs the entrance.
+   =========================================================================== */
+
+/* Entrance: 640ms rise, held back 780ms so it lands after the price has. */
+.dk-tag.is-in {
+  animation: dk-tag-in 640ms cubic-bezier(.2, .7, .2, 1) 780ms both;
+}
+@keyframes dk-tag-in {
+  from { opacity: 0; transform: translateY(10px) scale(.96); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* The dot, and a slow halo pulse that marks the tag as an ongoing fact.
+   --dot and --halo are set inline on the tag (tag.html) per surface. */
+.dk-tag-dot {
+  position: relative; flex: none; width: 12px; height: 12px; border-radius: 50%;
+  background: var(--dot, #A9C7A3);
+}
+.dk-tag-dot::after {
+  content: ""; position: absolute; inset: -6px; border-radius: 50%;
+  border: 2px solid var(--halo, rgba(169, 199, 163, .75));
+  animation: dk-pulse 2.6s cubic-bezier(.2, .7, .2, 1) infinite;
+}
+@keyframes dk-pulse {
+  0%   { transform: scale(.5);  opacity: .9; }
+  65%  { transform: scale(1.4); opacity: 0; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+
+/* Print / PDF export: static and fully visible. */
+@media print {
+  .dk-tag, .dk-tag.is-in { animation: none !important; opacity: 1 !important; transform: none !important; }
+  .dk-tag-dot::after { animation: none !important; opacity: 0; }
+}
+
+/* Reduced motion: no pulse, entrance effectively instant. */
+@media (prefers-reduced-motion: reduce) {
+  .dk-tag.is-in { animation-duration: .01s; animation-delay: 0s; }
+  .dk-tag-dot::after { animation: none; opacity: 0; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Kit preview</div>
+  <h1>Auto-renew <em>tag</em>, on both surfaces.</h1>
+
+  <div class="panel dark">
+    <div class="label">Annual billing</div>
+    <div class="price">$1495<span>/year</span></div>
+    <p class="cadence">Renews once a year.</p>
+    <div class="dk-tag" style="margin-top:30px;display:inline-flex;align-items:center;gap:16px;padding:13px 28px 13px 20px;border-radius:48px;background:rgba(135,164,130,.22);border:1px solid rgba(135,164,130,.55);font-size:24px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,252,247,.92);--dot:#A9C7A3;--halo:rgba(169,199,163,.75)"><span class="dk-tag-dot" aria-hidden="true"></span>Membership payment auto-renews</div>
+  </div>
+
+  <div class="panel light">
+    <div class="label">Annual billing</div>
+    <div class="price">$1495<span>/year</span></div>
+    <p class="cadence">Renews once a year.</p>
+    <div class="dk-tag" style="margin-top:30px;display:inline-flex;align-items:center;gap:16px;padding:13px 28px 13px 20px;border-radius:48px;background:rgba(135,164,130,.25);border:1px solid rgba(44,78,37,.4);font-size:24px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#1A500F;--dot:#2C4E25;--halo:rgba(44,78,37,.5)"><span class="dk-tag-dot" aria-hidden="true"></span>Membership payment auto-renews</div>
+  </div>
+
+  <p class="note">Reload the page to replay the entrance. In a deck, tag.js replays it each time the slide becomes active.</p>
+</div>
+<script>
+  // Preview only — no deck-stage here, so arm the entrance on load.
+  requestAnimationFrame(() => document.querySelectorAll('.dk-tag').forEach((t) => t.classList.add('is-in')));
+</script>
+</body>
+</html>
