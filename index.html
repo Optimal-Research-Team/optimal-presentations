@@ -4,126 +4,121 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
-<meta name="version" content="optimal-presentations v1.1.0">
+<meta name="version" content="optimal-presentations v1.2.0">
+<meta name="theme-color" content="#13220F">
 <title>Presentations — Optimal Clinic, Barrie</title>
 <link rel="icon" href="assets/logos/symbol-green-nobg.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Castoro:ital@0;1&amp;family=Public+Sans:wght@400;500;600;700&amp;display=swap">
-<link rel="preload" as="image" href="assets/leaves-overhead.webp">
 <style>
+  /* Forest Night — the Optimal dark scheme (optimal-design-system/forest-night.css),
+     the same one the reception TVs, explainers and anatomy figures use. */
   :root {
+    --night-950: #0B1608;
+    --night-900: #152511;
+    --night-800: #1C3118;
+    --night-700: #253821;
+    --night-line: #2B3F27;
+    --leaf-300: #A9D49C;
+    --forest-light: #519044;
     --forest-700: #2C4E25;
-    --forest-500: #87A482;
-    --sage-300: #A9C7A3;
-    --sage-100: #DDE7D2;
     --cream-50: #FFFCF7;
+    --fg: #C9CDBF;
+    --fg-muted: #98A28E;
+    --hair: rgba(255,252,247,.09);
     --ease: cubic-bezier(.2,.7,.2,1);
     --thumb: clamp(120px, 10vw, 196px);
+    --gutter: clamp(16px, 3.4vw, 56px);
+    color-scheme: dark;
   }
   *, *::before, *::after { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; }
+  html { -webkit-text-size-adjust: 100%; background: var(--night-950); }
   body {
     margin: 0; min-height: 100vh; min-height: 100dvh;
-    background: #14250F; color: var(--cream-50);
+    display: flex; flex-direction: column;
+    color: var(--fg);
+    background:
+      radial-gradient(1100px 620px at 8% -14%, rgba(81,144,68,.22), transparent 68%),
+      radial-gradient(900px 560px at 104% 112%, rgba(81,144,68,.09), transparent 70%),
+      linear-gradient(180deg, #13220F 0%, #0D1909 100%) fixed;
     font-family: 'Public Sans', system-ui, sans-serif;
     font-feature-settings: "kern", "liga", "tnum";
     -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
   }
-
-  /* ── Canopy: the same wallpaper and wash as every deck's preparation screen,
-        so choosing a deck lands on a page that already looks like this one. ── */
-  .canopy { position: fixed; inset: 0; overflow: hidden; z-index: 0; }
-  .canopy::before {
-    content: ""; position: absolute; inset: 0;
-    background: url('assets/leaves-overhead.webp') center center / cover no-repeat;
-    animation: canopy-drift 34s ease-in-out infinite alternate;
-  }
-  .canopy::after {
-    content: ""; position: absolute; inset: 0;
-    background: radial-gradient(120% 100% at 50% 45%, rgba(13,24,11,.22) 0%, rgba(13,24,11,.5) 60%, rgba(11,20,9,.86) 100%);
-  }
-  @keyframes canopy-drift { from { transform: scale(1); } to { transform: scale(1.035); } }
-
-  .shell {
-    position: relative; z-index: 1; min-height: 100vh; min-height: 100dvh;
-    display: grid; place-items: center;
-    padding: clamp(14px, 2.2vw, 48px);
+  /* Film grain so the gradient never bands on a big TV. Inline SVG noise — no image request. */
+  body::after {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 10;
+    opacity: .07; mix-blend-mode: soft-light;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
-  /* ── Glass panel ── */
-  .panel {
-    width: min(1440px, 100%);
-    padding: clamp(24px, 3.6vw, 56px) clamp(20px, 3.8vw, 60px) clamp(22px, 2.6vw, 36px);
-    border-radius: 28px;
-    background: rgba(16,30,12,.5);
-    border: 1px solid rgba(255,255,255,.16);
-    -webkit-backdrop-filter: blur(26px) saturate(118%);
-    backdrop-filter: blur(26px) saturate(118%);
-    box-shadow: 0 36px 90px rgba(0,0,0,.5);
-    animation: panel-pop .75s var(--ease) both;
-    transition: opacity .26s var(--ease), transform .26s var(--ease);
-  }
-  .panel.leaving { opacity: 0; transform: translateY(-8px) scale(.992); }
-  @keyframes panel-pop {
-    from { opacity: 0; transform: translateY(18px) scale(.985); }
-    to   { opacity: 1; transform: none; }
-  }
+  .frame { width: min(1440px, 100%); margin: 0 auto; padding: 0 var(--gutter); }
 
-  .top {
-    display: flex; align-items: flex-start; justify-content: space-between; gap: 24px;
-  }
-  .logo { display: block; height: 32px; width: auto; opacity: .96; }
+  /* ── Top bar ── */
+  .bar { border-bottom: 1px solid var(--hair); }
+  .bar .frame { height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+  .logo { display: block; height: 28px; width: auto; }
   .today {
     font-size: 12px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
-    color: rgba(255,255,255,.56); padding-top: 9px; text-align: right; white-space: nowrap;
+    color: var(--fg-muted); white-space: nowrap;
+  }
+
+  /* Centre the content between bar and footer, so a 1080p TV has no empty bottom half. */
+  main { flex: 1; display: flex; flex-direction: column; justify-content: center; transition: opacity .26s var(--ease), transform .26s var(--ease); }
+  main > .frame { padding-bottom: clamp(8px, 2vw, 32px); }
+  main.leaving { opacity: 0; transform: translateY(-6px); }
+
+  /* ── Heading ── */
+  .hero {
+    display: flex; align-items: flex-end; justify-content: space-between; gap: 24px 64px; flex-wrap: wrap;
+    padding: clamp(32px, 4.6vw, 72px) 0 clamp(26px, 3vw, 44px);
   }
   .eyebrow {
-    margin: clamp(26px, 3vw, 40px) 0 14px;
     font-size: 13px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase;
-    color: var(--forest-500);
+    color: var(--leaf-300); margin-bottom: 16px;
   }
   h1 {
     margin: 0; font-family: Castoro, serif; font-weight: 400;
-    font-size: clamp(38px, 4.6vw, 66px); line-height: 1; letter-spacing: -.03em; color: #fff;
+    font-size: clamp(40px, 5.2vw, 76px); line-height: .98; letter-spacing: -.035em; color: var(--cream-50);
   }
-  h1 em { font-style: italic; color: var(--sage-100); }
+  h1 em { font-style: italic; color: var(--leaf-300); }
+  .lede {
+    margin: 0 0 6px; max-width: 34ch; font-size: 16px; line-height: 1.55; color: var(--fg-muted);
+  }
 
-  .groups {
-    display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 3.2vw, 48px);
-    margin-top: clamp(28px, 3.4vw, 48px);
-    padding-top: clamp(24px, 2.8vw, 36px);
-    border-top: 1px solid rgba(255,255,255,.12);
-  }
+  /* ── Groups ── */
+  .groups { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 3.2vw, 48px); }
   .group h2 {
-    margin: 0 0 16px; display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
-    font-size: 12px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
-    color: rgba(255,255,255,.62);
+    margin: 0 0 14px; display: flex; align-items: center; gap: 14px;
+    font-size: 12px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--fg);
   }
-  .group h2 span { font-weight: 600; letter-spacing: .14em; color: rgba(255,255,255,.38); }
-  .decks { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  .group h2::after { content: ""; flex: 1; height: 1px; background: var(--hair); order: 1; }
+  .group h2 span { order: 2; font-weight: 600; letter-spacing: .1em; color: var(--fg-muted); font-variant-numeric: tabular-nums; }
+  .decks { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
 
   /* ── Big buttons ── */
   .deck {
     position: relative;
     display: grid; grid-template-columns: var(--thumb) 1fr auto; align-items: center;
     gap: clamp(16px, 1.6vw, 24px);
-    padding: 12px clamp(14px, 1.4vw, 20px) 12px 12px;
-    border-radius: 18px;
-    background: rgba(255,255,255,.055);
-    border: 1px solid rgba(255,255,255,.12);
+    padding: 11px clamp(14px, 1.4vw, 20px) 11px 11px;
+    border-radius: 16px;
+    background: rgba(28,49,24,.62);
+    border: 1px solid var(--night-line);
+    box-shadow: inset 0 1px 0 rgba(255,252,247,.035);
     color: inherit; text-decoration: none;
     transition: background .25s var(--ease), border-color .25s var(--ease), transform .25s var(--ease);
     -webkit-tap-highlight-color: transparent;
   }
-  a.deck:hover { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.28); }
+  a.deck:hover { background: var(--night-700); border-color: rgba(255,252,247,.16); }
   a.deck:active { transform: scale(.992); }
-  a.deck:focus-visible { outline: none; border-color: var(--sage-300); box-shadow: 0 0 0 4px rgba(135,164,130,.28); }
+  a.deck:focus-visible { outline: none; border-color: var(--leaf-300); box-shadow: 0 0 0 4px rgba(169,212,156,.22); }
 
   .thumb {
-    position: relative; aspect-ratio: 16 / 9; border-radius: 10px; overflow: hidden;
-    background: #0E1A0C;
-    box-shadow: 0 0 0 1px rgba(255,255,255,.1), 0 10px 26px rgba(0,0,0,.28);
+    position: relative; aspect-ratio: 16 / 9; border-radius: 9px; overflow: hidden;
+    background: var(--night-950);
+    box-shadow: 0 0 0 1px rgba(255,252,247,.12), 0 8px 22px rgba(0,0,0,.32);
   }
   .thumb img {
     display: block; width: 100%; height: 100%; object-fit: cover;
@@ -135,104 +130,94 @@
   .ctx {
     display: flex; gap: 10px; align-items: baseline;
     font-size: 11.5px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
-    color: var(--sage-300); margin-bottom: 8px;
+    color: var(--leaf-300); margin-bottom: 8px;
   }
-  .ctx b { font-weight: 600; letter-spacing: .06em; color: rgba(255,255,255,.4); font-variant-numeric: tabular-nums; }
+  .ctx b { font-weight: 600; letter-spacing: .06em; color: var(--fg-muted); font-variant-numeric: tabular-nums; }
   .name {
     margin: 0; font-family: Castoro, serif; font-weight: 400;
-    font-size: clamp(23px, 1.8vw, 32px); line-height: 1.04; white-space: nowrap; letter-spacing: -.02em; color: #fff;
+    font-size: clamp(23px, 1.8vw, 32px); line-height: 1.04; letter-spacing: -.02em; white-space: nowrap;
+    color: var(--cream-50);
   }
-  .name em { font-style: italic; color: var(--sage-100); }
+  .name em { font-style: italic; color: var(--leaf-300); }
   .meta {
-    margin: 7px 0 0; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.45; color: rgba(255,255,255,.66);
-    text-wrap: pretty;
+    margin: 7px 0 0; font-size: 15px; line-height: 1.45; color: var(--fg-muted);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
 
   .go {
     width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center;
-    border: 1px solid rgba(255,255,255,.24); color: #fff;
+    border: 1px solid rgba(255,252,247,.18); color: var(--cream-50);
     transition: background .25s var(--ease), border-color .25s var(--ease), color .25s var(--ease);
   }
   .go svg { width: 18px; height: 18px; transition: transform .3s var(--ease); }
-  a.deck:hover .go, a.deck:focus-visible .go { background: var(--cream-50); border-color: var(--cream-50); color: var(--forest-700); }
+  a.deck:hover .go, a.deck:focus-visible .go { background: var(--cream-50); border-color: var(--cream-50); color: var(--night-900); }
   a.deck:hover .go svg, a.deck:focus-visible .go svg { transform: translateX(2px); }
 
-  /* Not built yet: same footprint, clearly inert. */
-  .deck.soon { background: transparent; border-style: dashed; border-color: rgba(255,255,255,.2); cursor: default; }
-  .deck.soon .thumb {
-    background: rgba(255,255,255,.03); box-shadow: inset 0 0 0 1px rgba(255,255,255,.12);
-    display: grid; place-items: center;
-    font-size: 11px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.42);
-  }
-  .deck.soon .ctx { color: rgba(255,255,255,.4); }
-  .deck.soon .name { color: rgba(255,255,255,.5); }
-  .deck.soon .name em { color: rgba(221,231,210,.5); }
-  .deck.soon .meta { color: rgba(255,255,255,.42); }
-  .deck.soon .go { visibility: hidden; }
-
-  .foot {
-    display: flex; justify-content: space-between; gap: 16px 32px; flex-wrap: wrap;
-    margin-top: clamp(24px, 2.8vw, 36px); padding-top: 18px;
-    border-top: 1px solid rgba(255,255,255,.1);
-    font-size: 14px; line-height: 1.5; color: rgba(255,255,255,.5);
+  /* ── Footer ── */
+  .foot { border-top: 1px solid var(--hair); margin-top: clamp(20px, 2.4vw, 36px); }
+  .foot .frame {
+    min-height: 60px; display: flex; align-items: center; justify-content: space-between; gap: 10px 32px; flex-wrap: wrap;
+    padding-top: 14px; padding-bottom: 14px;
+    font-size: 14px; line-height: 1.5; color: var(--fg-muted);
   }
   .foot kbd {
-    font: 600 12px/1 'Public Sans', system-ui, sans-serif; color: rgba(255,255,255,.72);
-    padding: 3px 6px; border-radius: 5px; border: 1px solid rgba(255,255,255,.2);
+    font: 600 12px/1 'Public Sans', system-ui, sans-serif; color: var(--fg);
+    padding: 3px 6px; border-radius: 5px; border: 1px solid rgba(255,252,247,.18);
   }
 
   /* ── Entrance: staggered rise, one curve, no bounce ── */
-  .rv { animation: rise .62s var(--ease) both; animation-delay: calc(.12s + var(--i, 0) * .06s); }
+  .rv { animation: rise .62s var(--ease) both; animation-delay: calc(.08s + var(--i, 0) * .06s); }
   @keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
 
-  @media (max-height: 980px) and (min-width: 1061px) {
-    .panel { padding-top: 30px; padding-bottom: 22px; }
-    .eyebrow { margin: 20px 0 10px; }
-    h1 { font-size: clamp(38px, 3.6vw, 56px); }
-    .groups { margin-top: 24px; padding-top: 22px; }
-    .group h2 { margin-bottom: 12px; }
-    .decks { gap: 10px; }
-    .deck { padding-top: 10px; padding-bottom: 10px; }
-    .foot { margin-top: 20px; padding-top: 14px; }
+  @media (max-height: 940px) and (min-width: 1061px) {
+    .hero { padding: 30px 0 26px; }
+    h1 { font-size: clamp(40px, 4.4vw, 64px); }
   }
   @media (max-width: 1060px) {
     .groups { grid-template-columns: 1fr; }
   }
   @media (max-width: 600px) {
     :root { --thumb: 104px; }
-    .panel { border-radius: 22px; }
+    .bar .frame { height: 60px; }
+    .logo { height: 24px; }
     .today { display: none; }
+    .lede { font-size: 15px; }
     .deck { grid-template-columns: var(--thumb) 1fr; padding: 10px 14px 10px 10px; gap: 14px; }
     .go { display: none; }
     .ctx { font-size: 10.5px; letter-spacing: .14em; margin-bottom: 5px; }
     .name { font-size: 22px; white-space: normal; }
     .meta { font-size: 13.5px; margin-top: 6px; white-space: normal; }
-    .deck.soon .thumb { font-size: 9.5px; letter-spacing: .12em; text-align: center; padding: 0 6px; }
     .foot .keys { display: none; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .canopy::before, .panel, .rv { animation: none !important; }
-    .panel, .thumb img, .go svg { transition: none !important; }
+    .rv { animation: none !important; }
+    main, .thumb img, .go svg { transition: none !important; }
   }
 </style>
 </head>
 <body>
-<div class="canopy" aria-hidden="true"></div>
+<header class="bar rv" style="--i:0">
+  <div class="frame">
+    <img class="logo" src="assets/logos/Optimal-Logo-Inverted.png" alt="Optimal" width="92" height="28">
+    <div class="today" id="today">Barrie, ON</div>
+  </div>
+</header>
 
-<main class="shell">
-  <div class="panel" id="panel">
-    <header class="top rv" style="--i:0">
-      <img class="logo" src="assets/logos/Optimal-Logo-Inverted.png" alt="Optimal" width="105" height="32">
-      <div class="today" id="today">Barrie, ON</div>
-    </header>
-    <div class="eyebrow rv" style="--i:1">Presentations</div>
-    <h1 class="rv" style="--i:2">Which visit is <em>today</em>?</h1>
+<main id="main">
+  <div class="frame">
+    <div class="hero">
+      <div>
+        <div class="eyebrow rv" style="--i:1">Presentations</div>
+        <h1 class="rv" style="--i:2">Which visit is <em>today</em>?</h1>
+      </div>
+      <p class="lede rv" style="--i:3">Pick the visit. It opens on its own preparation screen, where you enter the patient's name.</p>
+    </div>
 
     <div class="groups">
       <section class="group" aria-labelledby="g-womens">
-        <h2 id="g-womens" class="rv" style="--i:3">Women's health <span>3</span></h2>
+        <h2 id="g-womens" class="rv" style="--i:4">Women's health <span>3</span></h2>
         <ul class="decks">
-          <li class="rv" style="--i:4">
+          <li class="rv" style="--i:5">
             <a class="deck" data-key="1" href="menopause-foundation/">
               <div class="thumb"><img src="assets/thumbs/menopause-foundation.webp" alt="" width="960" height="540" decoding="async"></div>
               <div class="info">
@@ -243,7 +228,7 @@
               <span class="go" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span>
             </a>
           </li>
-          <li class="rv" style="--i:5">
+          <li class="rv" style="--i:6">
             <a class="deck" data-key="2" href="menopause-foundation/graduation-ongoing-care/">
               <div class="thumb"><img src="assets/thumbs/ongoing-care.webp" alt="" width="960" height="540" decoding="async"></div>
               <div class="info">
@@ -254,7 +239,7 @@
               <span class="go" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span>
             </a>
           </li>
-          <li class="rv" style="--i:6">
+          <li class="rv" style="--i:7">
             <a class="deck" data-key="3" href="cycle-hormone-care/">
               <div class="thumb"><img src="assets/thumbs/cycle-hormone.webp" alt="" width="960" height="540" decoding="async"></div>
               <div class="info">
@@ -269,9 +254,9 @@
       </section>
 
       <section class="group" aria-labelledby="g-longevity">
-        <h2 id="g-longevity" class="rv" style="--i:3">Longevity Membership · Core <span>4</span></h2>
+        <h2 id="g-longevity" class="rv" style="--i:4">Longevity Membership · Core <span>4</span></h2>
         <ul class="decks">
-          <li class="rv" style="--i:4">
+          <li class="rv" style="--i:5">
             <a class="deck" data-key="4" href="tour/">
               <div class="thumb"><img src="assets/thumbs/walk-in.webp" alt="" width="960" height="540" decoding="async"></div>
               <div class="info">
@@ -282,7 +267,7 @@
               <span class="go" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span>
             </a>
           </li>
-          <li class="rv" style="--i:5">
+          <li class="rv" style="--i:6">
             <a class="deck" data-key="5" href="intro/">
               <div class="thumb"><img src="assets/thumbs/intro-only.webp" alt="" width="960" height="540" decoding="async"></div>
               <div class="info">
@@ -293,7 +278,7 @@
               <span class="go" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span>
             </a>
           </li>
-          <li class="rv" style="--i:6">
+          <li class="rv" style="--i:7">
             <a class="deck" data-key="6" href="intro-intake/">
               <div class="thumb"><img src="assets/thumbs/intro-intake.webp" alt="" width="960" height="540" decoding="async"></div>
               <div class="info">
@@ -304,7 +289,7 @@
               <span class="go" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span>
             </a>
           </li>
-          <li class="rv" style="--i:7">
+          <li class="rv" style="--i:8">
             <a class="deck" data-key="7" href="intake/">
               <div class="thumb"><img src="assets/thumbs/intake-only.webp" alt="" width="960" height="540" decoding="async"></div>
               <div class="info">
@@ -318,13 +303,15 @@
         </ul>
       </section>
     </div>
-
-    <footer class="foot rv" style="--i:8">
-      <span>Each presentation opens on its own preparation screen, where you enter the patient's name.</span>
-      <span class="keys">Press <kbd>1</kbd>–<kbd>7</kbd> to open · browser Back returns here</span>
-    </footer>
   </div>
 </main>
+
+<footer class="foot rv" style="--i:9">
+  <div class="frame">
+    <span class="keys">Press <kbd>1</kbd>–<kbd>7</kbd> to open · browser Back returns here</span>
+    <span>Optimal Clinic · Barrie, ON</span>
+  </div>
+</footer>
 
 <script>
 (() => {
@@ -333,15 +320,14 @@
   const d = new Date();
   today.textContent = 'Barrie, ON · ' + d.toLocaleDateString('en-CA', { weekday: 'short', month: 'short', day: 'numeric' }).replace(/\./g, '');
 
-  const panel = document.getElementById('panel');
+  const main = document.getElementById('main');
   const decks = [...document.querySelectorAll('a.deck')];
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Fade the panel out over the canopy, then hand off to the deck — whose
-  // preparation screen is the same canopy, so the switch reads as one surface.
+  // Fade the page out, then hand off to the deck.
   const open = (a) => {
     if (reduce) { location.href = a.href; return; }
-    panel.classList.add('leaving');
+    main.classList.add('leaving');
     setTimeout(() => { location.href = a.href; }, 220);
   };
   decks.forEach((a) => {
@@ -363,8 +349,8 @@
   });
 
   // Coming back with the Back button restores this page from the bfcache —
-  // with the panel still faded out. Bring it back.
-  addEventListener('pageshow', (e) => { if (e.persisted) panel.classList.remove('leaving'); });
+  // still faded out. Bring it back.
+  addEventListener('pageshow', (e) => { if (e.persisted) main.classList.remove('leaving'); });
 })();
 </script>
 </body>

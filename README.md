@@ -35,9 +35,11 @@ never break another. Each folder has its own README with that deck's details
 build for its 3-D hypothalamus).
 
 The launcher (`index.html` at the root) is plain HTML + CSS with a small script
-for the date, number-key shortcuts and the fade hand-off. It sits on the same
-canopy wallpaper and glass panel as the decks' preparation screens, so picking a
-deck reads as one continuous surface. Thumbnails in `assets/thumbs/` are
+for the date, number-key shortcuts and the fade hand-off. It uses the brand's
+dark **Forest Night** scheme (from `optimal-design-system/forest-night.css`, the
+same one the reception TVs use): a flat night-green page, one soft glow, an
+inline-SVG grain so the gradient doesn't band on a TV, and hairline dividers.
+There is no background photo. Thumbnails in `assets/thumbs/` are
 screenshots of each deck's title slide — regenerate them when a title slide
 changes.
 
