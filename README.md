@@ -19,7 +19,7 @@ today's visit and that presentation opens on its own preparation screen
 
 ## Using it
 
-- Open the live link, click a visit (or press its number key, `1`–`7`).
+- Open the live link and click a visit. Or hover or use the arrow keys to preview one, press Enter to open it, or press its number key (`1`–`7`).
 - Every preparation screen has an **All presentations** link back to the launcher;
   the browser Back button also returns to it from anywhere in a deck (the decks
   rewrite the slide number with `replaceState`, so Back never steps through slides).
@@ -34,12 +34,12 @@ never break another. Each folder has its own README with that deck's details
 (the Ongoing Care deck also has `HYPO3D.md` and the `tools/build-hypo3d.sh`
 build for its 3-D hypothalamus).
 
-The launcher (`index.html` at the root) is plain HTML + CSS with a small script
-for the date, number-key shortcuts and the fade hand-off. It uses the brand's
-dark **Forest Night** scheme (from `optimal-design-system/forest-night.css`, the
-same one the reception TVs use): a flat night-green page, one soft glow, an
-inline-SVG grain so the gradient doesn't band on a TV, and hairline dividers.
-There is no background photo. Thumbnails in `assets/thumbs/` are
+The launcher (`index.html` at the root) is plain HTML + CSS with a small
+script. It's built like the decks' own slides:
+- a cream canvas with Castoro display type and hairline rows on the left, one per visit, grouped by program;
+- a forest preview panel on the right that shows the selected deck's title slide and the three facts its title slide states (who leads, length, outcome), the same list-plus-panel pairing as the decks' closing slide.
+
+Hover or arrow keys choose a deck, and Enter or a click opens it. The number keys `1`–`7` jump straight to a deck. The last deck opened is remembered per device (localStorage). Below 960px the panel is dropped and each row carries its own thumbnail. Thumbnails in `assets/thumbs/` are
 screenshots of each deck's title slide — regenerate them when a title slide
 changes.
 
