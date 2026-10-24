@@ -1,4 +1,9 @@
-// <hypo-3d> renderer: the A2 hypothalamus as a cleared-tissue specimen block in real-time 3-D.
+// A2 3-D layer renderer: the hypothalamus as a cleared-tissue specimen block in real-time 3-D.
+//
+// Ported from the Ongoing Care deck's <hypo-3d> (menopause-foundation-presentation
+// graduation-ongoing-care/src/hypo3d-scene.js @ 971c31b). Changes for the figure: two themes (Cream is
+// the deck's tuning, unchanged; Forest night is new), a lighter build for phones (`lite`), the camera
+// framed to the figure's stage (`fit`), async shader compiles, and a dispose that frees the context.
 //
 // Pipeline (all same-origin, no textures by URL, no postprocessing stack):
 //   1. block back faces → rtB (view depth): how far each ray travels through the tissue
@@ -28,15 +33,64 @@ const V3 = (p) => new Vector3(p[0] - AN.CX, AN.CY - p[1], p[2] || 0);
 const wpts = (pts) => pts.map((p) => W(p[0], p[1], p[2] || 0));
 const lin = (hex) => new Color(hex); // three converts sRGB hex to linear working space
 
-// ---------------------------------------------------------------- palette (A2 figure.css, Cream theme)
-const PAL = {
-  tissueA: "#f8e6e9", tissueB: "#e7b9c3", frost: "#fdf4f3", edge: "#b07f8a", speck: "#8a5a8e",
-  white: "#fbf3ee", vessel: "#c94c5e", gland: "#ecc8cf", ant: "#e3a6b6", stalk: "#e9c1ca", me: "#eac4cc",
-  bone: "#efe4d1", boneCut: "#f7f0e3", mamm: "#ecccd2",
-  kndy: "#8e2f88", kndyCore: "#f4cdf0", kndyGlow: "#c2189b", nkb: "#d01aa5", axon: "#9b4794",
-  mn: "#138a63", mnCore: "#c8f0df", rec: "#0b5c41", recOff: "#c3a2a8", hot: "#e0731e", heat: "#f08a32",
-  estro: "#c98a00", out: "#3f9a76",
+// ---------------------------------------------------------------- the two themes
+// Cream is the deck's tuning, unchanged (tuned on the same #FFFCF7 cream as the figure's card).
+// Forest night is new: a dark-field look on the forest plate, like A2's own dark theme (a fluorescence
+// slide): smoky plum tissue that veils a little more, lavender rims, cells that glow, a forest-green
+// bounce from below and a deep contact shadow. Colours only; every motion and size is the model's.
+const CREAM = {
+  pal: {
+    tissueA: "#f8e6e9", tissueB: "#e7b9c3", frost: "#fdf4f3", edge: "#b07f8a", speck: "#8a5a8e",
+    white: "#fbf3ee", vessel: "#c94c5e", gland: "#ecc8cf", ant: "#e3a6b6", stalk: "#e9c1ca", me: "#eac4cc",
+    bone: "#efe4d1", boneCut: "#f7f0e3", mamm: "#ecccd2",
+    kndy: "#8e2f88", kndyCore: "#f4cdf0", kndyGlow: "#c2189b", nkb: "#d01aa5", axon: "#9b4794",
+    mn: "#138a63", mnCore: "#c8f0df", rec: "#0b5c41", recOff: "#c3a2a8", hot: "#e0731e", heat: "#f08a32",
+    estro: "#c98a00", out: "#3f9a76",
+  },
+  env: { ground: "#d9c8bf", horizon: "#efe6dc", sky: "#fbf7f1", boxes: 1, intensity: 0.85 },
+  key: ["#fff4ea", 2.5], rim: ["#eef1ff", 1.0], hemi: ["#fffaf2", "#ead8d0", 0.35],
+  mat: {},
+  block: { uSigma: 0.009, uOnset: 85, uBlur: 0.028, tissueA: "#f9e7e9", tissueB: "#e8b6bf", white: "#fffaf6", uAmb: 0.7, uKey: 0.52, uSpec: 1, uFrostK: 1, uEdgeK: 1, uSpeckK: 1 },
+  glow: ["#b81c95", "#1f9c70", "#f0822a"], glowK: [1, 1, 1],
+  shadow: [78, 50, 46, 1],
+  halo: { nkb: "#d01aa5", hot: "#ff8a2a", k: 1 },
+  mnBase: "#0d6e4e", speckMesh: "#a77aa6",
+  kGlow: { emissive: 0.55, core: [0.2, 0.25], mnHot: 0.5 },
 };
+const FOREST = {
+  pal: {
+    ...CREAM.pal,
+    frost: "#a898c4", edge: "#8f7da6", speck: "#c4b6e4",
+    white: "#c9bfd6", vessel: "#c2465c", gland: "#a87888", ant: "#b86c84", stalk: "#a47585", me: "#a47585",
+    bone: "#a39a86", boneCut: "#b9b09c", mamm: "#9a7f8f",
+    nkb: "#ff6fd8", axon: "#c04cb4", rec: "#a6f0cf", recOff: "#6e6378", hot: "#ff9a3c", estro: "#ffbf3a", out: "#4fd6a0",
+  },
+  env: { ground: "#0d140c", horizon: "#2b2836", sky: "#45405a", boxes: 0.8, intensity: 0.7 },
+  key: ["#fff0e2", 1.9], rim: ["#d6ccff", 2.1], hemi: ["#6c6386", "#1c3118", 0.5],
+  mat: {
+    white: { color: "#cfc4dc", sss: "#8f7aa8", sheenColor: "#e8e0ff" },
+    vessel: { color: "#c2465c", sss: "#ff4a64" },
+    mamm: { color: "#9a7f8f", sss: "#c27a92", sheenColor: "#e0c8f0" },
+    stalk: { color: "#a47585", sss: "#d0708a", sheenColor: "#e8c8e0" },
+    ant: { color: "#b86c84", sss: "#e86a8a", sheenColor: "#f0c8dc" },
+    post: { color: "#a87888", sss: "#d07890", sheenColor: "#e8c8e0" },
+    bone: { color: "#a39a86", sss: "#a8916c", sheenColor: "#e0d8c8" },
+    boneCut: { color: "#b9b09c", sss: "#a8916c" },
+    kndy: { color: "#8a1f7e", sss: "#ff3cc4", core: "#ffb0ec", coreAmt: 0.16, env: 0.5 },
+    mn: { color: "#138a62", sss: "#2fe0a0", core: "#b8ffe2", coreAmt: 0.14, env: 0.5 },
+    rec: { color: "#a6f0cf" },
+    axon: { color: "#b84cae", sss: "#ff5cd0" },
+    out: { color: "#4fd6a0", sss: "#6affc4" },
+    estro: { color: "#ffbf3a", emissive: "#ffb000", emissiveIntensity: 0.4, sss: "#ffd66a" },
+  },
+  block: { uSigma: 0.0125, uOnset: 85, uBlur: 0.03, tissueA: "#3b2f48", tissueB: "#271d31", white: "#7d7290", uAmb: 0.62, uKey: 0.62, uSpec: 0.5, uFrostK: 0.7, uEdgeK: 1.15, uSpeckK: 0.75, uBack: 0.86, backCol: "#22182b" },
+  glow: ["#ff3cc4", "#3fe0a2", "#ffa040"], glowK: [1.25, 1.15, 1.1],
+  shadow: [3, 9, 2, 2.1],
+  halo: { nkb: "#ff6fd8", hot: "#ffa040", k: 1.2 },
+  mnBase: "#138a62", speckMesh: "#7a6ea6",
+  kGlow: { emissive: 0.8, core: [0.3, 0.4], mnHot: 0.7 },
+};
+export const THEMES = { light: CREAM, dark: FOREST };
 
 // ---------------------------------------------------------------- physical tissue material with a subsurface feel
 // Wrap lighting adds a reddened band past the terminator, plus a little back-light through thin
@@ -113,8 +167,9 @@ function physMat(o) {
   const sss = !!o.sss && SSS_PATCHED;
   const core = !!o.core;
   const nb = (o.bump ?? 0) > 0 || (o.mottle ?? 0) > 0;
-  // Defines go on the material before it first compiles (setting them inside onBeforeCompile changed
-  // the program key after the first compile, so every material compiled twice, the second on frame one).
+  // The defines go on the material before it ever compiles. (The deck added them inside onBeforeCompile,
+  // which changed the material's program key after its first compile, so every one compiled twice and the
+  // second, synchronous compile landed on the first frame.)
   m.defines = { ...(m.defines || {}), ...(sss ? { USE_SSS: "" } : {}), ...(core ? { USE_CORE: "" } : {}), ...(nb ? { USE_NBUMP: "" } : {}) };
   m.onBeforeCompile = (sh) => {
     Object.assign(sh.uniforms, U);
@@ -184,7 +239,7 @@ uniform sampler2D tColor; uniform sampler2D tDepth; uniform sampler2D tBack;
 uniform vec2 uRes; uniform float uNear; uniform float uFar; uniform float uDpr;
 uniform float uSigma; uniform float uBlur; uniform float uOnset;
 uniform vec3 uTissueA; uniform vec3 uTissueB; uniform vec3 uFrost; uniform vec3 uEdge; uniform vec3 uSpeck; uniform vec3 uWhite;
-uniform vec3 uKeyDir; uniform float uAmb; uniform float uKey;
+uniform vec3 uKeyDir; uniform float uAmb; uniform float uKey; uniform float uSpec; uniform float uFrostK; uniform float uEdgeK; uniform float uSpeckK; uniform float uBack; uniform vec3 uBackCol;
 uniform vec3 uGlowPos[ 3 ]; uniform vec3 uGlowCol[ 3 ]; uniform float uGlowAmt[ 3 ]; uniform float uGlowRad[ 3 ];
 varying vec3 vWorld; varying vec3 vView; varying vec3 vNormalW;
 const float CX = ${AN.CX.toFixed(1)}; const float CY = ${AN.CY.toFixed(1)};
@@ -314,7 +369,7 @@ void main() {
   float NdV = clamp( dot( N, V ), 0.0, 1.0 );
   float F = 0.03 + 0.97 * pow( 1.0 - NdV, 5.0 );
   // a faint frosted skin, denser at grazing angles (gives the block its body and silhouette)
-  over( col, alpha, mix( uFrost, uTissueA, 0.5 ) * lightF, sw * ( 0.07 + 0.2 * pow( 1.0 - NdV, 2.2 ) + 0.2 * ( 1.0 - smoothstep( 10.0, 90.0, sF ) ) ) );
+  over( col, alpha, mix( uFrost, uTissueA, 0.5 ) * lightF, sw * uFrostK * ( 0.07 + 0.2 * pow( 1.0 - NdV, 2.2 ) + 0.2 * ( 1.0 - smoothstep( 10.0, 90.0, sF ) ) ) );
   // painted cut anatomy (A2's front, top and end faces)
   float fpx = ( fwidth( sec.x ) + fwidth( sec.y ) + fwidth( vWorld.z ) ) * 0.5;
   fFront *= sw; fTop *= sw; fEnd *= sw;
@@ -349,17 +404,22 @@ void main() {
   // glial speckle on every cut face
   vec2 q = fFront * sec + fTop * vec2( sec.x, vWorld.z * 1.0 ) + fEnd * vec2( vWorld.z, sec.y );
   float sp = speck( q, 12.5, 0.52, fpx * 0.75 ) * max( max( fFront, fTop ), fEnd );
-  over( col, alpha, uSpeck * mix( 0.8, 1.0, lightF ), sp * 0.26 );
+  over( col, alpha, uSpeck * mix( 0.8, 1.0, lightF ), sp * 0.26 * uSpeckK );
   // edges: the rounded rims of the cut catch a soft line (A2 strokes the block's edges)
   float edgeBand = 1.0 - max( max( abs( N.x ), abs( N.y ) ), abs( N.z ) );
-  over( col, alpha, uEdge * lightF, sw * smoothstep( 0.04, 0.28, edgeBand ) * 0.42 );
+  over( col, alpha, uEdge * lightF, sw * smoothstep( 0.04, 0.28, edgeBand ) * 0.42 * uEdgeK );
   // wet specular: studio softboxes + a tight key glint
   vec3 R = reflect( -V, N );
   vec3 spec = studio( R ) * F * 0.85;
   vec3 H = normalize( uKeyDir + V );
   spec += vec3( 1.0, 0.97, 0.93 ) * pow( max( dot( N, H ), 0.0 ), 160.0 ) * ( 0.35 + 1.5 * F );
-  spec *= sw;
+  spec *= sw * uSpec;
   col += spec;
+  // a dark backing behind the whole volume (Forest night): where the tissue is thin, the block reads as deep
+  // plum instead of letting the forest plate show through it
+  float bk = uBack * sw;
+  col += uBackCol * lightF * bk * ( 1.0 - alpha );
+  alpha += bk * ( 1.0 - alpha );
   alpha = clamp( alpha + dot( spec, vec3( 0.3333 ) ) * 0.5, 0.0, 1.0 );
   gl_FragColor = outT( vec4( col, alpha ) );
 }`;
@@ -414,7 +474,7 @@ function fibreTexture() {
   return t;
 }
 
-function shadowTexture() {
+function shadowTexture(tint = [78, 50, 46, 1]) {
   // the contact shadow on an implied ground under the sella, painted once (soft, warm, faint)
   const Wc = 512, Hc = 320;
   const c = document.createElement("canvas");
@@ -427,7 +487,7 @@ function shadowTexture() {
   const Z = (z) => ((z + 300) / 450) * Hc;
   const blob = (x0, x1, z0, z1, blur, alpha, rx = 0.5) => {
     g.save();
-    g.shadowColor = `rgba(78, 50, 46, ${alpha})`;
+    g.shadowColor = `rgba(${tint[0]}, ${tint[1]}, ${tint[2]}, ${Math.min(1, alpha * tint[3])})`;
     g.shadowBlur = blur;
     g.shadowOffsetX = 4000;
     g.translate(-4000, 0);
@@ -448,12 +508,12 @@ function shadowTexture() {
 }
 
 // ---------------------------------------------------------------- the studio environment (PMREM, procedural)
-function buildEnv(renderer) {
+function buildEnv(renderer, E = CREAM.env) {
   const scene = new Scene();
   const geo = new SphereGeometry(100, 48, 24);
   const pos = geo.attributes.position;
   const cols = [];
-  const ground = lin("#d9c8bf"), horizon = lin("#efe6dc"), sky = lin("#fbf7f1");
+  const ground = lin(E.ground), horizon = lin(E.horizon), sky = lin(E.sky);
   const tmp = new Color();
   for (let i = 0; i < pos.count; i++) {
     const y = pos.getY(i) / 100;
@@ -464,7 +524,7 @@ function buildEnv(renderer) {
   geo.setAttribute("color", new Float32BufferAttribute(cols, 3));
   scene.add(new Mesh(geo, new MeshBasicMaterial({ vertexColors: true, side: BackSide })));
   const box = (d, w, h, k, hex) => {
-    const m = new Mesh(new PlaneGeometry(w, h), new MeshBasicMaterial({ color: lin(hex).multiplyScalar(k), side: DoubleSide }));
+    const m = new Mesh(new PlaneGeometry(w, h), new MeshBasicMaterial({ color: lin(hex).multiplyScalar(k * E.boxes), side: DoubleSide }));
     m.position.copy(new Vector3(...d).normalize().multiplyScalar(60));
     m.lookAt(0, 0, 0);
     scene.add(m);
@@ -508,8 +568,18 @@ function blockGeometry() {
   return g;
 }
 
+/** Give the page a turn (input, paint) between build steps. */
+const yieldTask = () => new Promise((r) => (globalThis.scheduler && typeof scheduler.yield === "function" ? scheduler.yield().then(r) : setTimeout(r, 0)));
+
+// ---------------------------------------------------------------- level of detail
+// Phones (coarse pointers) get a lighter build: one icosphere step less and about 60 % of the segments
+// along and 70 % around every tube. Same shapes and the same random sequence, fewer triangles
+// (about half), and a shorter main-thread build. At phone size the cells are 10–20 px across.
+const LOD_FULL = { lite: false, detail: (d) => d, n: (k) => k, r: (k) => k };
+const LOD_LITE = { lite: true, detail: (d) => Math.max(0, d - 1), n: (k) => Math.max(8, Math.round(k * 0.6)), r: (k) => Math.max(6, Math.round(k * 0.7)) };
+
 // ---------------------------------------------------------------- neurons
-function neuronGeometry(r, nDend, rng, { stretch = [1.12, 0.92, 0.94], branches = 2 } = {}) {
+function neuronGeometry(r, nDend, rng, { stretch = [1.12, 0.92, 0.94], branches = 2, lod = LOD_FULL } = {}) {
   // process directions first: the soma swells toward each (a cell body that flows into its
   // processes). They spread in the section plane and back into the tissue, never down out of it.
   const dirs = [];
@@ -526,7 +596,7 @@ function neuronGeometry(r, nDend, rng, { stretch = [1.12, 0.92, 0.94], branches 
     return k;
   };
   const R = [r * stretch[0], r * stretch[1], r * stretch[2]];
-  const parts = [blobGeo(R, rng, { amp: 0.07, detail: 4, shape })];
+  const parts = [blobGeo(R, rng, { amp: 0.07, detail: lod.detail(4), shape })];
   dirs.forEach((d, k) => {
     const tip = new Vector3(d.x * R[0], d.y * R[1], d.z * R[2]).multiplyScalar(1.12);
     const dd = tip.clone().normalize();
@@ -538,13 +608,13 @@ function neuronGeometry(r, nDend, rng, { stretch = [1.12, 0.92, 0.94], branches 
     const P = (u) => tip.clone().addScaledVector(dd, L * u).addScaledVector(side, L * (bend * 0.38 * u * u + wig * 0.12 * Math.sin(u * 7.0)));
     const pts = [tip.clone().multiplyScalar(0.82), P(0.2), P(0.42), P(0.64), P(0.84), P(1)];
     const rad = (u) => 0.34 + r * (0.08 * (1 - u) + 0.17 * Math.pow(1 - Math.min(1, u / 0.3), 2));
-    parts.push(tubeGeo(pts.map((p) => p.toArray()), rad, { tubular: 34, radial: 8 }));
+    parts.push(tubeGeo(pts.map((p) => p.toArray()), rad, { tubular: lod.n(34), radial: lod.r(8) }));
     if (k < branches) {
       const b0 = P(0.48);
       const bd = dd.clone().multiplyScalar(0.55).addScaledVector(side, bend > 0 ? -0.85 : 0.85).normalize();
       const bl = L * (0.32 + rng() * 0.18);
       const bpts = [b0, b0.clone().addScaledVector(bd, bl * 0.5).addScaledVector(dd, bl * 0.12), b0.clone().addScaledVector(bd, bl).addScaledVector(dd, bl * 0.3)];
-      parts.push(tubeGeo(bpts.map((p) => p.toArray()), (u) => 0.3 + r * 0.045 * (1 - u), { tubular: 16, radial: 6 }));
+      parts.push(tubeGeo(bpts.map((p) => p.toArray()), (u) => 0.3 + r * 0.045 * (1 - u), { tubular: lod.n(16), radial: lod.r(6) }));
     }
   });
   return mergeGeos(parts);
@@ -552,9 +622,16 @@ function neuronGeometry(r, nDend, rng, { stretch = [1.12, 0.92, 0.94], branches 
 
 // ---------------------------------------------------------------- the scene
 export class HypoScene {
-  constructor(canvas) {
+  /**
+   * theme: "light" (Cream) | "dark" (Forest night); lite: the lighter phone build (see LOD_LITE);
+   * power: the WebGL power preference. "default" for the figure (a figure on a web page shouldn't wake a
+   * laptop's discrete GPU); the Ongoing Care deck's <hypo-3d> passes "high-performance" (a full-screen slide).
+   */
+  constructor(canvas, { theme = "light", lite = false, power = "default" } = {}) {
     this.canvas = canvas;
-    const renderer = new WebGLRenderer({ canvas, alpha: true, antialias: true, premultipliedAlpha: true, powerPreference: "high-performance", preserveDrawingBuffer: false });
+    this.T = THEMES[theme] || CREAM;
+    this.lod = lite ? LOD_LITE : LOD_FULL;
+    const renderer = new WebGLRenderer({ canvas, alpha: true, antialias: true, premultipliedAlpha: true, powerPreference: power, preserveDrawingBuffer: false });
     renderer.setClearColor(0x000000, 0);
     renderer.autoClear = false;
     renderer.toneMapping = NeutralToneMapping;
@@ -564,19 +641,34 @@ export class HypoScene {
     renderer.shadowMap.autoUpdate = false;
     renderer.shadowMap.needsUpdate = true;
     renderer.info.autoReset = false;
+    // three's per-program error logs make the first frame wait on the GPU for every shader (a long task on a
+    // phone). linked() checks every program's status instead, once the parallel compile has finished.
+    renderer.debug.checkShaderErrors = false;
     this.renderer = renderer;
 
     this.camera = new PerspectiveCamera(30, 1, 300, 4000);
     this.target = new Vector3(...W(300, 380, -48));
-    this.dist = 980;
+    this.dist = 980; // the deck's framing; fit() reframes it for the figure's stage
+    // the specimen's outline for fit(): the block's eight corners, the bony cup and the optic nerve stump
+    this.keyPts = [];
+    for (const x of [AN.BX0, AN.BX1]) for (const y of [AN.BY0, 449]) for (const z of [AN.ZF, AN.ZB]) this.keyPts.push(V3([x, y, z]));
+    for (const z of [AN.SELLA.z0, AN.SELLA.z1]) for (const p of [[231, 502], [378, 482], [306, 582], [254, 566], [358, 562]]) this.keyPts.push(V3([p[0], p[1] - AN.SELLA.lift * 0.5, z]));
+    this.keyPts.push(V3([46, 438, -21]));
 
     this.opaque = new Scene();
     this.back = new Scene();
     this.comp = new Scene();
 
     this._rt(2, 2);
-    this._build();
+    this.ready = false; // init() builds the scene in steps, so the page never waits on one long task
+  }
+
+  /** Build everything, yielding to the page between steps (each is a short task, even on a phone). */
+  async init() {
+    await this._build();
+    await yieldTask();
     this._initEnv();
+    this.ready = true;
   }
 
   _rt(w, h) {
@@ -587,9 +679,9 @@ export class HypoScene {
 
   _initEnv() {
     if (this.envRT) this.envRT.dispose();
-    this.envRT = buildEnv(this.renderer);
+    this.envRT = buildEnv(this.renderer, this.T.env);
     this.opaque.environment = this.envRT.texture;
-    this.opaque.environmentIntensity = 0.85;
+    this.opaque.environmentIntensity = this.T.env.intensity;
     this.renderer.shadowMap.needsUpdate = true;
   }
 
@@ -598,48 +690,53 @@ export class HypoScene {
     this._initEnv();
   }
 
-  _build() {
+  async _build() {
     const O = this.opaque;
+    const T = this.T;
+    const P = T.pal;
+    const L = this.lod;
     const rng = makeRng(23);
     const fibre = fibreTexture();
     this._disposables = [fibre];
 
     // lights: a warm key from the upper left front (A2's light), a cool rim, a soft sky fill
-    const key = new DirectionalLight("#fff4ea", 2.5);
+    const key = new DirectionalLight(T.key[0], T.key[1]);
     this.keyDir = new Vector3(-0.55, 0.7, 0.45).normalize();
     const pitTarget = new Vector3(...W(305, 520, 0));
     key.position.copy(pitTarget).addScaledVector(this.keyDir, 700);
     key.target.position.copy(pitTarget);
     key.castShadow = true;
-    key.shadow.mapSize.set(2048, 2048);
+    key.shadow.mapSize.set(L.lite ? 1024 : 2048, L.lite ? 1024 : 2048);
     Object.assign(key.shadow.camera, { left: -150, right: 150, top: 150, bottom: -150, near: 400, far: 1000 });
     key.shadow.bias = -0.0004;
     key.shadow.normalBias = 0.8;
     O.add(key, key.target);
-    const rim = new DirectionalLight("#eef1ff", 1.0);
+    const rim = new DirectionalLight(T.rim[0], T.rim[1]);
     rim.position.set(0.5, 0.45, -0.75).multiplyScalar(800);
     O.add(rim);
-    O.add(new HemisphereLight("#fffaf2", "#ead8d0", 0.35));
+    O.add(new HemisphereLight(T.hemi[0], T.hemi[1], T.hemi[2]));
 
     // ---- materials
+    // the theme overrides colours (and a few glow strengths) per material; the shapes and finishes stay
+    const X = (name, o) => physMat({ ...o, ...(T.mat[name] || {}) });
     const M = {
-      white: physMat({ color: "#f5e7e2", roughness: 0.48, clearcoat: 0.3, clearcoatRoughness: 0.32, sheen: 0.5, sheenColor: "#ffffff", sheenRoughness: 0.4, sss: "#efc0c2", sssWrap: 0.7, sssBack: 0.15, bumpMap: fibre, bumpScale: 0.9 }),
-      vessel: physMat({ color: PAL.vessel, roughness: 0.3, clearcoat: 0.9, clearcoatRoughness: 0.14, sss: "#ff5a5a", sssWrap: 0.45, sssBack: 0.2 }),
-      mamm: physMat({ color: PAL.mamm, roughness: 0.5, clearcoat: 0.35, clearcoatRoughness: 0.3, sheen: 0.4, sheenColor: "#fff0f2", sss: "#f19aa8", sssWrap: 0.7, bump: 0.9, bumpFreq: 0.13, mottle: 0.18 }),
-      stalk: physMat({ color: PAL.stalk, roughness: 0.45, clearcoat: 0.6, clearcoatRoughness: 0.24, sheen: 0.45, sheenColor: "#fff0f3", sss: "#f08e9e", sssWrap: 0.75, sssBack: 0.25, bump: 0.5, bumpFreq: 0.18, mottle: 0.2, mottleFreq: 0.08 }),
-      ant: physMat({ color: PAL.ant, roughness: 0.44, clearcoat: 0.7, clearcoatRoughness: 0.2, sheen: 0.4, sheenColor: "#ffe5ec", sss: "#ff7f95", sssWrap: 0.75, sssBack: 0.3, bump: 0.9, bumpFreq: 0.22, mottle: 0.32, mottleFreq: 0.05 }),
-      post: physMat({ color: PAL.gland, roughness: 0.48, clearcoat: 0.62, clearcoatRoughness: 0.24, sheen: 0.4, sheenColor: "#fff2f4", sss: "#f39aab", sssWrap: 0.75, sssBack: 0.3, bump: 0.7, bumpFreq: 0.24, mottle: 0.22, mottleFreq: 0.06 }),
-      bone: physMat({ color: PAL.bone, roughness: 0.6, clearcoat: 0.2, clearcoatRoughness: 0.42, sheen: 0.2, sheenColor: "#fffaf0", sss: "#efd2ae", sssWrap: 0.45, bump: 0.9, bumpFreq: 0.12, pores: 0.5, mottle: 0.16, mottleFreq: 0.05 }),
-      boneCut: physMat({ color: PAL.boneCut, roughness: 0.78, clearcoat: 0.08, sss: "#efd2ae", sssWrap: 0.4, bump: 1.6, bumpFreq: 0.3, pores: 2.2 }),
-      kndy: physMat({ color: "#661561", roughness: 0.4, clearcoat: 0.55, clearcoatRoughness: 0.09, env: 0.42, sss: "#b81f92", sssWrap: 0.5, sssBack: 0.3, core: "#d77ccd", coreAmt: 0.07, corePow: 5, emissive: PAL.kndyGlow, emissiveIntensity: 0, bump: 0.35, bumpFreq: 0.45 }),
-      mn: physMat({ color: "#0d6e4e", roughness: 0.4, clearcoat: 0.55, clearcoatRoughness: 0.09, env: 0.42, sss: "#18a877", sssWrap: 0.5, sssBack: 0.3, core: "#9fe3c8", coreAmt: 0.06, corePow: 5, emissive: PAL.hot, emissiveIntensity: 0, bump: 0.35, bumpFreq: 0.5 }),
-      rec: physMat({ color: PAL.rec, roughness: 0.32, clearcoat: 0.6, clearcoatRoughness: 0.15, env: 0.5 }),
-      axon: physMat({ color: "#8d3a86", roughness: 0.4, clearcoat: 0.4, clearcoatRoughness: 0.2, env: 0.55, sss: "#e04cc0", sssWrap: 0.5 }),
-      out: physMat({ color: PAL.out, roughness: 0.4, clearcoat: 0.4, clearcoatRoughness: 0.25, sss: "#59e0b0", sssWrap: 0.6, emissive: PAL.hot, emissiveIntensity: 0 }),
-      estro: physMat({ color: PAL.estro, roughness: 0.28, clearcoat: 1, clearcoatRoughness: 0.12, flatShading: true, emissive: "#c98a00", emissiveIntensity: 0.18, sss: "#ffcf5a", sssWrap: 0.5 }),
-      nkb: new MeshStandardMaterial({ color: PAL.nkb, roughness: 0.3, emissive: PAL.nkb, emissiveIntensity: 0.9 }),
-      pulse: new MeshStandardMaterial({ color: PAL.hot, roughness: 0.3, emissive: PAL.hot, emissiveIntensity: 1.1 }),
-      speck: new MeshStandardMaterial({ color: "#a77aa6", roughness: 0.55 }),
+      white: X("white", { color: "#f5e7e2", roughness: 0.48, clearcoat: 0.3, clearcoatRoughness: 0.32, sheen: 0.5, sheenColor: "#ffffff", sheenRoughness: 0.4, sss: "#efc0c2", sssWrap: 0.7, sssBack: 0.15, bumpMap: fibre, bumpScale: 0.9 }),
+      vessel: X("vessel", { color: P.vessel, roughness: 0.3, clearcoat: 0.9, clearcoatRoughness: 0.14, sss: "#ff5a5a", sssWrap: 0.45, sssBack: 0.2 }),
+      mamm: X("mamm", { color: P.mamm, roughness: 0.5, clearcoat: 0.35, clearcoatRoughness: 0.3, sheen: 0.4, sheenColor: "#fff0f2", sss: "#f19aa8", sssWrap: 0.7, bump: 0.9, bumpFreq: 0.13, mottle: 0.18 }),
+      stalk: X("stalk", { color: P.stalk, roughness: 0.45, clearcoat: 0.6, clearcoatRoughness: 0.24, sheen: 0.45, sheenColor: "#fff0f3", sss: "#f08e9e", sssWrap: 0.75, sssBack: 0.25, bump: 0.5, bumpFreq: 0.18, mottle: 0.2, mottleFreq: 0.08 }),
+      ant: X("ant", { color: P.ant, roughness: 0.44, clearcoat: 0.7, clearcoatRoughness: 0.2, sheen: 0.4, sheenColor: "#ffe5ec", sss: "#ff7f95", sssWrap: 0.75, sssBack: 0.3, bump: 0.9, bumpFreq: 0.22, mottle: 0.32, mottleFreq: 0.05 }),
+      post: X("post", { color: P.gland, roughness: 0.48, clearcoat: 0.62, clearcoatRoughness: 0.24, sheen: 0.4, sheenColor: "#fff2f4", sss: "#f39aab", sssWrap: 0.75, sssBack: 0.3, bump: 0.7, bumpFreq: 0.24, mottle: 0.22, mottleFreq: 0.06 }),
+      bone: X("bone", { color: P.bone, roughness: 0.6, clearcoat: 0.2, clearcoatRoughness: 0.42, sheen: 0.2, sheenColor: "#fffaf0", sss: "#efd2ae", sssWrap: 0.45, bump: 0.9, bumpFreq: 0.12, pores: 0.5, mottle: 0.16, mottleFreq: 0.05 }),
+      boneCut: X("boneCut", { color: P.boneCut, roughness: 0.78, clearcoat: 0.08, sss: "#efd2ae", sssWrap: 0.4, bump: 1.6, bumpFreq: 0.3, pores: 2.2 }),
+      kndy: X("kndy", { color: "#661561", roughness: 0.4, clearcoat: 0.55, clearcoatRoughness: 0.09, env: 0.42, sss: "#b81f92", sssWrap: 0.5, sssBack: 0.3, core: "#d77ccd", coreAmt: 0.07, corePow: 5, emissive: P.kndyGlow, emissiveIntensity: 0, bump: 0.35, bumpFreq: 0.45 }),
+      mn: X("mn", { color: "#0d6e4e", roughness: 0.4, clearcoat: 0.55, clearcoatRoughness: 0.09, env: 0.42, sss: "#18a877", sssWrap: 0.5, sssBack: 0.3, core: "#9fe3c8", coreAmt: 0.06, corePow: 5, emissive: P.hot, emissiveIntensity: 0, bump: 0.35, bumpFreq: 0.5 }),
+      rec: X("rec", { color: P.rec, roughness: 0.32, clearcoat: 0.6, clearcoatRoughness: 0.15, env: 0.5 }),
+      axon: X("axon", { color: "#8d3a86", roughness: 0.4, clearcoat: 0.4, clearcoatRoughness: 0.2, env: 0.55, sss: "#e04cc0", sssWrap: 0.5 }),
+      out: X("out", { color: P.out, roughness: 0.4, clearcoat: 0.4, clearcoatRoughness: 0.25, sss: "#59e0b0", sssWrap: 0.6, emissive: P.hot, emissiveIntensity: 0 }),
+      estro: X("estro", { color: P.estro, roughness: 0.28, clearcoat: 1, clearcoatRoughness: 0.12, flatShading: true, emissive: "#c98a00", emissiveIntensity: 0.18, sss: "#ffcf5a", sssWrap: 0.5 }),
+      nkb: new MeshStandardMaterial({ color: P.nkb, roughness: 0.3, emissive: P.nkb, emissiveIntensity: 0.9 }),
+      pulse: new MeshStandardMaterial({ color: P.hot, roughness: 0.3, emissive: P.hot, emissiveIntensity: 1.1 }),
+      speck: new MeshStandardMaterial({ color: T.speckMesh, roughness: 0.55 }),
     };
     this.M = M;
     const add = (geo, mat, o = {}) => {
@@ -650,54 +747,58 @@ export class HypoScene {
       return m;
     };
 
+    await yieldTask();
     // ---- white matter: fornix (cut at the top face), anterior commissure (cut at front and back),
     // optic chiasm with the nerve stump and the optic tract (cut at the back end)
     const F = AN.FORNIX;
     const fpts = F.pts.map((p, i) => (i === 0 ? [p[0], AN.BY0 + 0.6, p[2]] : p));
-    add(tubeGeo(wpts(fpts), (u) => F.r0 + (F.r1 - F.r0) * Math.pow(u, 0.9) + 1.2 * Math.sin(u * Math.PI) * 0.5, { tubular: 110, radial: 22, capStart: true }), M.white);
-    add(tubeGeo(wpts(AN.AC.pts.map((p, i, a) => (i === 0 ? [p[0], p[1], AN.ZF - 0.6] : i === a.length - 1 ? [p[0], p[1], AN.ZB + 0.6] : p))), (u) => AN.AC.r * (1 - 0.12 * Math.sin(u * Math.PI)), { tubular: 48, radial: 22, capStart: true, capEnd: true }), M.white);
+    add(tubeGeo(wpts(fpts), (u) => F.r0 + (F.r1 - F.r0) * Math.pow(u, 0.9) + 1.2 * Math.sin(u * Math.PI) * 0.5, { tubular: L.n(110), radial: L.r(22), capStart: true }), M.white);
+    add(tubeGeo(wpts(AN.AC.pts.map((p, i, a) => (i === 0 ? [p[0], p[1], AN.ZF - 0.6] : i === a.length - 1 ? [p[0], p[1], AN.ZB + 0.6] : p))), (u) => AN.AC.r * (1 - 0.12 * Math.sin(u * Math.PI)), { tubular: L.n(48), radial: L.r(22), capStart: true, capEnd: true }), M.white);
     // optic chiasm: the nerves (cut stumps, forward) cross into the tracts (cut short, back)
-    const optic = [blobGeo(AN.CHIASM.r, rng, { amp: 0.04, center: W(...AN.CHIASM.c) })];
-    for (const path of [...AN.NERVES, ...AN.TRACTS]) optic.push(tubeGeo(wpts(path.pts), path.r, { tubular: 24, radial: 18, capEnd: true }));
+    const optic = [blobGeo(AN.CHIASM.r, rng, { amp: 0.04, detail: L.detail(3), center: W(...AN.CHIASM.c) })];
+    for (const path of [...AN.NERVES, ...AN.TRACTS]) optic.push(tubeGeo(wpts(path.pts), path.r, { tubular: L.n(24), radial: L.r(18), capEnd: true }));
     add(mergeGeos(optic), M.white);
-    add(blobGeo([AN.MAMM.r, AN.MAMM.r * 0.94, AN.MAMM.r * 0.9], rng, { amp: 0.04, center: W(...AN.MAMM.c) }), M.mamm);
+    add(blobGeo([AN.MAMM.r, AN.MAMM.r * 0.94, AN.MAMM.r * 0.9], rng, { amp: 0.04, detail: L.detail(3), center: W(...AN.MAMM.c) }), M.mamm);
 
+    await yieldTask();
     // ---- vessels: A2's three in the slice (wandering in depth), deep penetrating vessels,
     // the median eminence's portal loops and the long portal vessels down the stalk
     const vessels = [];
-    AN.VESSEL_LINES.forEach((v, i) => vessels.push(tubeGeo(wpts(v), (u) => (i === 2 ? 2.1 : 2.7) - 0.8 * u, { tubular: 60, radial: 10, capStart: true })));
-    AN.DEEP_VESSELS.forEach((v) => vessels.push(tubeGeo(wpts(v), 2.4, { tubular: 50, radial: 8 })));
-    AN.LOOPS.forEach((v) => vessels.push(tubeGeo(wpts(v), 1.05, { tubular: 28, radial: 8 })));
-    AN.PORTAL.forEach((v) => vessels.push(tubeGeo(wpts(v), (u) => 1.25 - 0.55 * u, { tubular: 60, radial: 8 })));
+    AN.VESSEL_LINES.forEach((v, i) => vessels.push(tubeGeo(wpts(v), (u) => (i === 2 ? 2.1 : 2.7) - 0.8 * u, { tubular: L.n(60), radial: L.r(10), capStart: true })));
+    AN.DEEP_VESSELS.forEach((v) => vessels.push(tubeGeo(wpts(v), 2.4, { tubular: L.n(50), radial: L.r(8) })));
+    AN.LOOPS.forEach((v) => vessels.push(tubeGeo(wpts(v), 1.05, { tubular: L.n(28), radial: L.r(8) })));
+    AN.PORTAL.forEach((v) => vessels.push(tubeGeo(wpts(v), (u) => 1.25 - 0.55 * u, { tubular: L.n(60), radial: L.r(8) })));
     add(mergeGeos(vessels), M.vessel);
 
+    await yieldTask();
     // ---- the base: median eminence, stalk, anterior and posterior lobes, the bony cup
-    add(tubeGeo(wpts(AN.STALK.pts), AN.STALK.r, { tubular: 40, radial: 28 }), M.stalk, { cast: true, recv: true });
+    add(tubeGeo(wpts(AN.STALK.pts), AN.STALK.r, { tubular: L.n(40), radial: L.r(28) }), M.stalk, { cast: true, recv: true });
     // anterior lobe: a broad bean (wider side to side), posterior lobe: smaller and rounder
-    add(blobGeo(AN.LOBE_ANT.r, rng, { amp: 0.045, detail: 4, center: W(...AN.LOBE_ANT.c), shape: (x, y, z) => 1 - 0.07 * Math.max(0, x) * Math.max(0, y) + 0.035 * Math.sin(x * 4.1 + z * 2.3) * Math.sin(y * 3.7 + 1.1) }), M.ant, { cast: true, recv: true });
-    add(blobGeo(AN.LOBE_POST.r, rng, { amp: 0.04, detail: 4, center: W(...AN.LOBE_POST.c) }), M.post, { cast: true, recv: true });
+    add(blobGeo(AN.LOBE_ANT.r, rng, { amp: 0.045, detail: L.detail(4), center: W(...AN.LOBE_ANT.c), shape: (x, y, z) => 1 - 0.07 * Math.max(0, x) * Math.max(0, y) + 0.035 * Math.sin(x * 4.1 + z * 2.3) * Math.sin(y * 3.7 + 1.1) }), M.ant, { cast: true, recv: true });
+    add(blobGeo(AN.LOBE_POST.r, rng, { amp: 0.04, detail: L.detail(4), center: W(...AN.LOBE_POST.c) }), M.post, { cast: true, recv: true });
     const loop = closedLoop([...AN.SELLA_IN, [376, 476], ...AN.SELLA_OUT, [230, 494]], 96).map(([x, y]) => [x - AN.CX, AN.CY - y]);
     const sella = sweepGeo(loop, AN.SELLA.z0, AN.SELLA.z1, { slices: 30, lift: (zn) => -AN.SELLA.lift * zn * zn, taper: (zn) => 1 - 0.035 * zn * zn, cx: 306 - AN.CX, separate: true });
     add(sella.walls, M.bone, { cast: true, recv: true });
     add(sella.caps, M.boneCut, { recv: true });
 
+    await yieldTask();
     // ---- KNDy cells (8) and the heat-loss centre (6)
     this.kndy = AN.KNDY_POS.map((p, i) => {
       const g = new Group();
       g.position.copy(V3(p));
-      const m = new Mesh(neuronGeometry(KR, 4, makeRng(100 + i)), M.kndy);
+      const m = new Mesh(neuronGeometry(KR, 4, makeRng(100 + i), { lod: L }), M.kndy);
       g.add(m);
       O.add(g);
       return g;
     });
     this.mnpo = AN.MNPO_POS.map((p, i) => {
-      const m = new Mesh(neuronGeometry(MR, 3, makeRng(200 + i), { branches: 1 }), M.mn);
+      const m = new Mesh(neuronGeometry(MR, 3, makeRng(200 + i), { branches: 1, lod: L }), M.mn);
       m.position.copy(V3(p));
       O.add(m);
       return m;
     });
     // NK3 receptor dots on the heat-loss neurons (A2: 6 per cell)
-    const recGeo = blobGeo([1.9, 1.9, 1.9], rng, { amp: 0, detail: 2 });
+    const recGeo = blobGeo([1.9, 1.9, 1.9], rng, { amp: 0, detail: L.detail(2) });
     const rec = new InstancedMesh(recGeo, M.rec, AN.MNPO_POS.length * 6);
     const mtx = new Matrix4();
     let ri = 0;
@@ -712,10 +813,11 @@ export class HypoScene {
     O.add(rec);
     this.rec = rec;
 
+    await yieldTask();
     // ---- axons: 4 beaded KNDy → MnPO, 3 short to the median eminence; the heat-loss output
     const pathPts = (m) => m.pts.map((p, i) => W(p[0], p[1], m.zs[i]));
-    add(mergeGeos([...AN.AXONS, ...AN.DOWN].map((m) => tubeGeo(pathPts(m), 1.15, { tubular: Math.max(24, m.pts.length * 2), radial: 7 }))), M.axon);
-    const beadGeo = blobGeo([1, 1, 1], rng, { amp: 0, detail: 2 });
+    add(mergeGeos([...AN.AXONS, ...AN.DOWN].map((m) => tubeGeo(pathPts(m), 1.15, { tubular: L.n(Math.max(24, m.pts.length * 2)), radial: L.r(7) }))), M.axon);
+    const beadGeo = blobGeo([1, 1, 1], rng, { amp: 0, detail: L.detail(2) });
     const beadPos = AN.AXONS.flatMap((m) => m.pts.map((p, i) => [p[0], p[1], m.zs[i], i]).filter((q) => q[3] % 6 === 3));
     const beads = new InstancedMesh(beadGeo, M.axon, beadPos.length);
     beadPos.forEach((q, i) => {
@@ -735,10 +837,11 @@ export class HypoScene {
         break;
       }
     }
-    add(tubeGeo(outPts, 1.25, { tubular: 80, radial: 7, capEnd: true }), M.out);
+    add(tubeGeo(outPts, 1.25, { tubular: L.n(80), radial: L.r(7), capEnd: true }), M.out);
 
+    await yieldTask();
     // ---- moving parts (instanced): neurokinin-B packets, heat-loss pulses, estrogen, glial speckle
-    const ball = blobGeo([1, 1, 1], rng, { amp: 0, detail: 2 });
+    const ball = blobGeo([1, 1, 1], rng, { amp: 0, detail: L.detail(2) });
     this.packets = new InstancedMesh(ball, M.nkb, 96);
     this.pulses = new InstancedMesh(ball, M.pulse, 48);
     const hex = new CylinderGeometry(1, 1, 0.62, 6, 1);
@@ -751,7 +854,7 @@ export class HypoScene {
     }
     // glial nuclei through the depth of the block (they fade with depth: the strongest depth cue)
     const speckN = 420;
-    const speck = new InstancedMesh(blobGeo([1, 1, 1], rng, { amp: 0, detail: 1 }), M.speck, speckN);
+    const speck = new InstancedMesh(blobGeo([1, 1, 1], rng, { amp: 0, detail: L.detail(1) }), M.speck, speckN);
     const srng = makeRng(77);
     for (let i = 0; i < speckN; i++) {
       const x = AN.BX0 + 4 + srng() * (AN.BX1 - AN.BX0 - 8);
@@ -764,7 +867,7 @@ export class HypoScene {
     O.add(speck);
 
     // ---- contact shadow on an implied ground below the sella
-    const shadowTex = shadowTexture();
+    const shadowTex = shadowTexture(T.shadow);
     this._disposables.push(shadowTex);
     const ground = new Mesh(new PlaneGeometry(720, 450), new MeshBasicMaterial({ map: shadowTex, transparent: true, depthWrite: false, toneMapped: false }));
     ground.rotation.x = -Math.PI / 2;
@@ -772,6 +875,7 @@ export class HypoScene {
     ground.renderOrder = 10;
     O.add(ground);
 
+    await yieldTask();
     // ---- block passes
     const bgeo = blockGeometry();
     this.blockGeo = bgeo;
@@ -783,13 +887,15 @@ export class HypoScene {
     quad.frustumCulled = false;
     quad.renderOrder = 0;
     this.comp.add(quad);
-    const glowCol = [lin("#b81c95"), lin("#1f9c70"), lin("#f0822a")];
+    const glowCol = T.glow.map(lin);
     this.blockU = {
       tColor: { value: null }, tDepth: { value: null }, tBack: { value: null },
       uRes: { value: new Vector2(1, 1) }, uNear: { value: this.camera.near }, uFar: { value: this.camera.far }, uDpr: { value: 1 },
-      uSigma: { value: 0.0090 }, uOnset: { value: 85 }, uBlur: { value: 0.028 },
-      uTissueA: { value: lin("#f9e7e9") }, uTissueB: { value: lin("#e8b6bf") }, uFrost: { value: lin(PAL.frost) }, uEdge: { value: lin(PAL.edge) }, uSpeck: { value: lin(PAL.speck) }, uWhite: { value: lin("#fffaf6") },
-      uKeyDir: { value: this.keyDir.clone() }, uAmb: { value: 0.7 }, uKey: { value: 0.52 },
+      uSigma: { value: T.block.uSigma }, uOnset: { value: T.block.uOnset }, uBlur: { value: T.block.uBlur },
+      uTissueA: { value: lin(T.block.tissueA) }, uTissueB: { value: lin(T.block.tissueB) }, uFrost: { value: lin(P.frost) }, uEdge: { value: lin(P.edge) }, uSpeck: { value: lin(P.speck) }, uWhite: { value: lin(T.block.white) },
+      uKeyDir: { value: this.keyDir.clone() }, uAmb: { value: T.block.uAmb }, uKey: { value: T.block.uKey },
+      uSpec: { value: T.block.uSpec }, uFrostK: { value: T.block.uFrostK }, uEdgeK: { value: T.block.uEdgeK }, uSpeckK: { value: T.block.uSpeckK },
+      uBack: { value: T.block.uBack || 0 }, uBackCol: { value: lin(T.block.backCol || "#000000") },
       uGlowPos: { value: [new Vector3(), new Vector3(), new Vector3()] }, uGlowCol: { value: glowCol }, uGlowAmt: { value: [0, 0, 0] }, uGlowRad: { value: [30, 40, 90] },
     };
     const blockMat = new ShaderMaterial({ vertexShader: BLOCK_VS, fragmentShader: BLOCK_FS, uniforms: this.blockU, blending: NoBlending, depthTest: true, depthWrite: true, side: FrontSide });
@@ -824,10 +930,12 @@ export class HypoScene {
     // eased display state
     this.hotK = 0;
     this.blockK = 0;
-    this.colMn = lin("#0d6e4e");
-    this.colHot = lin(PAL.hot);
-    this.colRec = lin(PAL.rec);
-    this.colRecOff = lin(PAL.recOff);
+    this.colMn = lin(T.mnBase);
+    this.colHot = lin(P.hot);
+    this.colRec = lin(P.rec);
+    this.colRecOff = lin(P.recOff);
+    this.haloNkb = lin(T.halo.nkb);
+    this.haloHot = lin(T.halo.hot);
     this.kCenter = AN.KNDY_POS.reduce((a, p) => [a[0] + p[0] / 8, a[1] + p[1] / 8, a[2] + p[2] / 8], [0, 0, 0]);
     this._tmpQ = new Quaternion();
     this._tmpE = new Euler();
@@ -862,6 +970,62 @@ export class HypoScene {
     c.updateMatrixWorld();
   }
 
+  /**
+   * Frame the specimen for the figure's stage: at the rest view (yaw, pitch), move the camera so the
+   * specimen's outline (keyPts) fits inside `box`, given as fractions of the canvas [x0, y0, x1, y1],
+   * centred. A few fixed-point steps: perspective makes the outline's size depend on the distance.
+   */
+  fit(box, yaw, pitch) {
+    if (!box || !this.w || !this.h) return;
+    const cam = this.camera;
+    const v = this._tmpV;
+    const right = new Vector3();
+    const up = new Vector3();
+    for (let it = 0; it < 6; it++) {
+      this.setView(yaw, pitch);
+      let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+      for (const p of this.keyPts) {
+        v.copy(p).project(cam);
+        const sx = (v.x + 1) / 2, sy = (1 - v.y) / 2;
+        x0 = Math.min(x0, sx);
+        x1 = Math.max(x1, sx);
+        y0 = Math.min(y0, sy);
+        y1 = Math.max(y1, sy);
+      }
+      const hW = 2 * this.dist * Math.tan((cam.fov * Math.PI) / 360);
+      right.setFromMatrixColumn(cam.matrixWorld, 0);
+      up.setFromMatrixColumn(cam.matrixWorld, 1);
+      this.target.addScaledVector(right, ((x0 + x1) / 2 - (box[0] + box[2]) / 2) * hW * cam.aspect).addScaledVector(up, -((y0 + y1) / 2 - (box[1] + box[3]) / 2) * hW);
+      this.dist *= Math.max((x1 - x0) / (box[2] - box[0]), (y1 - y0) / (box[3] - box[1]));
+    }
+    this.setView(yaw, pitch);
+  }
+
+  /** Compile every shader up front, without blocking the page where the browser can (KHR_parallel_shader_compile). */
+  async compile() {
+    const r = this.renderer;
+    if (typeof r.compileAsync !== "function") return;
+    // each scene against the target it really renders into: the solids and the depth pass draw into float
+    // targets (linear, not tone-mapped), the composite onto the canvas, and those are different programs
+    const was = r.getRenderTarget();
+    for (const [sc, rt] of [[this.opaque, this.rtO], [this.back, this.rtB], [this.comp, null]]) {
+      r.setRenderTarget(rt);
+      try {
+        await r.compileAsync(sc, this.camera);
+      } catch (_) {
+        // a shader that can't compile shows up as a failed first frame instead
+      }
+    }
+    r.setRenderTarget(was);
+  }
+
+  /** True when every shader program compiled and linked (false sends the figure back to its SVG). */
+  linked() {
+    const gl = this.renderer.getContext();
+    if (!gl || gl.isContextLost()) return false;
+    return this.renderer.info.programs.every((p) => !p.program || gl.getProgramParameter(p.program, gl.LINK_STATUS));
+  }
+
   /** Light travel through the block from a point inside it toward the camera (for halos). */
   _haze(p) {
     const c = this.camera.position;
@@ -885,8 +1049,9 @@ export class HypoScene {
     // KNDy cells: size from the model (diameter × √area), burst glow (A2: 0.18 + 0.82 × glow)
     for (const g of this.kndy) g.scale.setScalar(s.scale);
     const kg = 0.18 + 0.82 * sim.glow;
-    this.M.kndy.emissiveIntensity = 0.55 * sim.glow;
-    this.M.kndy.userData.u.uCoreAmt.value = 0.2 + 0.25 * sim.glow;
+    const KG = this.T.kGlow;
+    this.M.kndy.emissiveIntensity = KG.emissive * sim.glow;
+    this.M.kndy.userData.u.uCoreAmt.value = KG.core[0] + KG.core[1] * sim.glow;
     // heat-loss centre: orange in a flash (A2 'a2-hot', 0.4 s transition), greyed receptors under a blocker
     this.hotK = ease(this.hotK, sim.hot() ? 1 : 0, 0.16);
     this.blockK = ease(this.blockK, sim.block ? 1 : 0, 0.35);
@@ -895,8 +1060,8 @@ export class HypoScene {
       const l = mc.r * 0.2126 + mc.g * 0.7152 + mc.b * 0.0722;
       mc.lerp(new Color(l, l, l), 0.45 * this.blockK);
     }
-    this.M.mn.emissiveIntensity = 0.5 * this.hotK;
-        this.M.rec.color.copy(this.colRec).lerp(this.colRecOff, this.blockK);
+    this.M.mn.emissiveIntensity = KG.mnHot * this.hotK;
+    this.M.rec.color.copy(this.colRec).lerp(this.colRecOff, this.blockK);
     this.M.out.emissiveIntensity = 0.25 * sim.heat();
 
     // glows inside the tissue (view space)
@@ -905,21 +1070,22 @@ export class HypoScene {
     const total = sim.total();
     U.uGlowPos.value[0].copy(V3(this.kCenter)).applyMatrix4(view);
     U.uGlowRad.value[0] = 30 * s.scale;
-    U.uGlowAmt.value[0] = 0.42 * kg;
+    U.uGlowAmt.value[0] = 0.42 * kg * this.T.glowK[0];
     U.uGlowPos.value[1].copy(V3([186, 234, -11])).applyMatrix4(view);
     U.uGlowRad.value[1] = 40;
-    U.uGlowAmt.value[1] = 0.5 * (0.12 + 0.7 * Math.min(1, total));
+    U.uGlowAmt.value[1] = 0.5 * (0.12 + 0.7 * Math.min(1, total)) * this.T.glowK[1];
     U.uGlowPos.value[2].copy(V3([186, 234, -14])).applyMatrix4(view);
     U.uGlowRad.value[2] = 92;
-    U.uGlowAmt.value[2] = 0.85 * sim.heat();
+    U.uGlowAmt.value[2] = 0.85 * sim.heat() * this.T.glowK[2];
 
     // packets (A2 radii 2.8 to the heat-loss centre, 2.2 to the median eminence)
     const mtx = this._mtx;
     const pt = [0, 0, 0];
     let n = 0, h = 0;
     const hP = this.hPos.array, hS = this.hSize.array, hC = this.hCol.array;
-    const nkb = lin(PAL.nkb);
-    const hot = lin("#ff8a2a");
+    const nkb = this.haloNkb;
+    const hot = this.haloHot;
+    const hk = this.T.halo.k;
     const pushHalo = (p, size, c, a) => {
       if (h >= this.haloMax) return;
       hP[h * 3] = p.x;
@@ -939,7 +1105,7 @@ export class HypoScene {
       const v = V3(pt);
       mtx.makeScale(r, r, r).setPosition(v);
       this.packets.setMatrixAt(n++, mtx);
-      pushHalo(v, r * 5.2, nkb, 0.46 * this._haze(v));
+      pushHalo(v, r * 5.2, nkb, 0.46 * hk * this._haze(v));
     }
     this.packets.count = n;
     this.packets.instanceMatrix.needsUpdate = true;
@@ -950,7 +1116,7 @@ export class HypoScene {
       const v = V3(pt);
       mtx.makeScale(3.4, 3.4, 3.4).setPosition(v);
       this.pulses.setMatrixAt(n++, mtx);
-      pushHalo(v, 20, hot, 0.55 * this._haze(v));
+      pushHalo(v, 20, hot, 0.55 * hk * this._haze(v));
     }
     this.pulses.count = n;
     this.pulses.instanceMatrix.needsUpdate = true;

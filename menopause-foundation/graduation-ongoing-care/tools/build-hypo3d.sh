@@ -10,7 +10,11 @@ set -euo pipefail
 
 ROUTE="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROUTE"
-export PATH="$HOME/.nvm/versions/node/v22.22.0/bin:$PATH"
+export PATH="$HOME/.nvm/versions/node/v22.23.4/bin:$PATH"
+
+# The 3-D brain's files in src/a2/ are copies of the master in optimal-anatomy-figures (tools/sync-hypo3d.mjs).
+# Refuse to build if one was edited here: the fix belongs in the master, then a sync.
+node tools/sync-hypo3d.mjs --check
 
 THREE_VERSION="0.186.1"
 ESBUILD_VERSION="0.25.10"

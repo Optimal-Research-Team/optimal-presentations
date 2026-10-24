@@ -2,7 +2,11 @@
 //
 // A block of cleared hypothalamic tissue, cut at the midline: KNDy cells at the base signal the
 // heat-loss centre (MnPO) by the lamina terminalis; estrogen from the vessels keeps them small
-// and quiet. Four states, the same numbers and logic as A2 (src/hypo3d-model.js).
+// and quiet. Four states, the same numbers and logic as A2.
+//
+// The 3-D brain itself (model, anatomy, geometry, scene) is NOT kept here: src/a2/ holds copies of the master
+// files in optimal-anatomy-figures/figures/a2-hypothalamus, written by tools/sync-hypo3d.mjs. Change the brain
+// there, then sync. This file is only the deck's wrapper: the element, slide play/pause, tour, drag and print.
 //
 //   <hypo-3d stage="before" autotour></hypo-3d>
 //   el.stage = "after" | "therapy" | "nonhormonal" | "before"; el.play(); el.pause();
@@ -10,9 +14,10 @@
 //   events: hypo-stage {stage}, hypo-flash {on}
 //
 // No network, no storage: everything is generated in code.
-import { HypoScene } from "./hypo3d-scene.js";
-import { Sim, STAGES, STAGE_ORDER, KNDY, kndyOf, meanDrive } from "./hypo3d-model.js";
-import { SIM_ANATOMY } from "./hypo3d-anatomy.js";
+import { HypoScene } from "./a2/gl/hypo3d-scene.js";
+import { Sim, KNDY, kndyOf, meanDrive } from "./a2/gl/hypo3d-model.js";
+import { SIM_ANATOMY } from "./a2/gl/hypo3d-anatomy.js";
+import { STAGES, STAGE_ORDER } from "./hypo3d-stages.js";
 
 const DEG = Math.PI / 180;
 const VIEW = { yaw: 21 * DEG, pitch: 21 * DEG }; // a 3/4 view close to A2's (front, top and back end showing)
@@ -30,7 +35,7 @@ img{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-event
 const STOP_EVENTS = ["pointerdown", "pointerup", "pointermove", "pointercancel", "click", "dblclick", "mousedown", "mouseup", "touchstart", "touchend", "touchmove", "contextmenu", "wheel"];
 
 class Hypo3D extends HTMLElement {
-  /** Per-stage readouts, exactly A2's (live.js setState + build.mjs DATA.rate): see hypo3d-model.js. */
+  /** Per-stage readouts, exactly A2's (live.js setState + build.mjs DATA.rate): see hypo3d-stages.js. */
   static STAGES = STAGES;
   static STAGE_ORDER = STAGE_ORDER;
   static get observedAttributes() {
@@ -121,7 +126,8 @@ class Hypo3D extends HTMLElement {
   connectedCallback() {
     if (!this._scene) {
       try {
-        this._scene = new HypoScene(this._canvas);
+        // Cream is the deck's tuning; a full-screen slide may use the faster GPU
+        this._scene = new HypoScene(this._canvas, { theme: "light", power: "high-performance" });
       } catch (err) {
         this._scene = null;
         this._failed = true;
@@ -136,6 +142,26 @@ class Hypo3D extends HTMLElement {
       this._silent = true;
       for (let i = 0; i < 300; i++) this._sim.step(1 / 60);
       this._silent = false;
+      // The scene builds in short steps and compiles its shaders in parallel, so the page never waits on one long
+      // task. Nothing draws until it's ready; a still asked for before then is drawn as soon as it is.
+      this._ready = false;
+      this._scene
+        .init()
+        .then(() => this._scene.compile())
+        .then(() => {
+          this._ready = true;
+          this._w = 0;
+          this._resize();
+          const pending = this._pending;
+          this._pending = null;
+          if (pending) pending();
+          else if (this._reduceMQ.matches) this._still();
+          else this._kick();
+        })
+        .catch((err) => {
+          this._failed = true;
+          console.warn("<hypo-3d>: the 3-D scene could not be built", err);
+        });
       this._canvas.addEventListener("webglcontextlost", (e) => {
         e.preventDefault();
         this._lost = true;
@@ -190,7 +216,7 @@ class Hypo3D extends HTMLElement {
   }
   /** Render one crisp frame and show it as an <img> over the canvas (print never depends on WebGL). */
   snapshotForPrint() {
-    if (!this._scene || this._lost) return null;
+    if (!this._scene || this._lost || !this._ready) return null;
     if (this._q < 1) {
       // print at full resolution even if the live view had stepped down
       this._q = 1;
@@ -222,7 +248,7 @@ class Hypo3D extends HTMLElement {
   }
   /** Draw calls, triangles and a running fps estimate (for QA). */
   stats() {
-    return this._scene ? { ...this._scene.stats(), fps: Math.round(this._fps), width: this._w, height: this._h, dpr: +this._dpr.toFixed(2), meanDrive: { before: meanDrive(1), after: meanDrive(0) } } : null;
+    return this._scene && this._ready ? { ...this._scene.stats(), fps: Math.round(this._fps), width: this._w, height: this._h, dpr: +this._dpr.toFixed(2), meanDrive: { before: meanDrive(1), after: meanDrive(0) } } : null;
   }
   /**
    * Deterministic still for QA/screenshots: run the model `t` seconds from the stage's settled
@@ -230,6 +256,10 @@ class Hypo3D extends HTMLElement {
    */
   renderAt(t, { yaw = 0, pitch = 0 } = {}) {
     if (!this._scene) return;
+    if (!this._ready) {
+      this._pending = () => this.renderAt(t, { yaw, pitch });
+      return;
+    }
     this._frozen = true;
     this._halt();
     const st = STAGES[this._stage];
@@ -246,6 +276,10 @@ class Hypo3D extends HTMLElement {
   /** A2's reduced-motion still for the current stage (after: mid-flash; before: just after a burst). */
   renderStill(opts = {}) {
     if (!this._scene) return;
+    if (!this._ready) {
+      this._pending = () => this.renderStill(opts);
+      return;
+    }
     this._frozen = true;
     this._halt();
     if (opts.yaw !== undefined) this._drag.yaw = opts.yaw * DEG;
@@ -276,7 +310,7 @@ class Hypo3D extends HTMLElement {
     this._idleAt = performance.now();
   }
   _still() {
-    if (!this._scene) return;
+    if (!this._scene || !this._ready) return;
     this._silent = true;
     this._sim.still();
     this._silent = false;
@@ -285,7 +319,7 @@ class Hypo3D extends HTMLElement {
     this._renderFrame();
   }
   _resize() {
-    if (!this._scene) return;
+    if (!this._scene || !this._ready) return;
     const w = this.offsetWidth, h = this.offsetHeight;
     const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1) * this._q);
     if (!w || !h) return;
@@ -303,7 +337,7 @@ class Hypo3D extends HTMLElement {
     return getComputedStyle(this).visibility !== "hidden";
   }
   _shouldRun() {
-    return this._playing && !this._frozen && !this._lost && !!this._scene && !document.hidden && this.isConnected && !this._reduceMQ.matches;
+    return this._playing && !this._frozen && !this._lost && !!this._scene && this._ready && !document.hidden && this.isConnected && !this._reduceMQ.matches;
   }
   _kick() {
     if (this._raf || this._poll || !this._shouldRun()) return;
@@ -415,7 +449,7 @@ class Hypo3D extends HTMLElement {
     };
   }
   _renderFrame(dt = 0) {
-    if (!this._scene || this._lost || !this._w) return;
+    if (!this._scene || !this._ready || this._lost || !this._w) return;
     const v = this._view();
     this._scene.setView(v.yaw, v.pitch);
     this._scene.update(this._sim, dt);

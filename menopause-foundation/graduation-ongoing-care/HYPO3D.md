@@ -30,16 +30,28 @@ true depths and fade the deeper they sit:
 
 No text inside WebGL — the slide does all typography.
 
+## One master copy (since Oct 24, 2026)
+
+The 3-D brain itself (model, anatomy, geometry, scene) lives in **one place**: `optimal-anatomy-figures/figures/a2-hypothalamus/` (`model.mjs` and `gl/`). The same files drive figure A2 on the gallery, beoptimal.ca and the reception TV. This deck keeps only its wrapper.
+
+To change the 3-D brain:
+1. Edit the master in the anatomy repo, rebuild A2 (`bash gl/build-gl.sh`), and push.
+2. Here, run `node tools/sync-hypo3d.mjs`, then `bash tools/build-hypo3d.sh`.
+3. Check slide 3 (`tools/hypo3d-lab.html`), then commit `src/a2/` and `hypo3d.js` together.
+
+The build refuses to run if a file in `src/a2/` was edited here.
+
+**Merge check (Oct 24):** the deck now builds from the master. Its deterministic stills (`renderAt`, four stages × two moments plus the flash still, 1920×1080) are identical to the previous build: 9 of 7.8 million pixels differ, by 1/255. In the deck flow, the worst frame on entering slide 3 stayed at 16.8 ms, it holds 60 fps, print works and the console is clean.
+
 ## Files
 
 | Path | What |
 |---|---|
 | `hypo3d.js` | **The shipped bundle** — one self-contained ES module (three.js tree-shaken in; MIT notice at EOF). ~634 KB raw / ~168 KB gzip. |
-| `src/hypo3d.src.js` | The custom element: lifecycle, API, loop, tour, events, drag, print snapshot, adaptive resolution. |
-| `src/hypo3d-model.js` | **A2's model, ported verbatim** (`KNDY`, `kndyOf`, `meanDrive`, `wanderAt`), `STAGES`, and the simulation (`Sim`, a port of live.js `step()`). |
-| `src/hypo3d-anatomy.js` | A2's section geometry (build.mjs, same `curve()` sampling so path lengths match) lifted into 3-D. |
-| `src/hypo3d-geo.js` | Geometry helpers (organic blobs, tapered tubes, sweeps, merge, creased normals). |
-| `src/hypo3d-scene.js` | Materials, meshes, studio environment, and the render pipeline. |
+| `src/hypo3d.src.js` | The deck's wrapper (kept here): the custom element, its lifecycle, API, loop, tour, events, drag, print snapshot and adaptive resolution. |
+| `src/hypo3d-stages.js` | The deck's stage names and the readouts its lab page shows, built from the master model (kept here). |
+| `src/a2/` | **Copies of the 3-D brain's master files. Don't edit them.** `model.mjs` and `gl/hypo3d-{model,anatomy,geo,scene}.js` come from `optimal-anatomy-figures/figures/a2-hypothalamus`, via `tools/sync-hypo3d.mjs`. `SOURCE.json` records the anatomy-figures commit and each file's hash. |
+| `tools/sync-hypo3d.mjs` | Copies the master files into `src/a2/` (`--check` verifies them; the build runs it first). |
 | `tools/build-hypo3d.sh` | Reproducible build + audit. |
 | `tools/hypo3d-lab.html` | Test harness (1920×1080 cream frame, element at the slide position, stage buttons, readouts). |
 

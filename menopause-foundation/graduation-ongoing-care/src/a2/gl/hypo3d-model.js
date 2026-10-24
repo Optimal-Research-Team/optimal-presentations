@@ -1,82 +1,22 @@
-// <hypo-3d> model: a faithful port of A2 "The hot-flash switch".
+// A2 3-D layer: the simulation behind the real-time hypothalamus (gl/).
 //
-// Source of truth: optimal-anatomy-figures/figures/a2-hypothalamus/model.mjs (the numbers) and
-// live.js (the motion: bursts, packets, the heat-loss centre's leaky drive, the flash, estrogen).
-// Every animated value below comes from there unchanged. Sources are listed in
-// optimal-anatomy-figures/reference/truth-pack.md §1 and "A2". Magnitudes marked ILLUSTRATIVE in
-// A2 stay illustrative here; nothing new is sourced.
-
-// ---------------------------------------------------------------- A2 model.mjs (verbatim numbers)
-// e is the estrogen state, as in Fig 1: 1 = before menopause, 0 = after menopause in a woman who
-// has hot flashes.
-export const KNDY = {
-  area: 1.94, //            post ÷ pre soma area [Rance & Young 1991] (direction HIGH, % LOW)
-  burst: [3.4, 1.7], //     s between drawn bursts, pre → post: ILLUSTRATIVE (more NKB signalling)
-  packets: [2, 4], //       NKB packets per axon per burst, pre → post: ILLUSTRATIVE
-  axons: 4, //              drawn KNDy → MnPO axons
-  tau: 2.5, //              s, how fast the heat-loss centre's drive fades: ILLUSTRATIVE
-  k: 0.034, //              drive added per packet: sets the post mean near 0.8 of the tipping point
-  swing: 0.22, //           a small natural wander in core temperature (Fig 1's trigger), as drive
-  refractory: 6, //         s after a flash before the next can start (drawn)
-  therapy: 0.85, //         estrogen state drawn under hormone therapy: ILLUSTRATIVE [Rometo 2007]
-  blocked: 0.2, //          share of the NKB signal still received under a receptor blocker: ILLUSTRATIVE [Rance 2013]
-};
-const lerp = (a, b, t) => a + (b - a) * t;
-/** KNDy state at estrogen e: soma scale (diameter), seconds between bursts, packets per axon. */
-export const kndyOf = (e) => ({
-  scale: Math.sqrt(lerp(KNDY.area, 1, e)),
-  area: lerp(KNDY.area, 1, e),
-  burst: lerp(KNDY.burst[1], KNDY.burst[0], e),
-  packets: Math.round(lerp(KNDY.packets[1], KNDY.packets[0], e)),
-});
-/** Mean drive on the heat-loss centre (1 = tipping point) at estrogen e. */
-export const meanDrive = (e) => {
-  const s = kndyOf(e);
-  return (KNDY.k * s.packets * KNDY.axons * KNDY.tau) / s.burst;
-};
-/** The wander: 0 … swing, irregular. */
-export const wanderAt = (t) => KNDY.swing * (0.5 + 0.3 * Math.sin((2 * Math.PI * t) / 7.3) + 0.2 * Math.sin((2 * Math.PI * t) / 11.9 + 1.3));
+// Ported from the Ongoing Care deck's <hypo-3d> (menopause-foundation-presentation
+// graduation-ongoing-care/src/hypo3d-model.js @ 971c31b), which was itself a port of this figure's
+// live.js. In this repo the numbers are not copied: they are imported from A2's own model.mjs, so
+// the SVG and the 3-D layer can never disagree. Sources: reference/truth-pack.md §1 and "A2".
+// Magnitudes marked ILLUSTRATIVE in model.mjs stay illustrative; nothing new is sourced here.
+import { KNDY, kndyOf, meanDrive, wanderAt } from "../model.mjs";
+export { KNDY, kndyOf, meanDrive, wanderAt };
 
 // ---------------------------------------------------------------- the four states (A2 live.js setState)
-// target e per state: [1, 0, KNDY.therapy, 0]; the receptor blocker only in state 3.
-export const STAGE_ORDER = ["before", "after", "therapy", "nonhormonal"];
-const TARGET = [1, 0, KNDY.therapy, 0];
-// Hot-flash rate readout = Fig 1's rateOf(e) as A2's build.mjs passes it in (DATA.rate):
-// rateOf(1) ≈ 4.8e-12 (prints "Rare"), rateOf(0) = 1.1 per hour [Meldrum 1979; Freedman 1998; Low 2008].
-const RATE = [4.807038969646711e-12, 1.1];
-// A2 build.mjs LINES (the scene line under the figure), verbatim.
-const LINES = [
-  "Before menopause: estrogen keeps the KNDy cells small and their signal modest. The heat-loss centre idles, and everyday wanders in body heat pass unnoticed.",
-  "After menopause: with little estrogen, the cells swell and send neurokinin B more often. The heat-loss centre runs close to its edge, and a small wander tips it into a hot flash.",
-  "Hormone therapy, where it suits: estrogen is replaced, the KNDy cells quieten, and the heat-loss centre moves back from its edge.",
-  "A non-hormonal prescription option: the cells still signal, but a neurokinin-receptor blocker stops the heat-loss centre from receiving it.",
+// target e per state: [1, 0, KNDY.therapy, 0]; the receptor blocker only in state 3. The readouts
+// (estrogen, cell size, hot flashes) stay in live.js, which owns the card.
+export const STAGES = [
+  { e: 1, blocked: false }, //            before menopause
+  { e: 0, blocked: false }, //            after menopause
+  { e: KNDY.therapy, blocked: false }, // hormone therapy
+  { e: 0, blocked: true }, //             non-hormonal (neurokinin-receptor blocker)
 ];
-/**
- * Per-stage readouts, computed exactly as A2 live.js setState(i) computes its three stat cells:
- *   estrogen   = ["Cycling", "Low", "Replaced", "Low"][i]
- *   kndySize   = i === 2 ? "Smaller" : `${Math.round(100 * kndyOf(target).area)}%`
- *   hotFlashes = i < 2 ? (rate[i] < 0.05 ? "Rare" : `≈ ${rate[i].toFixed(1)} an hour`) : "Fewer, typically"
- * Source: optimal-anatomy-figures/figures/a2-hypothalamus/live.js (setState) + build.mjs (LINES, DATA.rate).
- */
-export const STAGES = Object.freeze(
-  Object.fromEntries(
-    STAGE_ORDER.map((name, i) => {
-      const s = kndyOf(TARGET[i]);
-      return [
-        name,
-        Object.freeze({
-          index: i,
-          e: TARGET[i],
-          blocked: i === 3,
-          estrogen: ["Cycling", "Low", "Replaced", "Low"][i],
-          kndySize: i === 2 ? "Smaller" : `${Math.round(100 * s.area)}%`,
-          hotFlashes: i < 2 ? (RATE[i] < 0.05 ? "Rare" : `≈ ${RATE[i].toFixed(1)} an hour`) : "Fewer, typically",
-          line: LINES[i],
-        }),
-      ];
-    }),
-  ),
-);
 
 // ---------------------------------------------------------------- seeded randomness (deterministic stills)
 export function makeRng(seed = 1) {

@@ -1,0 +1,14 @@
+{
+  "note": "Copies of the 3-D hypothalamus's master files. Do not edit here: change them in the anatomy repo, then run node tools/sync-hypo3d.mjs.",
+  "source": "Optimal-Research-Team/optimal-anatomy-figures/figures/a2-hypothalamus",
+  "commit": "f588396",
+  "dirty": false,
+  "syncedAt": "2026-10-24T14:32:29.938Z",
+  "files": {
+    "model.mjs": "d12acc90824c526b",
+    "gl/hypo3d-model.js": "3c1466d77241a762",
+    "gl/hypo3d-anatomy.js": "0d12bf0faf615aa2",
+    "gl/hypo3d-geo.js": "3dd43f487e7df451",
+    "gl/hypo3d-scene.js": "09e39e1cc5ee722e"
+  }
+}
