@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
-<meta name="version" content="optimal-presentations v2.0.0">
+<meta name="version" content="optimal-presentations v2.1.0">
 <meta name="theme-color" content="#FFFCF7">
 <title>Presentations — Optimal Clinic, Barrie</title>
 <link rel="icon" href="assets/logos/symbol-green-nobg.png">
@@ -150,23 +150,35 @@
   .rv { animation: rise .62s var(--ease) both; animation-delay: calc(.06s + var(--i, 0) * .05s); }
   @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
 
-  /* Laptop screens: keep everything above the fold. */
-  @media (max-height: 940px) and (min-width: 961px) {
-    .layout { padding-top: 26px; padding-bottom: 22px; }
-    h1 { font-size: clamp(40px, 4vw, 58px); }
-    .group { margin-top: 22px; }
-    .group + .group { margin-top: 18px; }
-    .row { padding-top: 10px; padding-bottom: 10px; }
-    .name { font-size: clamp(24px, 2vw, 30px); }
-    .meta { margin-top: 3px; font-size: 14.5px; }
-  }
-  @media (max-height: 840px) and (min-width: 961px) {
-    .bar .frame { height: 60px; }
-    .layout { padding-top: 20px; padding-bottom: 16px; }
+  /* Laptops and 1080p TVs: tighten the rhythm so all eight visits sit above the fold. */
+  @media (max-height: 1100px) and (min-width: 961px) {
+    .layout { padding-top: 24px; padding-bottom: 18px; }
+    h1 { font-size: clamp(40px, 3.6vw, 56px); margin-top: 10px; }
     .group { margin-top: 18px; }
     .group + .group { margin-top: 14px; }
+    .group h2 { margin-bottom: 2px; }
     .row { padding-top: 7px; padding-bottom: 7px; }
-    .foot .frame { min-height: 48px; padding-top: 8px; padding-bottom: 8px; }
+    .name { font-size: clamp(24px, 1.85vw, 29px); }
+    .meta { margin-top: 2px; font-size: 14px; }
+    .preview { padding: 20px; }
+    .pv-body { padding-top: 18px; }
+    .pv-facts { margin-top: 16px; padding-top: 14px; }
+    .pv-actions { margin-top: 18px; }
+  }
+  @media (max-height: 840px) and (min-width: 961px) {
+    .bar .frame { height: 56px; }
+    .layout { padding-top: 18px; padding-bottom: 14px; }
+    .eyebrow { font-size: 12px; }
+    h1 { font-size: 46px; }
+    .group { margin-top: 14px; }
+    .group + .group { margin-top: 10px; }
+    .row { padding-top: 5px; padding-bottom: 5px; }
+    .name { font-size: 25px; }
+    .meta { font-size: 13.5px; }
+    .pv-name { font-size: 30px; }
+    .pv-facts dd { font-size: 16px; }
+    .pv-open { padding: 12px 20px; font-size: 15px; }
+    .foot .frame { min-height: 44px; padding-top: 6px; padding-bottom: 6px; }
   }
   /* Tablet and phone: no preview panel; each row carries its own thumbnail. */
   @media (max-width: 960px) {
@@ -260,6 +272,18 @@
           </a></li>
         </ul>
       </section>
+
+      <section class="group" aria-labelledby="g-wellness">
+        <h2 id="g-wellness" class="rv" style="--i:12">Longevity &amp; wellness services</h2>
+        <ul class="rows">
+          <li class="rv" style="--i:13"><a class="row" data-key="8" href="hbot/">
+            <span class="num">08</span>
+            <img class="mthumb" src="assets/thumbs/hbot.webp" alt="" loading="lazy" decoding="async">
+            <span class="txt"><span class="name">Hyperbaric oxygen <em>therapy</em></span><span class="meta">HBOT briefing · physician-supervised program</span></span>
+            <svg class="arrow" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg>
+          </a></li>
+        </ul>
+      </section>
     </div>
 
     <aside class="preview rv" style="--i:4" aria-label="Selected presentation">
@@ -281,9 +305,9 @@
   </div>
 </main>
 
-<footer class="foot rv" style="--i:12">
+<footer class="foot rv" style="--i:14">
   <div class="frame">
-    <span class="keys"><kbd>↑</kbd> <kbd>↓</kbd> to choose · <kbd>Enter</kbd> to open · <kbd>1</kbd>–<kbd>7</kbd> to jump · browser Back returns here</span>
+    <span class="keys"><kbd>↑</kbd> <kbd>↓</kbd> to choose · <kbd>Enter</kbd> to open · <kbd>1</kbd>–<kbd>8</kbd> to jump · browser Back returns here</span>
     <span>Each deck opens on its preparation screen, where you enter the patient's name.</span>
   </div>
 </footer>
@@ -300,6 +324,7 @@
     5: { group: 'Longevity Membership · Core', thumb: 'intro-only', facts: [['Led by', 'Admin team & NP'], ["Today's meeting", '15–25 minutes'], ['Outcome', 'Membership decision']] },
     6: { group: 'Longevity Membership · Core', thumb: 'intro-intake', facts: [['Led by', 'Admin team & NP'], ["Today's meeting", 'Up to ~60 minutes'], ['Outcome', 'Membership & intake decision']] },
     7: { group: 'Longevity Membership · Core', thumb: 'intake-only', facts: [['Led by', 'Admin team & NP'], ["Today's visit", 'Full medical intake'], ['Outcome', 'Onboarding complete']] },
+    8: { group: 'Longevity & wellness services', thumb: 'hbot', facts: [['Administered by', 'Physician (MD)'], ['Protocol', 'Modelled on Sagol'], ['Coverage', 'HSA-eligible']] },
   };
 
   document.getElementById('today').textContent = 'Barrie, ON · ' +

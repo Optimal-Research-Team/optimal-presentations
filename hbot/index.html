@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hyperbaric Oxygen Therapy — Optimal Clinic, Barrie</title>
+<meta name="description" content="Patient presentation for hyperbaric oxygen therapy at Optimal Clinic, Barrie — how it works, the Sagol protocol, what the research explores and where it stands, sessions, eligibility, and next steps.">
+<meta name="theme-color" content="#14250F">
+<link rel="icon" href="assets/logos/symbol-green-nobg.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Castoro:ital@0;1&amp;family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap">
+<link rel="stylesheet" href="colors_and_type.css">
+<link rel="preload" as="image" href="assets/images/chambers.webp">
+<script src="deck-stage.js"></script>
+<style>
+  /* ==========================================================================
+     Hyperbaric Oxygen Therapy — Optimal Clinic, Barrie
+
+     The 15 slides below are built from the beoptimal.ca HBOT page (MD-reviewed copy): each
+     <section> is a self-contained, inline-styled 1920×1080 artboard, and
+     deck-stage.js letterboxes that canvas into whatever screen it lands on.
+     Everything in this stylesheet is chrome around those artboards — the
+     name-entry cover screens, the slide reveal engine, and the deck chrome.
+     Slide copy comes from the HBOT page: change markup, not words.
+     ========================================================================== */
+
+  html, body { margin: 0; padding: 0; background: #000; }
+  body {
+    font-family: 'Public Sans', system-ui, sans-serif;
+    color: var(--grey-900);
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "kern" 1, "liga" 1;
+  }
+  deck-stage h1, deck-stage h2, deck-stage h3, deck-stage p, deck-stage ul, deck-stage li { margin: 0; padding: 0; }
+
+  /* Motion vocabulary — one easing curve, no bounce, no spring, no parallax. */
+  :root { --deck-ease: cubic-bezier(.2, .7, .2, 1); }
+
+  /* ================= Slide transition =================
+     deck-stage stacks every slide and toggles opacity/visibility with no
+     transition of its own. Author styles on the slotted sections win over the
+     component's ::slotted() rules, so declaring the transition here turns that
+     hard switch into a crossfade without touching the engine's values. */
+  deck-stage > section {
+    transition: opacity 300ms var(--deck-ease), visibility 300ms var(--deck-ease);
+  }
+
+  /* ================= Slide entrance reveals =================
+     Content rises in with a small stagger each time a slide becomes active.
+     Non-active slides stay mounted, so the animations are gated on .in-view
+     and restarted by script on every visit. Reveal targets are tagged .dk-rv
+     at load; the decorative layers (.dk-bg/.dk-panel/.dk-ring/.dk-rule/
+     .dk-footer) were tagged during conversion and animate on their own clocks. */
+  deck-stage > section .dk-rv { opacity: 0; }
+  deck-stage > section.in-view .dk-rv {
+    animation: dk-rise 520ms var(--deck-ease) both;
+    animation-delay: calc(var(--rv, 0) * 60ms + 40ms);
+  }
+  @keyframes dk-rise {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  /* Full-bleed photography and the dividers' side panel: fade, then settle out
+     of a very slow zoom. Long and gentle enough to read as stillness. */
+  deck-stage > section .dk-bg,
+  deck-stage > section .dk-panel,
+  deck-stage > section .dk-scrim { opacity: 0; }
+  deck-stage > section.in-view .dk-bg,
+  deck-stage > section.in-view .dk-panel {
+    animation: dk-fade 900ms ease both, dk-settle 6s var(--deck-ease) both;
+  }
+  deck-stage > section.in-view .dk-scrim { animation: dk-fade 900ms ease 120ms both; }
+  @keyframes dk-fade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes dk-settle { from { transform: scale(1.03); } to { transform: scale(1); } }
+
+  /* Hand-drawn ring accents draw in once, after the headline has landed.
+     --rot carries each ring's authored tilt so the scale doesn't flatten it. */
+  deck-stage > section .dk-ring { opacity: 0; }
+  deck-stage > section.in-view .dk-ring {
+    animation: dk-ring-in 600ms var(--deck-ease) 620ms both;
+  }
+  @keyframes dk-ring-in {
+    from { opacity: 0; transform: rotate(var(--rot, -3deg)) scale(.82); }
+    to   { opacity: 1; transform: rotate(var(--rot, -3deg)) scale(1); }
+  }
+
+  /* Timeline rails draw left to right under their steps. */
+  deck-stage > section .dk-rule { opacity: 0; }
+  deck-stage > section.in-view .dk-rule {
+    transform-origin: left center;
+    animation: dk-draw 760ms var(--deck-ease) 220ms both;
+  }
+  @keyframes dk-draw {
+    from { opacity: 1; transform: scaleX(0); }
+    to   { opacity: 1; transform: scaleX(1); }
+  }
+
+  /* Footers arrive last and quietly. */
+  deck-stage > section .dk-footer { opacity: 0; }
+  deck-stage > section.in-view .dk-footer { animation: dk-fade 700ms ease 520ms both; }
+
+  @media print {
+    deck-stage > section :is(.dk-rv, .dk-bg, .dk-panel, .dk-scrim, .dk-ring, .dk-rule, .dk-footer) {
+      animation: none !important; opacity: 1 !important; transform: none !important;
+    }
+    deck-stage > section { transition: none !important; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    deck-stage > section :is(.dk-rv, .dk-bg, .dk-panel, .dk-scrim, .dk-ring, .dk-rule, .dk-footer) {
+      animation-duration: 0.01s !important; animation-delay: 0s !important;
+    }
+    deck-stage > section.in-view .dk-bg,
+    deck-stage > section.in-view .dk-panel { animation: dk-fade 0.01s both; }
+  }
+
+  /* ==========================================================================
+     COVER STAGE — preparation + welcome, on the same 16:9 canvas as the deck
+     ========================================================================== */
+  #cover-stage {
+    position: fixed; inset: 0; z-index: 2147483600;
+    display: flex; align-items: center; justify-content: center;
+    background: #000; overflow: hidden;
+    opacity: 1; transition: opacity 620ms var(--deck-ease);
+  }
+  #cover-stage[hidden] { display: none; }
+  #cover-stage.fade-out { opacity: 0; pointer-events: none; }
+  #cover-canvas {
+    position: relative; width: 1920px; height: 1080px; flex-shrink: 0;
+    transform-origin: center center; will-change: transform;
+  }
+
+  .canopy {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: #14250F; color: var(--cream-50);
+    opacity: 1; transition: opacity 620ms var(--deck-ease);
+  }
+  .canopy[hidden] { display: none; }
+  .canopy.fade-out { opacity: 0; pointer-events: none; }
+
+  /* Cover backdrop: the hyperbaric chambers at our partner facility. The photo
+     is bright clinical white, so both washes below run darker than the decks
+     that sit on the leaf canopy, and the wordmark is placed as its own layer. */
+  .canopy::before {
+    content: ""; position: absolute; inset: 0;
+    background: url('assets/images/chambers.webp') center 40% / cover no-repeat;
+    animation: canopy-drift 34s ease-in-out infinite alternate;
+  }
+  @keyframes canopy-drift {
+    from { transform: scale(1.0); }
+    to   { transform: scale(1.035); }
+  }
+  /* Preparation wash — even darkening so the glass card stays legible. */
+  .canopy::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(11,22,8,.62) 0%, rgba(11,22,8,.70) 55%, rgba(9,17,7,.90) 100%);
+  }
+  /* Welcome wash — keep the centred wordmark bright, darken the lower band
+     where the greeting sits so cream type holds up. */
+  #welcome-screen::after {
+    background: linear-gradient(180deg, rgba(11,22,8,.58) 0%, rgba(11,22,8,.42) 40%, rgba(11,22,8,.62) 70%, rgba(9,17,7,.92) 100%);
+  }
+
+  /* ── Preparation card (glass over the canopy) ── */
+  .prep-card {
+    position: relative; z-index: 1;
+    width: 780px; padding: 60px 64px 52px; border-radius: 24px;
+    background: rgba(16,30,12,.46);
+    border: 1px solid rgba(255,255,255,.16);
+    -webkit-backdrop-filter: blur(26px) saturate(118%);
+    backdrop-filter: blur(26px) saturate(118%);
+    box-shadow: 0 36px 90px rgba(0,0,0,.5);
+    animation: prep-pop .75s var(--deck-ease) both;
+  }
+  @keyframes prep-pop {
+    from { opacity: 0; transform: translateY(18px) scale(.985); }
+    to   { opacity: 1; transform: none; }
+  }
+  .prep-card .opt-logo { display: block; height: 34px; width: auto; margin-bottom: 34px; opacity: .96; }
+  .prep-eyebrow {
+    font-size: 14px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase;
+    color: var(--forest-500); margin-bottom: 18px;
+  }
+  .prep-title {
+    font-family: Castoro, serif; font-weight: 400; font-size: 60px;
+    line-height: 1.0; letter-spacing: -.03em; color: #fff; margin-bottom: 18px;
+  }
+  .prep-title em { font-style: italic; color: #DDE7D2; }
+  .prep-sub {
+    font-size: 19px; line-height: 1.5; color: rgba(255,255,255,.72);
+    margin-bottom: 36px; max-width: 48ch;
+  }
+  .prep-form { display: flex; flex-direction: column; gap: 22px; }
+  .prep-form .field { display: flex; flex-direction: column; gap: 9px; }
+  .prep-form .field-label {
+    font-size: 12px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+    color: rgba(255,255,255,.58);
+  }
+  .prep-form input {
+    font-family: Castoro, serif; font-size: 26px; letter-spacing: -.01em; color: #fff;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.2); border-radius: 13px;
+    padding: 14px 18px; outline: none; width: 100%;
+    transition: border-color .2s, background .2s, box-shadow .2s;
+  }
+  .prep-form input::placeholder { color: rgba(255,255,255,.42); font-style: italic; }
+  .prep-form input:focus {
+    border-color: var(--forest-500); background: rgba(255,255,255,.1);
+    box-shadow: 0 0 0 4px rgba(135,164,130,.18);
+  }
+  .prep-form .field--date input {
+    font-family: 'Public Sans', system-ui, sans-serif; font-size: 18px; max-width: 300px;
+    color-scheme: dark;
+  }
+  .prep-form .field--date input::-webkit-calendar-picker-indicator {
+    filter: invert(1); opacity: .65; cursor: pointer;
+  }
+  .prep-actions { display: flex; align-items: center; gap: 14px; margin-top: 10px; flex-wrap: wrap; }
+  .prep-btn {
+    font-family: 'Public Sans', system-ui, sans-serif;
+    font-size: 17px; font-weight: 600; letter-spacing: .01em;
+    border-radius: 999px; padding: 15px 30px; cursor: pointer; border: 1px solid transparent;
+    transition: transform .15s var(--deck-ease), background .2s, color .2s, border-color .2s;
+  }
+  .prep-btn.primary { background: var(--cream-50); color: var(--forest-700); }
+  .prep-btn.primary:hover { background: #fff; transform: translateY(-1px); }
+  .prep-btn.ghost { background: transparent; color: rgba(255,255,255,.88); border-color: rgba(255,255,255,.32); }
+  .prep-btn.ghost:hover { border-color: rgba(255,255,255,.62); color: #fff; }
+  .prep-btn.ghost svg { width: 15px; height: 15px; margin-right: 8px; vertical-align: -2px; }
+
+  .prep-card > * { animation: dk-rise .62s var(--deck-ease) both; }
+  .prep-card > *:nth-child(1) { animation-delay: .10s; }
+  .prep-card > *:nth-child(2) { animation-delay: .16s; }
+  .prep-card > *:nth-child(3) { animation-delay: .22s; }
+  .prep-card > *:nth-child(4) { animation-delay: .28s; }
+
+  /* ── Welcome screen ── */
+  .welcome-mark {
+    position: absolute; left: 50%; top: 40%; z-index: 1; height: 112px; width: auto;
+    transform: translate(-50%, -50%); opacity: 0;
+  }
+  #welcome-screen.is-on .welcome-mark { animation: dk-fade 1.1s ease .2s both; }
+  #welcome-screen { align-items: flex-end; justify-content: center; }
+  .welcome-inner {
+    position: relative; z-index: 1; text-align: center; padding: 0 120px 96px;
+    text-shadow: 0 1px 36px rgba(9,17,8,.6);
+  }
+  .welcome-title {
+    font-family: Castoro, serif; font-weight: 400;
+    font-size: 68px; line-height: 1.02; letter-spacing: -.03em; color: #fff;
+  }
+  .welcome-title.no-name .w-comma, .welcome-title.no-name .welcome-name { display: none; }
+  .welcome-name { font-style: italic; color: #E7EFDD; }
+  .welcome-meta {
+    font-size: 17px; letter-spacing: .02em; color: rgba(255,255,255,.66); margin-top: 22px;
+  }
+  .welcome-begin {
+    display: inline-flex; align-items: center; gap: 11px; margin-top: 32px;
+    font-family: 'Public Sans', system-ui, sans-serif;
+    font-size: 18px; font-weight: 600; letter-spacing: .01em;
+    background: var(--cream-50); color: var(--forest-700);
+    border: none; border-radius: 999px; padding: 16px 34px; cursor: pointer;
+    transition: transform .15s var(--deck-ease), background .2s;
+  }
+  .welcome-begin:hover { background: #fff; transform: translateY(-1px); }
+  .welcome-begin .arr { font-size: 19px; transition: transform .2s var(--deck-ease); }
+  .welcome-begin:hover .arr { transform: translateX(3px); }
+  .welcome-hint {
+    margin-top: 24px; font-size: 12px; letter-spacing: .16em; text-transform: uppercase;
+    color: rgba(255,255,255,.5);
+  }
+  .welcome-hint kbd {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12px;
+    padding: 2px 7px; border-radius: 5px; color: rgba(255,255,255,.85);
+    background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.18);
+  }
+  .welcome-back {
+    position: absolute; top: 38px; left: 44px; z-index: 2;
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'Public Sans', system-ui, sans-serif;
+    font-size: 14px; font-weight: 600; letter-spacing: .01em; color: rgba(255,255,255,.82);
+    background: rgba(18,32,12,.42);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,.22); border-radius: 999px;
+    padding: 10px 18px 10px 16px; cursor: pointer;
+    transition: background .2s, color .2s, border-color .2s;
+  }
+  .welcome-back:hover { background: rgba(18,32,12,.72); color: #fff; border-color: rgba(255,255,255,.5); }
+  .welcome-back .arr { font-size: 15px; transition: transform .2s var(--deck-ease); }
+  .welcome-back:hover .arr { transform: translateX(-3px); }
+  #welcome-screen .welcome-back { opacity: 0; }
+  #welcome-screen.is-on .welcome-back { animation: dk-rise .6s var(--deck-ease) .12s both; }
+  #welcome-screen .welcome-inner > * { opacity: 0; transform: translateY(20px); }
+  #welcome-screen.is-on .welcome-inner > * { animation: dk-rise .7s var(--deck-ease) both; }
+  #welcome-screen.is-on .welcome-inner > *:nth-child(1) { animation-delay: .60s; }
+  #welcome-screen.is-on .welcome-inner > *:nth-child(2) { animation-delay: .74s; }
+  #welcome-screen.is-on .welcome-inner > *:nth-child(3) { animation-delay: .88s; }
+  #welcome-screen.is-on .welcome-inner > *:nth-child(4) { animation-delay: 1.00s; }
+
+  /* ==========================================================================
+     IN-DECK CHROME — export + fullscreen controls
+     ========================================================================== */
+  .fab {
+    position: fixed; z-index: 2147483500;
+    display: inline-flex; align-items: center; gap: 9px;
+    font-family: 'Public Sans', system-ui, sans-serif;
+    font-size: 13px; font-weight: 600; letter-spacing: .01em; color: rgba(255,255,255,.92);
+    background: rgba(18,32,12,.66);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,.2); border-radius: 999px;
+    padding: 10px 17px; cursor: pointer;
+    opacity: 0; transform: translateY(-6px); pointer-events: none;
+    transition: opacity .3s, transform .3s, background .2s;
+  }
+  .fab[hidden] { display: none; }
+  .fab.avail { opacity: .5; transform: none; pointer-events: auto; }
+  .fab.avail:hover { opacity: 1; background: rgba(18,32,12,.88); }
+  .fab svg { width: 15px; height: 15px; }
+  #export-fab { right: 22px; top: 20px; }
+  #fullscreen-fab { right: 22px; top: 68px; }
+  /* One glyph at a time — every toggle reads "enter" or "exit" by state. */
+  [data-fullscreen-toggle] .fs-exit,
+  [data-fullscreen-toggle].on .fs-enter { display: none; }
+  [data-fullscreen-toggle].on .fs-exit { display: block; }
+  .prep-btn[data-fullscreen-toggle] { display: inline-flex; align-items: center; }
+
+  /* ── Closing slide: export the record without leaving the deck ──
+     Sits in the final slide's own 1920×1080 coordinate space, so it scales
+     with the canvas and reads as designed-in rather than floating chrome.
+     It is an affordance, not content — the printed record drops it. */
+  .closing-export { margin-top: 38px; margin-bottom: 12px; }
+  .export-cta {
+    display: inline-flex; align-items: center; gap: 13px;
+    font-family: 'Public Sans', system-ui, sans-serif;
+    font-size: 24px; font-weight: 600; letter-spacing: -.01em;
+    color: var(--forest-700); background: var(--cream-50);
+    border: 1px solid var(--cream-50); border-radius: 48px;
+    padding: 17px 32px; cursor: pointer;
+    transition: background .2s var(--deck-ease), transform .15s var(--deck-ease), box-shadow .2s;
+  }
+  .export-cta svg { width: 23px; height: 23px; }
+  .export-cta:hover {
+    background: #fff; transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, .3);
+  }
+  .export-cta:active { transform: none; }
+  .export-cta:focus-visible { outline: 3px solid var(--forest-500); outline-offset: 3px; }
+  @media print { .closing-export { display: none !important; } }
+
+
+  /* ==========================================================================
+     PRINT — the welcome page becomes page 1, then one slide per page
+     ========================================================================== */
+  @media print {
+    #prep-screen, .fab { display: none !important; }
+    #cover-stage {
+      position: static !important; display: block !important;
+      background: none !important; overflow: visible !important;
+      opacity: 1 !important; z-index: auto !important;
+    }
+    #cover-canvas {
+      transform: none !important; width: 1920px !important; height: 1080px !important;
+      break-after: page; page-break-after: always;
+    }
+    #welcome-screen {
+      display: flex !important; position: relative !important; inset: auto !important;
+      width: 1920px !important; height: 1080px !important;
+      opacity: 1 !important; z-index: auto !important; overflow: hidden;
+    }
+    #welcome-screen .welcome-inner > * { opacity: 1 !important; transform: none !important; animation: none !important; }
+    #welcome-screen .welcome-begin, #welcome-screen .welcome-hint, #welcome-screen .welcome-back { display: none !important; }
+    .canopy::before { animation: none !important; transform: scale(1) !important; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .canopy::before { animation: none; transform: scale(1); }
+    .prep-card, .prep-card > *, #welcome-screen.is-on .welcome-inner > *,
+    #welcome-screen.is-on .welcome-back {
+      animation-duration: .01s !important; animation-delay: 0s !important;
+    }
+  }
+</style>
+<style>
+  /* Back to the presentations launcher (optimal-presentations). Lives on the
+     preparation screen only, so it never shows on a slide or in the PDF. */
+  .all-decks {
+    position: absolute; top: 38px; left: 44px; z-index: 2;
+    display: inline-flex; align-items: center; gap: 9px;
+    font-family: 'Public Sans', system-ui, sans-serif; font-size: 14px; font-weight: 600; letter-spacing: .01em;
+    color: rgba(255,255,255,.82); text-decoration: none;
+    background: rgba(18,32,12,.42);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,.18); border-radius: 999px; padding: 10px 18px 10px 14px;
+    transition: color .2s, border-color .2s, background .2s;
+  }
+  .all-decks:hover, .all-decks:focus-visible { color: #fff; border-color: rgba(255,255,255,.42); background: rgba(18,32,12,.6); outline: none; }
+  .all-decks svg { width: 16px; height: 16px; }
+  @media print { .all-decks { display: none !important; } }
+</style>
+</head>
+<body>
+
+<!-- ============ COVER STAGE — preparation, then the personalised welcome ============ -->
+<div id="cover-stage">
+  <div id="cover-canvas">
+
+    <!-- Preparation: the front desk enters the patient's name before walking in -->
+    <div id="prep-screen" class="canopy">
+      <a class="all-decks" href="../"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 10H4M9 5l-5 5 5 5"/></svg>All presentations</a>
+      <div class="prep-card">
+        <img class="opt-logo" src="assets/logos/Optimal-Logo-Inverted.png" alt="Optimal">
+        <div>
+          <div class="prep-eyebrow">Hyperbaric Oxygen Therapy · Preparation</div>
+          <h1 class="prep-title">Let's set up <em>this briefing</em>.</h1>
+          <p class="prep-sub">Enter the patient's name to personalise their welcome screen. The name and date are also stamped onto the PDF you can export for the chart.</p>
+        </div>
+        <form id="prep-form" class="prep-form" autocomplete="off">
+          <label class="field">
+            <span class="field-label">Patient name</span>
+            <input id="patient-name" type="text" placeholder="e.g. Sarah" autocomplete="off" spellcheck="false">
+          </label>
+          <label class="field field--date">
+            <span class="field-label">Date</span>
+            <input id="session-date" type="date">
+          </label>
+          <div class="prep-actions">
+            <button type="submit" class="prep-btn primary">Begin presentation →</button>
+            <button type="button" class="prep-btn ghost" data-fullscreen-toggle>
+              <svg class="fs-enter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+              <svg class="fs-exit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h3a2 2 0 0 0 2-2V3"/><path d="M21 8h-3a2 2 0 0 1-2-2V3"/><path d="M3 16h3a2 2 0 0 1 2 2v3"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/></svg>
+              <span class="fs-label">Fullscreen</span></button>
+            <button type="button" id="prep-export" class="prep-btn ghost">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>Export PDF for records</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Welcome: slide 01 of the deck, personalised -->
+    <div id="welcome-screen" class="canopy" hidden>
+      <button type="button" id="welcome-back" class="welcome-back"><span class="arr">←</span> Edit name</button>
+      <img class="welcome-mark" src="assets/logos/Optimal-Logo-Inverted.png" alt="Optimal">
+      <div class="welcome-inner">
+        <h1 class="welcome-title"><span>Welcome</span><span class="w-comma">,</span> <span class="welcome-name" id="welcome-name"></span></h1>
+        <p class="welcome-meta" id="welcome-meta"></p>
+        <button type="button" id="welcome-begin" class="welcome-begin">Begin <span class="arr">→</span></button>
+        <div class="welcome-hint">Press <kbd>→</kbd> to continue</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- In-deck chrome -->
+<button id="export-fab" class="fab" type="button" aria-label="Export presentation as PDF" hidden>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>Export PDF
+</button>
+<button id="fullscreen-fab" class="fab" type="button" aria-label="Toggle fullscreen" data-fullscreen-toggle hidden>
+  <svg class="fs-enter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+  <svg class="fs-exit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h3a2 2 0 0 0 2-2V3"/><path d="M21 8h-3a2 2 0 0 1-2-2V3"/><path d="M3 16h3a2 2 0 0 1 2 2v3"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/></svg>
+  <span class="fs-label">Fullscreen</span> <span style="opacity:.6">F</span>
+</button>
+
+<deck-stage width="1920" height="1080">
+
+<section data-label="Title" data-speaker-notes="Frame the service: hyperbaric oxygen therapy as a structured, physician-supervised longevity and wellness program — investigational, evidence-informed, and delivered at our partner facility." style="position:relative;width:1920px;height:1080px;box-sizing:border-box;overflow:hidden;font-family:'Public Sans',system-ui,sans-serif;background:#FFFCF7;color:#040504;padding:88px 120px 96px" class="sl">
+  <img src="assets/images/chambers.webp" alt="Hyperbaric chambers at our partner facility" style="position:absolute;top:88px;right:120px;width:700px;height:896px;object-fit:cover;border-radius:16px;box-shadow:0 8px 48px rgba(0,0,0,.07)" loading="eager" decoding="async" class="dk-panel">
+  <div style="width:880px;height:100%;display:flex;flex-direction:column">
+    <div>
+      <img src="assets/logos/OptimalLogo-Green.png" alt="Optimal" style="height:44px" loading="eager" decoding="async">
+      <div style="margin-top:26px;padding-bottom:26px;border-bottom:2px solid #DFD7CA;font-size:22px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#76736D;letter-spacing:.22em">Patient briefing  ·  2026  ·  Barrie, ON</div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
+      <div style="font-size:24px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#1A500F">A longevity &amp; wellness service from Optimal</div>
+      <h1 style="margin:28px 0 0;font-family:Castoro,serif;font-weight:400;font-size:128px;line-height:1;letter-spacing:-.04em;color:#2C4E25">Hyperbaric<br>oxygen <em>therapy</em>.</h1>
+      <p style="margin:40px 0 0;max-width:760px;font-size:32px;line-height:1.45;letter-spacing:-.015em;color:#474747">Breathing oxygen at increased pressure, delivered as a structured, physician-supervised program.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:36px;border-top:2px solid #DFD7CA;padding-top:30px">
+      <div><div style="font-size:22px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#76736D;font-size:20px">Administered by</div><div style="margin-top:12px;font-family:Castoro,serif;font-size:30px;letter-spacing:-.015em;color:#2C4E25">Physician (MD)</div></div>
+      <div><div style="font-size:22px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#76736D;font-size:20px">Protocol</div><div style="margin-top:12px;font-family:Castoro,serif;font-size:30px;letter-spacing:-.015em;color:#2C4E25">Modelled on Sagol</div></div>
+      <div><div style="font-size:22px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#76736D;font-size:20px">Coverage</div><div style="margin-top:12px;font-family:Castoro,serif;font-size:30px;letter-spacing:-.015em;color:#2C4E25">HSA-eligible</div></div>
+    </div>
+  </div>
+</section>
+
+<section data-label="Agenda" data-speaker-notes="Five parts. The research and its limits come before the clinic and the sessions, so the patient hears the honest version first." style="position:relative;width:1920px;height:1080px;box-sizing:border-box;overflow:hidden;font-family:'Public Sans',system-ui,sans-serif;background:#FFFCF7;color:#040504;padding:88px 120px 130px;display:flex;flex-direction:column" class="sl">
+  <div style="display:flex;justify-content:space-between;align-items:flex-end">
+    <div>
+      <div style="font-size:24px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#1A500F">Today, step by step</div>
+      <h2 style="margin:22px 0 0;font-family:Castoro,serif;font-weight:400;font-size:76px;line-height:1.05;letter-spacing:-.03em;color:#040504">What we'll <em>cover</em>.</h2>
+    </div>
+    <div style="font-size:22px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#76736D;padding-bottom:14px">5 parts</div>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
+    <div style="display:grid;grid-template-columns:140px 1fr 520px;align-items:center;border-top:2px solid #DFD7CA;padding:30px 0"><div style="font-family:Castoro,serif;font-size:44px;color:#1A500F">01</div><div style="font-family:Castoro,serif;font-size:42px;letter-spacing:-.02em">How it works</div><div style="text-align:right;font-size:22px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#76736D">The Sagol protocol</div></div>
+    <div style="display:grid;grid-template-columns:140px 1fr 520px;align-items:center;border-top:2px solid #DFD7CA;padding:30px 0"><div style="font-family:Castoro,serif;font-size:44px;color:#1A500F">02</div><div style="font-family:Castoro,serif;font-size:42px;letter-spacing:-.02em">What the research explores</div><div style="text-align:right;font-size:22px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#76736D">Four areas</div></div>
+    <div style="display:grid;grid-template-columns:140px 1fr 520px;align-items:center;border-top:2px solid #DFD7CA;padding:30px 0"><div style="font-family:Castoro,serif;font-size:44px;color:#1A500F">03</div><div style="font-family:Castoro,serif;font-size:42px;letter-spacing:-.02em">Where this fits, plainly</div><div style="text-align:right;font-size:22px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#76736D">The honest version</div></div>
+    <div style="display:grid;grid-template-columns:140px 1fr 520px;align-items:center;border-top:2px solid #DFD7CA;padding:30px 0"><div style="font-family:Castoro,serif;font-size:44px;color:#1A500F">04</div><div style="font-family:Castoro,serif;font-size:42px;letter-spacing:-.02em">The clinic &amp; your sessions</div><div style="text-align:right;font-size:22px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#76736D">What to expect</div></div>
+    <div style="display:grid;grid-template-columns:140px 1fr 520px;align-items:center;border-top:2px solid #DFD7CA;border-bottom:2px solid #DFD7CA;padding:30px 0"><div style="font-family:Castoro,serif;font-size:44px;color:#1A500F">05</div><div style="font-family:Castoro,serif;font-size:42px;letter-spacing:-.02em">The evidence &amp; your questions</div><div style="text-align:right;font-size:22px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#76736D">Next steps</div></div>
+  </div>
+  <div class="dk-footer" style="position:absolute;left:120px;right:120px;bottom:50px;display:flex;justify-content:space-between;align-items:center"><div style="font-size:24px;letter-spacing:-.01em;color:#8A867D"><span style="color:#1A500F;font-weight:600">03 / 16</span>  Hyperbaric Oxygen Therapy — Optimal Clinic, Barrie</div><img src="assets/logos/symbol-green-nobg.png" alt="" style="height:30px;opacity:.85" loading="eager" decoding="async"></div>
+</section>
+
+<section data-label="How it works" data-speaker-notes="The mechanism in one idea: controlled swings in oxygen that the body reads as a signal. It is the repetition across a series, not one session, that the research associates with change." style="position:relative;width:1920px;height:1080px;box-sizing:border-box;overflow:hidden;font-family:'Public Sans',system-ui,sans-serif;background:#FFFCF7;color:#040504;padding:88px 120px 130px;display:flex;flex-direction:column" class="sl">
+  <div style="display:grid;grid-template-columns:1fr 760px;gap:120px;align-items:end">
+    <div>
+      <div style="font-size:24px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#1A500F">How it works</div>
+      <h2 style="margin:22px 0 0;font-family:Castoro,serif;font-weight:400;font-size:76px;line-height:1.05;letter-spacing:-.03em;color:#040504;font-size:96px">Oxygen, under <em>pressure</em>.</h2>
+    </div>
+    <p style="font-size:28px;line-height:1.5;letter-spacing:-.01em;color:#474747">Inside a pressurized chamber, you breathe oxygen at a concentration and pressure far above normal air. Researchers describe the underlying idea as the &ldquo;hyperoxic-hypoxic paradox&rdquo; — repeated, controlled swings in oxygen that the body responds to as a signal.</p>
+  </div>
+  <div style="flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:64px;align-content:center">
+    <div style="border-top:2px solid #DFD7CA;padding-top:34px"><div style="font-family:Castoro,serif;font-style:italic;font-size:64px;line-height:1;color:#87A482">01</div><h3 style="margin:26px 0 0;font-family:Castoro,serif;font-weight:400;font-size:44px;letter-spacing:-.02em;color:#040504">Pressurized chamber</h3><p style="margin:18px 0 0;font-size:28px;line-height:1.5;letter-spacing:-.01em;color:#474747;font-size:26px">You rest in a clear chamber while pressure is gently raised — similar to the sensation of a plane&rsquo;s descent. Sessions are calm and monitored throughout.</p></div>
+    <div style="border-top:2px solid #DFD7CA;padding-top:34px"><div style="font-family:Castoro,serif;font-style:italic;font-size:64px;line-height:1;color:#87A482">02</div><h3 style="margin:26px 0 0;font-family:Castoro,serif;font-weight:400;font-size:44px;letter-spacing:-.02em;color:#040504">Elevated oxygen</h3><p style="margin:18px 0 0;font-size:28px;line-height:1.5;letter-spacing:-.01em;color:#474747;font-size:26px">Higher pressure lets far more oxygen dissolve into the blood and plasma than breathing ordinary air ever could, reaching tissues throughout the body.</p></div>
+    <div style="border-top:2px solid #DFD7CA;padding-top:34px"><div style="font-family:Castoro,serif;font-style:italic;font-size:64px;line-height:1;color:#87A482">03</div><h3 style="margin:26px 0 0;font-family:Castoro,serif;font-weight:400;font-size:44px;letter-spacing:-.02em;color:#040504">Repeated sessions</h3><p style="margin:18px 0 0;font-size:28px;line-height:1.5;letter-spacing:-.01em;color:#474747;font-size:26px">The protocol is a series of sessions over weeks. In studies, it&rsquo;s the repeated cycling — not any single session — that is associated with the biological changes.</p></div>
+  </div>
+  <div class="dk-footer" style="position:absolute;left:120px;right:120px;bottom:50px;display:flex;justify-content:space-between;align-items:center"><div style="font-size:24px;letter-spacing:-.01em;color:#8A867D"><span style="color:#1A500F;font-weight:600">04 / 16</span>  Hyperbaric Oxygen Therapy — Optimal Clinic, Barrie</div><img src="assets/logos/symbol-green-nobg.png" alt="" style="height:30px;opacity:.85" loading="eager" decoding="async"></div>
+</section>
+
+<section data-label="The Sagol protocol" data-speaker-notes="Our program follows the Sagol Center protocol (Shamir Medical Center, Israel): intermittent oxygen across a series of sessions. Exact parameters are set by the administering physician after screening." style="position:relative;width:1920px;height:1080px;box-sizing:border-box;overflow:hidden;font-family:'Public Sans',system-ui,sans-serif;background:#FFFCF7;color:#040504;padding:88px 120px 130px 900px;display:flex;flex-direction:column;justify-content:center" class="sl">
+  <img src="assets/images/chamber-controls.webp" alt="A hyperbaric chamber's control panel at our partner facility" style="position:absolute;top:0;left:0;bottom:0;width:780px;height:100%;object-fit:cover" loading="eager" decoding="async" class="dk-panel">
+  <div style="font-size:24px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#1A500F">The protocol we follow</div>
+  <h2 style="margin:22px 0 0;font-family:Castoro,serif;font-weight:400;font-size:76px;line-height:1.05;letter-spacing:-.03em;color:#040504">The Sagol <em>protocol</em>.</h2>
+  <p style="margin:30px 0 0;font-size:28px;line-height:1.5;letter-spacing:-.01em;color:#474747;font-size:26px">Our program is modelled on the structured protocol developed at the Sagol Center for Hyperbaric Medicine and Research (Shamir Medical Center, Israel) — the group behind much of the published research on HBOT and aging-associated biomarkers.</p>
+  <p style="margin:18px 0 0;font-size:28px;line-height:1.5;letter-spacing:-.01em;color:#474747;font-size:26px">Rather than continuous oxygen, the protocol uses <strong style="font-weight:600;color:#040504">intermittent oxygen breathing</strong> within each session — the pattern researchers associate with the &ldquo;hyperoxic-hypoxic paradox.&rdquo;</p>
+  <div style="margin-top:44px;display:grid;grid-template-columns:1fr 1fr;gap:34px 56px">
+    <div style="border-top:2px solid #DFD7CA;padding-top:22px"><div style="font-family:Castoro,serif;font-size:58px;line-height:1;letter-spacing:-.025em;color:#2C4E25">~90 min</div><div style="margin-top:12px;font-size:23px;line-height:1.4;color:#474747">per session, including gradual pressure changes</div></div>
+    <div style="border-top:2px solid #DFD7CA;padding-top:22px"><div style="font-family:Castoro,serif;font-size:58px;line-height:1;letter-spacing:-.025em;color:#2C4E25">Series</div><div style="margin-top:12px;font-size:23px;line-height:1.4;color:#474747">a course of repeated sessions over several weeks</div></div>
+    <div style="border-top:2px solid #DFD7CA;padding-top:22px"><div style="font-family:Castoro,serif;font-size:58px;line-height:1;letter-spacing:-.025em;color:#2C4E25">Cycled O<sub style="font-size:.55em">2</sub></div><div style="margin-top:12px;font-size:23px;line-height:1.4;color:#474747">intermittent oxygen with brief air breaks within each session</div></div>
+    <div style="border-top:2px solid #DFD7CA;padding-top:22px"><div style="font-family:Castoro,serif;font-size:58px;line-height:1;letter-spacing:-.025em;color:#2C4E25">MD-led</div><div style="margin-top:12px;font-size:23px;line-height:1.4;color:#474747">supervised by the administering physician throughout</div></div>
+  </div>
+  <div class="dk-footer" style="position:absolute;left:900px;right:120px;bottom:50px;display:flex;justify-content:space-between;align-items:center"><div style="font-size:24px;letter-spacing:-.01em;color:#8A867D"><span style="color:#1A500F;font-weight:600">05 / 16</span>  Hyperbaric Oxygen Therapy — Optimal Clinic, Barrie</div><img src="assets/logos/symbol-green-nobg.png" alt="" style="height:30px;opacity:.85" loading="eager" decoding="async"></div>
+</section>
+
+<section data-label="Research: aging &amp; regeneration" data-speaker-notes="Two of four areas. Read the caveat line on each card aloud: these are biomarker and biology findings, not proven outcomes." style="position:relative;width:1920px;height:1080px;box-sizing:border-box;overflow:hidden;font-family:'Public Sans',system-ui,sans-serif;background:#FFFCF7;color:#040504;padding:80px 120px 124px;display:flex;flex-direction:column" class="sl">
+  <div style="display:grid;grid-template-columns:1fr 720px;gap:100px;align-items:end">
+    <div>
+      <div style="font-size:24px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#1A500F">What the research explores  ·  1 of 2</div>
+      <h2 style="margin:22px 0 0;font-family:Castoro,serif;font-weight:400;font-size:76px;line-height:1.05;letter-spacing:-.03em;color:#040504;font-size:68px">Potential longevity-related <em>benefits</em>.</h2>
+    </div>
+    <p style="font-size:28px;line-height:1.5;letter-spacing:-.01em;color:#474747;font-size:24px">A growing body of peer-reviewed research explores how HBOT interacts with the biology of aging. Here&rsquo;s what studies have observed across four areas — described plainly, with every source cited at the end so you can read it yourself.</p>
+  </div>
+  <div style="flex:1;margin-top:40px;display:grid;grid-template-columns:1fr 1fr;gap:40px">
+    <div style="display:flex;flex-direction:column;border:2px solid #DFD7CA;border-radius:16px;overflow:hidden;background:#fff;box-shadow:0 8px 48px rgba(0,0,0,.05)"><div style="height:320px;background:#0B1608;overflow:hidden"><img src="assets/images/micro-telomeres.webp" alt="Fluorescence micrograph of cells and their nuclei" style="width:100%;height:100%;object-fit:cover;display:block" loading="eager" decoding="async"></div><div style="padding:34px 40px 36px;display:flex;flex-direction:column;flex:1"><h3 style="margin:0;font-family:Castoro,serif;font-weight:400;font-size:42px;letter-spacing:-.02em;color:#040504">Cellular aging markers</h3><p style="margin:16px 0 0;font-size:28px;line-height:1.5;letter-spacing:-.01em;color:#474747;font-size:25px">In trials, HBOT has been associated with longer telomeres and fewer senescent immune cells in the blood of aging adults, alongside signals of active DNA repair.</p><p style="margin:auto 0 0;padding-top:20px;border-top:2px solid #DFD7CA;font-size:22px;line-height:1.4;font-style:italic;color:#76736D">Early biomarker findings — not yet proven to change how we age.</p></div></div>
+    <div style="display:flex;flex-direction:column;border:2px solid #DFD7CA;border-radius:16px;overflow:hidden;background:#fff;box-shadow:0 8px 48px rgba(0,0,0,.05)"><div style="height:320px;background:#0B1608;overflow:hidden"><img src="assets/images/micro-angiogenesis.webp" alt="Fluorescence micrograph of retinal blood vessels" style="width:100%;height:100%;object-fit:cover;display:block" loading="eager" decoding="async"></div><div style="padding:34px 40px 36px;display:flex;flex-direction:column;flex:1"><h3 style="margin:0;font-family:Castoro,serif;font-weight:400;font-size:42px;letter-spacing:-.02em;color:#040504">Tissue &amp; regeneration</h3><p style="margin:16px 0 0;font-size:28px;line-height:1.5;letter-spacing:-.01em;color:#474747;font-size:25px">Studies point to increased blood-vessel growth, shifts in skin collagen density, and better tissue oxygenation and wound-healing dynamics.</p><p style="margin:auto 0 0;padding-top:20px;border-top:2px solid #DFD7CA;font-size:22px;line-height:1.4;font-style:italic;color:#76736D">Reparative-biology signals, still being studied in healthy people.</p></div></div>
+  </div>
+  <div class="dk-footer" style="position:absolute;left:120px;right:120px;bottom:50px;display:flex;justify-content:space-between;align-items:center"><div style="font-size:24px;letter-spacing:-.01em;color:#8A867D"><span style="color:#1A500F;font-weight:600">06 / 16</span>  Hyperbaric Oxygen Therapy — Optimal Clinic, Barrie</div><img src="assets/logos/symbol-green-nobg.png" alt="" style="height:30px;opacity:.85" loading="eager" decoding="async"></div>
+</section>
+
+<section data-label="Research: brain &amp; mitochondria" data-speaker-notes="The other two areas. The brain findings come mainly from injury and impairment groups; the mitochondrial story is a plausible mechanism, not an established longevity link." style="position:relative;width:1920px;height:1080px;box-sizing:border-box;overflow:hidden;font-family:'Public Sans',system-ui,sans-serif;background:#FFFCF7;color:#040504;padding:80px 120px 124px;display:flex;flex-direction:column" class="sl">
+  <div style="display:grid;grid-template-columns:1fr 720px;gap:100px;align-items:end">
+    <div>
+      <div style="font-size:24px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#1A500F">What the research explores  ·  2 of 2</div>
+      <h2 style="margin:22px 0 0;font-family:Castoro,serif;font-weight:400;font-size:76px;line-height:1.05;letter-spacing:-.03em;color:#040504;font-size:68px">Potential longevity-related <em>benefits</em>.</h2>
+    </div>
+    <p style="font-size:28px;line-height:1.5;letter-spacing:-.01em;color:#474747;font-size:24px">A growing body of peer-reviewed research explores how HBOT interacts with the biology of aging. Here&rsquo;s what studies have observed across four areas — described plainly, with every source cited at the end so you can read it yourself.</p>
+  </div>
+  <div style="flex:1;margin-top:40px;display:grid;grid-template-columns:1fr 1fr;gap:40px">
+    <div style="display:flex;flex-direction:column;border:2px solid #DFD7CA;border-radius:16px;overflow:hidden;background:#fff;box-shadow:0 8px 48px rgba(0,0,0,.05)"><div style="height:320px;background:#0B1608;overflow:hidden"><img src="assets/images/micro-neurons.webp" alt="Fluorescence micrograph of neurons" style="width:100%;height:100%;object-fit:cover;display:block" loading="eager" decoding="async"></div><div style="padding:34px 40px 36px;display:flex;flex-direction:column;flex:1"><h3 style="margin:0;font-family:Castoro,serif;font-weight:400;font-size:42px;letter-spacing:-.02em;color:#040504">Brain &amp; neuroplasticity</h3><p style="margin:16px 0 0;font-size:28px;line-height:1.5;letter-spacing:-.01em;color:#474747;font-size:25px">In injury and impairment groups, HBOT has been linked to changes in cerebral blood flow and gains on some attention and executive-function measures.</p><p style="margin:auto 0 0;padding-top:20px;border-top:2px solid #DFD7CA;font-size:22px;line-height:1.4;font-style:italic;color:#76736D">Studied mainly after injury — not yet in healthy aging.</p></div></div>
+    <div style="display:flex;flex-direction:column;border:2px solid #DFD7CA;border-radius:16px;overflow:hidden;background:#fff;box-shadow:0 8px 48px rgba(0,0,0,.05)"><div style="height:320px;background:#0B1608;overflow:hidden"><img src="assets/images/micro-mitochondria.webp" alt="Fluorescence micrograph of mitochondrial networks" style="width:100%;height:100%;object-fit:cover;display:block" loading="eager" decoding="async"></div><div style="padding:34px 40px 36px;display:flex;flex-direction:column;flex:1"><h3 style="margin:0;font-family:Castoro,serif;font-weight:400;font-size:42px;letter-spacing:-.02em;color:#040504">Mitochondria &amp; oxidative signalling</h3><p style="margin:16px 0 0;font-size:28px;line-height:1.5;letter-spacing:-.01em;color:#474747;font-size:25px">Oxygen cycling appears to nudge mitochondrial signalling and the body&rsquo;s own antioxidant defenses through a hormesis — a beneficial small-stress adaptation — effect.</p><p style="margin:auto 0 0;padding-top:20px;border-top:2px solid #DFD7CA;font-size:22px;line-height:1.4;font-style:italic;color:#76736D">A plausible mechanism; the longevity link isn&rsquo;t established.</p></div></div>
+  </div>
+  <div class="dk-footer" style="position:absolute;left:120px;right:120px;bottom:50px;display:flex;justify-content:space-between;align-items:center"><div style="font-size:24px;letter-spacing:-.01em;color:#8A867D"><span style="color:#1A500F;font-weight:600">07 / 16</span>  Hyperbaric Oxygen Therapy — Optimal Clinic, Barrie</div><img src="assets/logos/symbol-green-nobg.png" alt="" style="height:30px;opacity:.85" loading="eager" decoding="async"></div>
+</section>
+
+<section data-label="The honest bottom line" data-speaker-notes="Say this plainly and pause. The patient should leave knowing exactly where the science stands." style="position:relative;width:1920px;height:1080px;box-sizing:border-box;overflow:hidden;font-family:'Public Sans',system-ui,sans-serif;background:linear-gradient(135deg,#2C4E25 0%,#1C3118 100%);color:#FFFCF7;padding:96px 120px 130px;display:flex;flex-direction:column;justify-content:center" class="sl sl-dark">
+  <img src="assets/images/micro-neurons.webp" alt="" style="position:absolute;top:0;right:0;bottom:0;width:640px;height:100%;object-fit:cover;opacity:.9" loading="eager" decoding="async" class="dk-panel">
+  <div style="position:absolute;top:0;right:0;bottom:0;width:640px;background:linear-gradient(90deg,#1F3A1B 0%,rgba(31,58,27,0) 34%)" class="dk-scrim"></div>
+  <div style="max-width:1020px;position:relative">
+    <div style="font-size:24px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:rgba(255,252,247,.66)">The honest bottom line</div>
+    <p style="margin:36px 0 0;font-family:Castoro,serif;font-size:58px;line-height:1.18;letter-spacing:-.025em;color:#FFFCF7">These are early findings at the level of biology. A longer lifespan, disease prevention in healthy people, and reversal of aging haven&rsquo;t been proven as clinical outcomes — larger trials are ongoing.</p>
+    <p style="margin:44px 0 0;max-width:860px;font-size:30px;line-height:1.5;color:rgba(255,252,247,.78)">We think the science is genuinely promising, and we&rsquo;d rather you see <em style="font-family:Castoro,serif;font-size:1.12em;color:#DDE7D2">exactly where it stands</em>.</p>
+  </div>
+  <div class="dk-footer" style="position:absolute;left:120px;right:120px;bottom:50px;display:flex;justify-content:space-between;align-items:center"><div style="font-size:24px;letter-spacing:-.01em;color:rgba(255,252,247,.5)"><span style="color:#FFFCF7;font-weight:600">08 / 16</span>  Hyperbaric Oxygen Therapy — Optimal Clinic, Barrie</div><img src="assets/logos/symbol-white.png" alt="" style="height:30px;opacity:.7" loading="eager" decoding="async"></div>
+</section>
+
+<section data-label="Where this fits" data-speaker-notes="The positioning in two paragraphs: established for specific conditions, investigational for longevity, paid privately. Then the four commitments along the bottom." style="position:relative;width:1920px;height:1080px;box-sizing:border-box;overflow:hidden;font-family:'Public Sans',system-ui,sans-serif;background:#FFFCF7;color:#040504;padding:88px 120px 130px;display:flex;flex-direction:column" class="sl">
+  <div style="font-size:24px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#1A500F">The honest version</div>
+  <h2 style="margin:22px 0 0;font-family:Castoro,serif;font-weight:400;font-size:76px;line-height:1.05;letter-spacing:-.03em;color:#040504;font-size:96px">Where this fits, <span style="position:relative;display:inline-block"><em>plainly</em><span class="dk-ring" style="position:absolute;inset:-6px -26px;border:3px solid rgba(26,80,18,.5);border-radius:50%;transform:rotate(-2.5deg);pointer-events:none;--rot:-2.5deg"></span></span>.</h2>
+  <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:96px;align-content:center">
+    <p style="font-size:28px;line-height:1.5;letter-spacing:-.01em;color:#474747;font-size:29px">Hyperbaric oxygen therapy (HBOT) is a well-established treatment for a specific set of medical conditions. Its use for longevity, healthy aging, and wellness is newer and still being researched — so we offer it in that spirit: promising and evidence-informed, and not a Health Canada–approved treatment for aging or disease.</p>
+    <p style="font-size:28px;line-height:1.5;letter-spacing:-.01em;color:#474747;font-size:29px">Because it&rsquo;s a wellness service rather than a covered medical treatment, it isn&rsquo;t billed to OHIP; most members pay privately, and some employer HSA plans may apply. Everything in this presentation reflects what the research actually shows — cited in full, so you can judge it for yourself.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:44px">
+    <div style="display:flex;gap:16px;align-items:flex-start;border-top:2px solid #DFD7CA;padding-top:26px"><svg viewBox="0 0 24 24" fill="none" stroke="#2C4E25" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:30px;height:30px;flex:none;margin-top:4px"><path d="M4 12.5l5 5L20 6.5"/></svg><div style="font-family:Castoro,serif;font-size:30px;line-height:1.25;letter-spacing:-.01em;color:#040504">Physician-administered &amp; supervised</div></div>
+    <div style="display:flex;gap:16px;align-items:flex-start;border-top:2px solid #DFD7CA;padding-top:26px"><svg viewBox="0 0 24 24" fill="none" stroke="#2C4E25" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:30px;height:30px;flex:none;margin-top:4px"><path d="M4 12.5l5 5L20 6.5"/></svg><div style="font-family:Castoro,serif;font-size:30px;line-height:1.25;letter-spacing:-.01em;color:#040504">Modelled on the Sagol Center protocol</div></div>
+    <div style="display:flex;gap:16px;align-items:flex-start;border-top:2px solid #DFD7CA;padding-top:26px"><svg viewBox="0 0 24 24" fill="none" stroke="#2C4E25" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:30px;height:30px;flex:none;margin-top:4px"><path d="M4 12.5l5 5L20 6.5"/></svg><div style="font-family:Castoro,serif;font-size:30px;line-height:1.25;letter-spacing:-.01em;color:#040504">Every program begins with a medical screening</div></div>
+    <div style="display:flex;gap:16px;align-items:flex-start;border-top:2px solid #DFD7CA;padding-top:26px"><svg viewBox="0 0 24 24" fill="none" stroke="#2C4E25" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:30px;height:30px;flex:none;margin-top:4px"><path d="M4 12.5l5 5L20 6.5"/></svg><div style="font-family:Castoro,serif;font-size:30px;line-height:1.25;letter-spacing:-.01em;color:#040504">HSA-eligible · not OHIP-covered</div></div>
+  </div>
+  <div class="dk-footer" style="position:absolute;left:120px;right:120px;bottom:50px;display:flex;justify-content:space-between;align-items:center"><div style="font-size:24px;letter-spacing:-.01em;color:#8A867D"><span style="color:#1A500F;font-weight:600">09 / 16</span>  Hyperbaric Oxygen Therapy — Optimal Clinic, Barrie</div><img src="assets/logos/symbol-green-nobg.png" alt="" style="height:30px;opacity:.85" loading="eager" decoding="async"></div>
+</section>
+
+<section data-label="The clinic behind it" data-speaker-notes="Who does what: Optimal coordinates onboarding; the physician who runs the partner facility administers and supervises every session; results are reviewed with the patient." style="position:relative;width:1920px;height:1080px;box-sizing:border-box;overflow:hidden;font-family:'Public Sans',system-ui,sans-serif;background:#FFFCF7;color:#040504;padding:88px 900px 130px 120px;display:flex;flex-direction:column;justify-content:center" class="sl">
+  <img src="assets/images/clinician-review.webp" alt="A clinician reviewing results with a patient" style="position:absolute;top:0;right:0;bottom:0;width:780px;height:100%;object-fit:cover;object-position:60% center" loading="eager" decoding="async" class="dk-panel">
+  <div style="font-size:24px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#1A500F">The clinic behind it</div>
+  <h2 style="margin:22px 0 0;font-family:Castoro,serif;font-weight:400;font-size:76px;line-height:1.05;letter-spacing:-.03em;color:#040504">Longevity care, with a clinician&rsquo;s <em>hand</em>.</h2>
+  <p style="margin:30px 0 0;font-size:28px;line-height:1.5;letter-spacing:-.01em;color:#474747;font-size:27px">Optimal is a members&rsquo; clinic in Barrie built around preventative, longevity-minded care. Your hyperbaric sessions are delivered at our partner hyperbaric facility and administered under the supervision of the physician who runs it — with Optimal coordinating your onboarding.</p>
+  <div style="margin-top:44px;border-bottom:2px solid #DFD7CA">
+    <div style="display:grid;grid-template-columns:300px 1fr;align-items:baseline;border-top:2px solid #DFD7CA;padding:22px 0"><div style="font-size:22px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#76736D;color:#1A500F">Optimal</div><div style="font-family:Castoro,serif;font-size:34px;letter-spacing:-.015em;color:#040504">One team plans it</div></div>
+    <div style="display:grid;grid-template-columns:300px 1fr;align-items:baseline;border-top:2px solid #DFD7CA;padding:22px 0"><div style="font-size:22px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#76736D;color:#1A500F">Physician (MD)</div><div style="font-family:Castoro,serif;font-size:34px;letter-spacing:-.015em;color:#040504">A physician oversees it</div></div>
+    <div style="display:grid;grid-template-columns:300px 1fr;align-items:baseline;border-top:2px solid #DFD7CA;padding:22px 0"><div style="font-size:22px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#76736D;color:#1A500F">You</div><div style="font-family:Castoro,serif;font-size:34px;letter-spacing:-.015em;color:#040504">Your results are reviewed with you</div></div>
+  </div>
+  <div class="dk-footer" style="position:absolute;left:120px;right:900px;bottom:50px;display:flex;justify-content:space-between;align-items:center"><div style="font-size:24px;letter-spacing:-.01em;color:#8A867D"><span style="color:#1A500F;font-weight:600">10 / 16</span>  Hyperbaric Oxygen Therapy — Optimal Clinic, Barrie</div><img src="assets/logos/symbol-green-nobg.png" alt="" style="height:30px;opacity:.85" loading="eager" decoding="async"></div>
+</section>
+
+<section data-label="What a session is like" data-speaker-notes="Walk a session end to end. Name the common, mild effects directly; less common effects are covered on the info call and at screening." style="position:relative;width:1920px;height:1080px;box-sizing:border-box;overflow:hidden;font-family:'Public Sans',system-ui,sans-serif;background:#FFFCF7;color:#040504;padding:88px 120px 130px;display:flex;flex-direction:column" class="sl">
+  <div style="display:grid;grid-template-columns:1fr 720px;gap:100px;align-items:end">
+    <div>
+      <div style="font-size:24px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#1A500F">What to expect</div>
+      <h2 style="margin:22px 0 0;font-family:Castoro,serif;font-weight:400;font-size:76px;line-height:1.05;letter-spacing:-.03em;color:#040504;font-size:88px">What a session is <em>like</em>.</h2>
+    </div>
+    <p style="font-size:28px;line-height:1.5;letter-spacing:-.01em;color:#474747;font-size:26px">HBOT is generally well tolerated. Every program begins with a medical screening, and the physician reviews your history before any session is booked.</p>
+  </div>
+  <div style="flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:48px;align-content:center">
+    <div style="border-top:2px solid #DFD7CA;padding-top:30px"><div style="font-size:22px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#76736D;color:#1A500F">Before</div><h3 style="margin:18px 0 0;font-family:Castoro,serif;font-weight:400;font-size:38px;letter-spacing:-.02em;color:#040504">Arrival &amp; screening</h3><p style="margin:16px 0 0;font-size:28px;line-height:1.5;letter-spacing:-.01em;color:#474747;font-size:24px">Wear comfortable cotton clothing. You&rsquo;ll be checked for anything that shouldn&rsquo;t go into the chamber and briefed on how to equalize ear pressure.</p></div>
+    <div style="border-top:2px solid #DFD7CA;padding-top:30px"><div style="font-size:22px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#76736D;color:#1A500F">In the chamber</div><h3 style="margin:18px 0 0;font-family:Castoro,serif;font-weight:400;font-size:38px;letter-spacing:-.02em;color:#040504">During the session</h3><p style="margin:16px 0 0;font-size:28px;line-height:1.5;letter-spacing:-.01em;color:#474747;font-size:24px">You rest, read, or listen to music while pressure is raised slowly. Most people feel only a fullness in the ears, like a flight or a dive.</p></div>
+    <div style="border-top:2px solid #DFD7CA;padding-top:30px"><div style="font-size:22px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#76736D;color:#1A500F">Good to know</div><h3 style="margin:18px 0 0;font-family:Castoro,serif;font-weight:400;font-size:38px;letter-spacing:-.02em;color:#040504">Common, mild effects</h3><p style="margin:16px 0 0;font-size:28px;line-height:1.5;letter-spacing:-.01em;color:#474747;font-size:24px">Temporary ear or sinus pressure and lightheadedness are the most common. Less common effects, including temporary changes in near vision, are discussed on your call.</p></div>
+    <div style="border-top:2px solid #DFD7CA;padding-top:30px"><div style="font-size:22px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#76736D;color:#1A500F">After</div><h3 style="margin:18px 0 0;font-family:Castoro,serif;font-weight:400;font-size:38px;letter-spacing:-.02em;color:#040504">Afterward</h3><p style="margin:16px 0 0;font-size:28px;line-height:1.5;letter-spacing:-.01em;color:#474747;font-size:24px">There&rsquo;s no downtime — you return to your day as normal. Your provider tracks how you tolerate each session across the series.</p></div>
+  </div>
+  <div class="dk-footer" style="position:absolute;left:120px;right:120px;bottom:50px;display:flex;justify-content:space-between;align-items:center"><div style="font-size:24px;letter-spacing:-.01em;color:#8A867D"><span style="color:#1A500F;font-weight:600">11 / 16</span>  Hyperbaric Oxygen Therapy — Optimal Clinic, Barrie</div><img src="assets/logos/symbol-green-nobg.png" alt="" style="height:30px;opacity:.85" loading="eager" decoding="async"></div>
+</section>
+
+<section data-label="Who it may suit" data-speaker-notes="Eligibility is the physician's call at screening. The right-hand list is screened for on every intake and is not complete." style="position:relative;width:1920px;height:1080px;box-sizing:border-box;overflow:hidden;font-family:'Public Sans',system-ui,sans-serif;background:#FFFCF7;color:#040504;padding:88px 120px 130px;display:grid;grid-template-columns:1fr 1fr;gap:120px" class="sl">
+  <div style="display:flex;flex-direction:column;padding-top:40px">
+    <div style="min-height:190px;display:flex;flex-direction:column;justify-content:flex-end">
+      <div style="font-size:24px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#1A500F">Eligibility</div>
+      <h2 style="margin:22px 0 0;font-family:Castoro,serif;font-weight:400;font-size:76px;line-height:1.05;letter-spacing:-.03em;color:#040504;font-size:64px">Who it may <em>suit</em>.</h2>
+    </div>
+    <ul style="margin:44px 0 0;padding:0;border-bottom:2px solid #DFD7CA">
+      <li style="display:flex;gap:18px;align-items:flex-start;border-top:2px solid #DFD7CA;padding:22px 0;list-style:none"><svg viewBox="0 0 24 24" fill="none" stroke="#2C4E25" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:30px;height:30px;flex:none;margin-top:4px"><path d="M4 12.5l5 5L20 6.5"/></svg><span style="font-size:27px;line-height:1.45;color:#474747">Adults exploring longevity and wellness options who understand the service is investigational</span></li>
+      <li style="display:flex;gap:18px;align-items:flex-start;border-top:2px solid #DFD7CA;padding:22px 0;list-style:none"><svg viewBox="0 0 24 24" fill="none" stroke="#2C4E25" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:30px;height:30px;flex:none;margin-top:4px"><path d="M4 12.5l5 5L20 6.5"/></svg><span style="font-size:27px;line-height:1.45;color:#474747">People comfortable committing to a full series of sessions over several weeks</span></li>
+      <li style="display:flex;gap:18px;align-items:flex-start;border-top:2px solid #DFD7CA;padding:22px 0;list-style:none"><svg viewBox="0 0 24 24" fill="none" stroke="#2C4E25" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:30px;height:30px;flex:none;margin-top:4px"><path d="M4 12.5l5 5L20 6.5"/></svg><span style="font-size:27px;line-height:1.45;color:#474747">Those who clear a physician screening for eligibility and contraindications</span></li>
+    </ul>
+  </div>
+  <div style="display:flex;flex-direction:column;padding-top:40px">
+    <div style="min-height:190px;display:flex;flex-direction:column;justify-content:flex-end">
+      <div style="font-size:24px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#1A500F;color:#76736D">Screened for on every intake</div>
+      <h2 style="margin:22px 0 0;font-family:Castoro,serif;font-weight:400;font-size:76px;line-height:1.05;letter-spacing:-.03em;color:#040504;font-size:64px">Who should not — or should <em>wait</em>.</h2>
+    </div>
+    <ul style="margin:44px 0 0;padding:0;border-bottom:2px solid #DFD7CA">
+      <li style="display:flex;gap:18px;align-items:flex-start;border-top:2px solid #DFD7CA;padding:22px 0;list-style:none"><svg viewBox="0 0 24 24" fill="none" stroke="#76736D" stroke-width="2.2" stroke-linecap="round" aria-hidden="true" style="width:30px;height:30px;flex:none;margin-top:4px"><path d="M5 12h14"/></svg><span style="font-size:27px;line-height:1.45;color:#474747">Untreated pneumothorax (collapsed lung) — a firm contraindication</span></li>
+      <li style="display:flex;gap:18px;align-items:flex-start;border-top:2px solid #DFD7CA;padding:22px 0;list-style:none"><svg viewBox="0 0 24 24" fill="none" stroke="#76736D" stroke-width="2.2" stroke-linecap="round" aria-hidden="true" style="width:30px;height:30px;flex:none;margin-top:4px"><path d="M5 12h14"/></svg><span style="font-size:27px;line-height:1.45;color:#474747">Certain lung conditions, recent ear or sinus surgery, or active infection</span></li>
+      <li style="display:flex;gap:18px;align-items:flex-start;border-top:2px solid #DFD7CA;padding:22px 0;list-style:none"><svg viewBox="0 0 24 24" fill="none" stroke="#76736D" stroke-width="2.2" stroke-linecap="round" aria-hidden="true" style="width:30px;height:30px;flex:none;margin-top:4px"><path d="M5 12h14"/></svg><span style="font-size:27px;line-height:1.45;color:#474747">Pregnancy, and some medications — reviewed individually with the physician</span></li>
+      <li style="display:flex;gap:18px;align-items:flex-start;border-top:2px solid #DFD7CA;padding:22px 0;list-style:none"><svg viewBox="0 0 24 24" fill="none" stroke="#76736D" stroke-width="2.2" stroke-linecap="round" aria-hidden="true" style="width:30px;height:30px;flex:none;margin-top:4px"><path d="M5 12h14"/></svg><span style="font-size:27px;line-height:1.45;color:#474747">Claustrophobia or difficulty equalizing ear pressure — discussed before booking</span></li>
+    </ul>
+    <p style="margin:18px 0 0;font-size:22px;font-style:italic;color:#76736D">This is not a complete list.</p>
+  </div>
+  <div class="dk-footer" style="position:absolute;left:120px;right:120px;bottom:50px;display:flex;justify-content:space-between;align-items:center"><div style="font-size:24px;letter-spacing:-.01em;color:#8A867D"><span style="color:#1A500F;font-weight:600">12 / 16</span>  Hyperbaric Oxygen Therapy — Optimal Clinic, Barrie</div><img src="assets/logos/symbol-green-nobg.png" alt="" style="height:30px;opacity:.85" loading="eager" decoding="async"></div>
+</section>
+
+<section data-label="Established treatment" data-speaker-notes="Context only: these are the recognized medical uses under UHMS guidelines. They are distinct from the wellness use we offer, and several are covered in the appropriate medical setting." style="position:relative;width:1920px;height:1080px;box-sizing:border-box;overflow:hidden;font-family:'Public Sans',system-ui,sans-serif;background:#FFFCF7;color:#040504;padding:88px 120px 130px;display:flex;flex-direction:column" class="sl">
+  <div style="display:grid;grid-template-columns:1fr 760px;gap:100px;align-items:end">
+    <div>
+      <div style="font-size:24px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#1A500F">For context</div>
+      <h2 style="margin:22px 0 0;font-family:Castoro,serif;font-weight:400;font-size:76px;line-height:1.05;letter-spacing:-.03em;color:#040504;font-size:84px">Where HBOT is an established <em>treatment</em>.</h2>
+    </div>
+    <p style="font-size:28px;line-height:1.5;letter-spacing:-.01em;color:#474747;font-size:26px">HBOT has recognized, evidence-based medical uses under clinical guidelines such as the Undersea and Hyperbaric Medical Society (UHMS) indications. These are distinct from the wellness use we offer — and, unlike a longevity program, several are covered in the appropriate medical setting.</p>
+  </div>
+  <div style="flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:20px 64px;align-content:center">
+    <div style="border-top:2px solid #DFD7CA;padding:28px 0 0"><div style="font-family:Castoro,serif;font-size:40px;line-height:1.15;letter-spacing:-.02em;color:#040504">Non-healing &amp; diabetic wounds</div></div>
+    <div style="border-top:2px solid #DFD7CA;padding:28px 0 0"><div style="font-family:Castoro,serif;font-size:40px;line-height:1.15;letter-spacing:-.02em;color:#040504">Radiation tissue injury</div></div>
+    <div style="border-top:2px solid #DFD7CA;padding:28px 0 0"><div style="font-family:Castoro,serif;font-size:40px;line-height:1.15;letter-spacing:-.02em;color:#040504">Carbon monoxide poisoning</div></div>
+    <div style="border-top:2px solid #DFD7CA;padding:28px 0 0"><div style="font-family:Castoro,serif;font-size:40px;line-height:1.15;letter-spacing:-.02em;color:#040504">Decompression sickness</div></div>
+    <div style="border-top:2px solid #DFD7CA;padding:28px 0 0"><div style="font-family:Castoro,serif;font-size:40px;line-height:1.15;letter-spacing:-.02em;color:#040504">Certain serious infections</div></div>
+    <div style="border-top:2px solid #DFD7CA;padding:28px 0 0"><div style="font-family:Castoro,serif;font-size:40px;line-height:1.15;letter-spacing:-.02em;color:#040504">Compromised skin grafts &amp; flaps</div></div>
+  </div>
+  <div class="dk-footer" style="position:absolute;left:120px;right:120px;bottom:50px;display:flex;justify-content:space-between;align-items:center"><div style="font-size:24px;letter-spacing:-.01em;color:#8A867D"><span style="color:#1A500F;font-weight:600">13 / 16</span>  Hyperbaric Oxygen Therapy — Optimal Clinic, Barrie</div><img src="assets/logos/symbol-green-nobg.png" alt="" style="height:30px;opacity:.85" loading="eager" decoding="async"></div>
+</section>
+
+<section data-label="Read it yourself" data-speaker-notes="Every source is linked on our HBOT page; the QR code opens it. Start with the Hadanny &amp; Efrati review if they want one paper." style="position:relative;width:1920px;height:1080px;box-sizing:border-box;overflow:hidden;font-family:'Public Sans',system-ui,sans-serif;background:#FFFCF7;color:#040504;padding:84px 120px 124px;display:grid;grid-template-columns:640px 1fr;gap:110px" class="sl">
+  <div style="display:flex;flex-direction:column">
+    <div style="font-size:24px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#1A500F">The evidence</div>
+    <h2 style="margin:22px 0 0;font-family:Castoro,serif;font-weight:400;font-size:76px;line-height:1.05;letter-spacing:-.03em;color:#040504;font-size:92px">Read it <span style="position:relative;display:inline-block"><em>yourself</em><span class="dk-ring" style="position:absolute;inset:-6px -22px;border:3px solid rgba(26,80,18,.5);border-radius:50%;transform:rotate(-2.5deg);pointer-events:none;--rot:-2.5deg"></span></span>.</h2>
+    <p style="margin:30px 0 0;font-size:28px;line-height:1.5;letter-spacing:-.01em;color:#474747;font-size:25px">We&rsquo;d rather you judge the science than take a claim on faith. A useful starting point is the Hadanny &amp; Efrati review of the hyperoxic-hypoxic paradox, the mechanism that underlies much of this research.</p>
+    <div style="margin-top:auto;display:flex;gap:30px;align-items:center;padding:26px;border:2px solid #DFD7CA;border-radius:16px;background:#fff">
+      <img src="assets/images/qr-evidence.svg" alt="QR code linking to every source on beoptimal.ca" style="width:168px;height:168px;flex:none" loading="eager" decoding="async">
+      <div>
+        <div style="font-size:22px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#76736D;color:#1A500F">Every source, linked</div>
+        <div style="margin-top:10px;font-family:Castoro,serif;font-size:30px;line-height:1.2;color:#040504">Scan to open the full reading list.</div>
+        <div style="margin-top:10px;font-size:20px;color:#76736D">beoptimal.ca/services/hyperbaric-oxygen-therapy</div>
+      </div>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;justify-content:center;border-bottom:2px solid #DFD7CA">
+    <div style="border-top:2px solid #DFD7CA;padding:22px 0 18px"><div style="display:flex;gap:18px;align-items:baseline"><span style="font-size:22px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#76736D;color:#1A500F">1</span><span style="font-family:Castoro,serif;font-size:32px;letter-spacing:-.015em;color:#040504">Cellular aging biomarkers</span></div><ul style="margin:6px 0 0 0;padding:0 0 0 52px"><li style="list-style:none;margin-top:10px;font-size:21px;line-height:1.4;color:#474747">Hachmo Y, et al. (2020). <i>Aging (Albany NY)</i> 12(22) — telomere length &amp; immunosenescence</li><li style="list-style:none;margin-top:10px;font-size:21px;line-height:1.4;color:#474747">Hachmo Y, et al. (2021). <i>Aging (Albany NY)</i> 13(16) — telomeres &amp; DNA repair in aging adults</li></ul></div>
+    <div style="border-top:2px solid #DFD7CA;padding:22px 0 18px"><div style="display:flex;gap:18px;align-items:baseline"><span style="font-size:22px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#76736D;color:#1A500F">2</span><span style="font-family:Castoro,serif;font-size:32px;letter-spacing:-.015em;color:#040504">Tissue aging &amp; regeneration</span></div><ul style="margin:6px 0 0 0;padding:0 0 0 52px"><li style="list-style:none;margin-top:10px;font-size:21px;line-height:1.4;color:#474747">Fischer I, et al. (2021). <i>Aging (Albany NY)</i> 13(18) — angiogenesis &amp; regeneration in human skin</li><li style="list-style:none;margin-top:10px;font-size:21px;line-height:1.4;color:#474747">Thom SR. (2011). <i>Plast Reconstr Surg</i> 127(Suppl 1) — mechanisms &amp; efficacy</li></ul></div>
+    <div style="border-top:2px solid #DFD7CA;padding:22px 0 18px"><div style="display:flex;gap:18px;align-items:baseline"><span style="font-size:22px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#76736D;color:#1A500F">3</span><span style="font-family:Castoro,serif;font-size:32px;letter-spacing:-.015em;color:#040504">Neurocognitive &amp; brain aging</span></div><ul style="margin:6px 0 0 0;padding:0 0 0 52px"><li style="list-style:none;margin-top:10px;font-size:21px;line-height:1.4;color:#474747">Efrati S, et al. (2013). <i>J Neurotrauma</i> 30(3) — neuroplasticity in chronic deficits</li><li style="list-style:none;margin-top:10px;font-size:21px;line-height:1.4;color:#474747">Boussi-Gross R, et al. (2013). <i>PLoS ONE</i> 8(11) — post-concussion syndrome, RCT</li></ul></div>
+    <div style="border-top:2px solid #DFD7CA;padding:22px 0 18px"><div style="display:flex;gap:18px;align-items:baseline"><span style="font-size:22px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#76736D;color:#1A500F">4</span><span style="font-family:Castoro,serif;font-size:32px;letter-spacing:-.015em;color:#040504">Mitochondria &amp; oxidative signalling</span></div><ul style="margin:6px 0 0 0;padding:0 0 0 52px"><li style="list-style:none;margin-top:10px;font-size:21px;line-height:1.4;color:#474747">Hadanny A, Efrati S. (2020). <i>Biomolecules</i> 10(6):958 — the hyperoxic-hypoxic paradox</li></ul></div>
+    <div style="border-top:2px solid #DFD7CA;padding:22px 0 18px"><div style="display:flex;gap:18px;align-items:baseline"><span style="font-size:22px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#76736D;color:#1A500F">5</span><span style="font-family:Castoro,serif;font-size:32px;letter-spacing:-.015em;color:#040504">Systematic reviews &amp; consensus</span></div><ul style="margin:6px 0 0 0;padding:0 0 0 52px"><li style="list-style:none;margin-top:10px;font-size:21px;line-height:1.4;color:#474747">UHMS (2023). <i>Hyperbaric Oxygen Therapy Indications</i>, 15th Ed.</li><li style="list-style:none;margin-top:10px;font-size:21px;line-height:1.4;color:#474747">Clarke RE, et al. (2012). <i>Cochrane Database Syst Rev</i> CD004123</li></ul></div>
+  </div>
+  <div class="dk-footer" style="position:absolute;left:120px;right:120px;bottom:50px;display:flex;justify-content:space-between;align-items:center"><div style="font-size:24px;letter-spacing:-.01em;color:#8A867D"><span style="color:#1A500F;font-weight:600">14 / 16</span>  Hyperbaric Oxygen Therapy — Optimal Clinic, Barrie</div><img src="assets/logos/symbol-green-nobg.png" alt="" style="height:30px;opacity:.85" loading="eager" decoding="async"></div>
+</section>
+
+<section data-label="Questions" data-speaker-notes="The four questions patients ask most. The rest are on the HBOT page and the info call." style="position:relative;width:1920px;height:1080px;box-sizing:border-box;overflow:hidden;font-family:'Public Sans',system-ui,sans-serif;background:#FFFCF7;color:#040504;padding:84px 120px 124px;display:flex;flex-direction:column" class="sl">
+  <div style="font-size:24px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#1A500F">Frequently asked</div>
+  <h2 style="margin:22px 0 0;font-family:Castoro,serif;font-weight:400;font-size:76px;line-height:1.05;letter-spacing:-.03em;color:#040504;font-size:84px">Your <span style="position:relative;display:inline-block"><em>questions</em><span class="dk-ring" style="position:absolute;inset:-6px -24px;border:3px solid rgba(26,80,18,.5);border-radius:50%;transform:rotate(-2.5deg);pointer-events:none;--rot:-2.5deg"></span></span>, answered.</h2>
+  <div style="flex:1;margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:34px 96px;align-content:center">
+    <div style="border-top:2px solid #DFD7CA;padding-top:26px"><h3 style="margin:0;font-family:Castoro,serif;font-weight:400;font-size:34px;line-height:1.2;letter-spacing:-.015em;color:#040504">Is HBOT approved by Health Canada for longevity or anti-aging?</h3><p style="margin:14px 0 0;font-size:28px;line-height:1.5;letter-spacing:-.01em;color:#474747;font-size:23px">No. HBOT is approved for a defined set of medical conditions, but its use for aging, longevity, or general wellness is investigational and is not approved by Health Canada as a treatment for aging or disease prevention. We offer it as a private wellness service on that basis.</p></div>
+    <div style="border-top:2px solid #DFD7CA;padding-top:26px"><h3 style="margin:0;font-family:Castoro,serif;font-weight:400;font-size:34px;line-height:1.2;letter-spacing:-.015em;color:#040504">Is this covered by OHIP or my insurance?</h3><p style="margin:14px 0 0;font-size:28px;line-height:1.5;letter-spacing:-.01em;color:#474747;font-size:23px">Not for this indication. Because it&rsquo;s offered as a longevity and wellness service — not an OHIP-eligible medical treatment — HBOT here is paid privately. Some employer Health Spending Accounts (HSA) may apply; we can discuss this on your info call.</p></div>
+    <div style="border-top:2px solid #DFD7CA;padding-top:26px"><h3 style="margin:0;font-family:Castoro,serif;font-weight:400;font-size:34px;line-height:1.2;letter-spacing:-.015em;color:#040504">Who administers the treatment, and where?</h3><p style="margin:14px 0 0;font-size:28px;line-height:1.5;letter-spacing:-.01em;color:#474747;font-size:23px">Sessions are delivered at our partner hyperbaric clinic and are administered under the supervision of the physician (MD) who runs that facility. Optimal coordinates your screening, program, and follow-up.</p></div>
+    <div style="border-top:2px solid #DFD7CA;padding-top:26px"><h3 style="margin:0;font-family:Castoro,serif;font-weight:400;font-size:34px;line-height:1.2;letter-spacing:-.015em;color:#040504">Will this make me live longer or reverse aging?</h3><p style="margin:14px 0 0;font-size:28px;line-height:1.5;letter-spacing:-.01em;color:#474747;font-size:23px">We can&rsquo;t say that, and we won&rsquo;t. Research has observed changes in some aging-associated biomarkers, but lifespan extension, disease prevention in healthy people, and reversal of biological aging have not been demonstrated as clinical outcomes.</p></div>
+  </div>
+  <div class="dk-footer" style="position:absolute;left:120px;right:120px;bottom:50px;display:flex;justify-content:space-between;align-items:center"><div style="font-size:24px;letter-spacing:-.01em;color:#8A867D"><span style="color:#1A500F;font-weight:600">15 / 16</span>  Hyperbaric Oxygen Therapy — Optimal Clinic, Barrie</div><img src="assets/logos/symbol-green-nobg.png" alt="" style="height:30px;opacity:.85" loading="eager" decoding="async"></div>
+</section>
+
+<section data-label="Next steps" data-speaker-notes="Close on the conversation, not a commitment. Info calls are booked with Peter. Invite questions; contact details are on screen." style="position:relative;width:1920px;height:1080px;box-sizing:border-box;overflow:hidden;font-family:'Public Sans',system-ui,sans-serif;background:#FFFCF7;color:#040504;padding:88px 120px 130px" class="sl">
+  <div style="display:grid;grid-template-columns:1fr 620px;gap:90px;height:100%;box-sizing:border-box;align-items:stretch">
+    <div style="display:flex;flex-direction:column;justify-content:center">
+      <div style="font-size:24px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#1A500F">Next steps</div>
+      <h2 style="margin:22px 0 0;font-family:Castoro,serif;font-weight:400;font-size:76px;line-height:1.05;letter-spacing:-.03em;color:#040504;font-size:80px">Curious whether HBOT is right for <em>you</em>?</h2>
+      <p style="margin:26px 0 0;font-size:28px;line-height:1.5;letter-spacing:-.01em;color:#474747;font-size:26px;max-width:880px">Start with a conversation. No obligation, no pressure — just an honest look at the evidence and whether a program makes sense for you.</p>
+      <div style="margin-top:40px">
+        <div style="display:grid;grid-template-columns:100px 1fr 420px;align-items:center;border-top:2px solid #DFD7CA;padding:26px 0"><div style="font-family:Castoro,serif;font-size:38px;color:#1A500F">01</div><div style="font-family:Castoro,serif;font-size:36px;letter-spacing:-.02em">Info call</div><div style="text-align:right;font-size:22px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#76736D">No obligation</div></div>
+        <div style="display:grid;grid-template-columns:100px 1fr 420px;align-items:center;border-top:2px solid #DFD7CA;padding:26px 0"><div style="font-family:Castoro,serif;font-size:38px;color:#1A500F">02</div><div style="font-family:Castoro,serif;font-size:36px;letter-spacing:-.02em">Medical screening</div><div style="text-align:right;font-size:22px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#76736D">With the physician</div></div>
+        <div style="display:grid;grid-template-columns:100px 1fr 420px;align-items:center;border-top:2px solid #DFD7CA;border-bottom:2px solid #DFD7CA;padding:26px 0"><div style="font-family:Castoro,serif;font-size:38px;color:#1A500F">03</div><div style="font-family:Castoro,serif;font-size:36px;letter-spacing:-.02em">Your program</div><div style="text-align:right;font-size:22px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#76736D">A series over weeks</div></div>
+      </div>
+      <p style="margin:26px 0 0;max-width:900px;font-size:19px;line-height:1.5;color:#76736D">Offered as an investigational longevity &amp; wellness service — not a Health Canada-approved treatment for aging, and not OHIP-covered. Treatment is delivered and administered by a physician (MD) at our partner hyperbaric clinic.</p>
+    </div>
+    <div style="background:linear-gradient(160deg,#2C4E25 0%,#1C3118 100%);color:#FFFCF7;border-radius:16px;padding:60px 54px;display:flex;flex-direction:column;margin:10px 0 40px;box-sizing:border-box;box-shadow:0 8px 48px rgba(0,0,0,.12)">
+      <img src="assets/logos/symbol-white.png" alt="" style="height:42px;align-self:flex-start" loading="eager" decoding="async">
+      <div style="margin-top:40px;font-family:Castoro,serif;font-size:62px;letter-spacing:-.03em"><em>Questions?</em></div>
+      <p style="margin:18px 0 0;font-size:26px;line-height:1.5;color:rgba(255,252,247,.85)">We&rsquo;re happy to talk anything through — today or after you&rsquo;ve thought it over.</p>
+      <div class="closing-export">
+        <button type="button" class="export-cta" data-export-pdf>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+          Export as PDF
+        </button>
+      </div>
+      <div style="margin-top:auto;border-top:1px solid rgba(255,252,247,.28);padding-top:34px;display:flex;flex-direction:column;gap:22px;font-size:28px">
+        <div><span style="display:block;font-size:24px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,252,247,.6)">Call or text</span><span style="display:block;margin-top:8px">(437) 370-0291</span></div>
+        <div><span style="display:block;font-size:24px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,252,247,.6)">Email</span><span style="display:block;margin-top:8px">care@beoptimal.ca</span></div>
+        <div><span style="display:block;font-size:24px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,252,247,.6)">Web</span><span style="display:block;margin-top:8px">beoptimal.ca</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="dk-footer" style="position:absolute;left:120px;right:120px;bottom:50px;display:flex;justify-content:space-between;align-items:center"><div style="font-size:24px;letter-spacing:-.01em;color:#8A867D"><span style="color:#1A500F;font-weight:600">16 / 16</span>  Hyperbaric Oxygen Therapy — Optimal Clinic, Barrie</div><img src="assets/logos/symbol-green-nobg.png" alt="" style="height:30px;opacity:.85" loading="eager" decoding="async"></div>
+</section>
+
+</deck-stage>
+
+<script>
+  /* ==========================================================================
+     1. Slide entrance reveals
+     --------------------------------------------------------------------------
+     deck-stage keeps every slide mounted (visibility:hidden), so entrance
+     animations have to be gated on .in-view and restarted whenever a slide
+     becomes active. Reveal targets are chosen structurally rather than
+     hand-tagged per slide: walk into a slide, skip the layers that animate on
+     their own clock, and stagger the natural content blocks.
+     ========================================================================== */
+  (() => {
+    const OWN_CLOCK = '.dk-bg, .dk-panel, .dk-scrim, .dk-rule, .dk-footer';
+    const isOwnClock = (el) => el.matches(OWN_CLOCK);
+    const hasText = (el) => [...el.childNodes]
+      .some((n) => n.nodeType === 3 && n.textContent.trim());
+
+    // Descend through wrapper elements that only exist to position one child —
+    // the reveal should land on the content, not on the scaffolding.
+    const unwrap = (el) => {
+      let cur = el, guard = 0;
+      while (guard++ < 4) {
+        const kids = [...cur.children].filter((k) => !isOwnClock(k));
+        if (kids.length !== 1 || hasText(cur)) break;
+        cur = kids[0];
+      }
+      return cur;
+    };
+
+    const expand = (el) => {
+      const u = unwrap(el);
+      const kids = [...u.children].filter((k) => !isOwnClock(k));
+      return (kids.length >= 2 && kids.length <= 9) ? kids : [u];
+    };
+
+    document.querySelectorAll('deck-stage > section').forEach((slide) => {
+      const tops = [...slide.children].filter((el) => !isOwnClock(el));
+      let targets = tops.flatMap(expand);
+
+      // A slide that resolved to one or two blocks reads as a single lump on
+      // screen; go one level deeper on its richest block so the eye gets a
+      // sequence (eyebrow → headline → body → rows) instead of a jump-cut.
+      if (targets.length < 3) {
+        const richest = targets.reduce((a, b) =>
+          (unwrap(b).children.length > unwrap(a).children.length ? b : a), targets[0]);
+        if (richest) {
+          targets = targets.flatMap((t) => (t === richest ? expand(t) : [t]));
+        }
+      }
+
+      targets.forEach((el, i) => {
+        el.classList.add('dk-rv');
+        el.style.setProperty('--rv', i);
+      });
+    });
+
+    const replay = (slide) => {
+      slide.querySelectorAll('.dk-rv, .dk-bg, .dk-panel, .dk-scrim, .dk-ring, .dk-rule, .dk-footer')
+        .forEach((el) => {
+          el.style.animation = 'none';
+          void el.getBoundingClientRect();   // force reflow so animations restart
+          el.style.animation = '';
+        });
+      slide.classList.add('in-view');
+    };
+
+    const deck = document.querySelector('deck-stage');
+
+    deck.addEventListener('slidechange', (e) => {
+      document.querySelectorAll('deck-stage > section').forEach((s) => s.classList.remove('in-view'));
+      if (e.detail.slide) replay(e.detail.slide);
+    });
+
+    // The deck may have initialised before this listener attached.
+    const active = document.querySelector('deck-stage > section[data-deck-active]');
+    if (active) replay(active);
+
+    // Slide 1's entrance plays hidden underneath the cover screens; the welcome
+    // screen re-runs it at the moment the presentation actually starts.
+    window.__replayActiveSlide = () => {
+      const a = document.querySelector('deck-stage > section[data-deck-active]');
+      if (a) replay(a);
+    };
+  })();
+
+  /* ==========================================================================
+     2. Fullscreen — the deck is meant to fill the consult-room display
+     --------------------------------------------------------------------------
+     Toggled by F, by the floating control, or from the preparation screen so
+     the room is set up before the patient sits down. Esc exits natively, and
+     the browser only grants fullscreen from a real user gesture, so every
+     entry point here hangs off a click or keypress.
+
+     Deep links need no code either: deck-stage already reads a 1-indexed #N on
+     load and keeps it in sync as you navigate, so #12 is linkable as-is. Note
+     that N counts deck slides — the welcome screen is 01 of the printed 16 but
+     lives outside the deck, so #1 is the Title slide, printed "02 / 16".
+     ========================================================================== */
+  (() => {
+    const root = document.documentElement;
+    const isOn = () => !!(document.fullscreenElement || document.webkitFullscreenElement);
+    const supported = !!(root.requestFullscreen || root.webkitRequestFullscreen);
+
+    window.__toggleFullscreen = () => {
+      if (!supported) return;
+      const p = isOn()
+        ? (document.exitFullscreen || document.webkitExitFullscreen).call(document)
+        : (root.requestFullscreen || root.webkitRequestFullscreen).call(root);
+      // Denied or unsupported is not an error worth surfacing mid-meeting.
+      if (p && p.catch) p.catch(() => {});
+    };
+
+    // Reflect the real state, which also changes via Esc or the browser's own UI.
+    const sync = () => {
+      const on = isOn();
+      document.querySelectorAll('[data-fullscreen-toggle]').forEach((b) => {
+        b.classList.toggle('on', on);
+        b.setAttribute('aria-pressed', String(on));
+        const label = b.querySelector('.fs-label');
+        if (label) label.textContent = on ? 'Exit fullscreen' : 'Fullscreen';
+      });
+    };
+    ['fullscreenchange', 'webkitfullscreenchange'].forEach((evt) =>
+      document.addEventListener(evt, sync));
+
+    if (!supported) {
+      document.querySelectorAll('[data-fullscreen-toggle]').forEach((b) => {
+        b.hidden = true;
+        b.dataset.unsupported = '1';
+      });
+    } else {
+      document.querySelectorAll('[data-fullscreen-toggle]').forEach((b) =>
+        b.addEventListener('click', (e) => { e.stopPropagation(); window.__toggleFullscreen(); }));
+      window.addEventListener('keydown', (e) => {
+        if (e.metaKey || e.ctrlKey || e.altKey) return;
+        if (e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+        if (e.key === 'f' || e.key === 'F') { e.preventDefault(); window.__toggleFullscreen(); }
+      });
+    }
+    sync();
+  })();
+
+  /* ==========================================================================
+     4. Preparation → welcome → presentation, and PDF export
+     ========================================================================== */
+  (() => {
+    const prep        = document.getElementById('prep-screen');
+    const welcome     = document.getElementById('welcome-screen');
+    const nameInput   = document.getElementById('patient-name');
+    const dateInput   = document.getElementById('session-date');
+    const welcomeName = document.getElementById('welcome-name');
+    const welcomeMeta = document.getElementById('welcome-meta');
+    const welcomeTtl  = welcome.querySelector('.welcome-title');
+    const beginBtn    = document.getElementById('welcome-begin');
+    const exportFab   = document.getElementById('export-fab');
+    const fsFab       = document.getElementById('fullscreen-fab');
+    const deck        = document.querySelector('deck-stage');
+    const coverStage  = document.getElementById('cover-stage');
+    const coverCanvas = document.getElementById('cover-canvas');
+
+    // Scale the 1920×1080 cover canvas to fit the viewport, letterboxed —
+    // exactly like deck-stage, so the cover screens keep 16:9 proportions and
+    // never stretch on any display aspect.
+    const fitCover = () => {
+      const s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+      coverCanvas.style.transform = 'scale(' + s + ')';
+    };
+    fitCover();
+    window.addEventListener('resize', fitCover);
+    if (window.ResizeObserver) new ResizeObserver(fitCover).observe(document.documentElement);
+
+    const iso = (d) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') +
+                       '-' + String(d.getDate()).padStart(2, '0');
+    const today = new Date();
+    dateInput.value = iso(today);
+
+    // A name can also arrive in the URL (?name=Sarah) for a pre-set kiosk.
+    const qsName = new URLSearchParams(location.search).get('name');
+    if (qsName) {
+      nameInput.value = qsName.trim().replace(/\s+/g, ' ')
+        .replace(/\S+/g, (w) => w[0].toUpperCase() + w.slice(1));
+    }
+
+    // Lock deck keyboard nav while a cover screen is up (deck-stage checks this).
+    window.__deckLocked = true;
+
+    const getName = () => (nameInput.value || '').trim();
+    const fmtDate = (s) => {
+      const [y, m, d] = (s || '').split('-').map(Number);
+      if (!y) return '';
+      return new Date(y, m - 1, d).toLocaleDateString('en-CA',
+        { year: 'numeric', month: 'long', day: 'numeric' });
+    };
+
+    // Keep the welcome page in sync with the inputs at all times, so even a
+    // native Cmd/Ctrl-P yields a correctly stamped record.
+    const syncWelcome = () => {
+      const name = getName();
+      welcomeName.textContent = name;
+      welcomeMeta.textContent = [fmtDate(dateInput.value), 'Optimal Clinic, Barrie']
+        .filter(Boolean).join('  ·  ');
+      welcomeTtl.classList.toggle('no-name', !name);
+    };
+    nameInput.addEventListener('input', syncWelcome);
+    dateInput.addEventListener('input', syncWelcome);
+    syncWelcome();
+
+    let started = false;
+    let coverTimer;   // last cover transition wins (guards rapid back-and-forth)
+
+    const openWelcome = () => {
+      clearTimeout(coverTimer);
+      syncWelcome();
+      prep.classList.add('fade-out');
+      welcome.hidden = false;
+      welcome.classList.remove('fade-out', 'is-on');
+      coverTimer = setTimeout(() => { prep.hidden = true; }, 640);
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        welcome.classList.add('is-on');
+        beginBtn.focus({ preventScroll: true });
+      }));
+    };
+
+    const backToPrep = () => {
+      clearTimeout(coverTimer);
+      welcome.classList.add('fade-out');
+      prep.hidden = false;
+      prep.classList.remove('fade-out');
+      coverTimer = setTimeout(() => { welcome.hidden = true; welcome.classList.remove('is-on'); }, 640);
+      setTimeout(() => { nameInput.focus({ preventScroll: true }); nameInput.select(); }, 60);
+    };
+
+    const beginPresentation = () => {
+      if (started) return;
+      started = true;
+      clearTimeout(coverTimer);
+      window.__deckLocked = false;          // hand keyboard control to the deck
+      coverStage.classList.add('fade-out');
+      coverTimer = setTimeout(() => { coverStage.hidden = true; }, 640);
+      if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+      exportFab.hidden = false;
+      if (fsFab.dataset.unsupported !== '1') fsFab.hidden = false;
+      // deck-stage has already landed on the title slide, or on the one a #N
+      // deep link asked for. Leave that alone and just re-run the entrance,
+      // which played hidden underneath the cover screens.
+      if (window.__replayActiveSlide) window.__replayActiveSlide();
+    };
+
+    document.getElementById('prep-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      openWelcome();
+    });
+    // Click anywhere on the welcome layer (including Begin) to start.
+    welcome.addEventListener('click', beginPresentation);
+    // "Edit name" returns to preparation — it must not also begin.
+    document.getElementById('welcome-back').addEventListener('click', (e) => {
+      e.stopPropagation();
+      backToPrep();
+    });
+
+    // Welcome-screen keyboard affordance. The deck is inert via __deckLocked,
+    // so this only drives the cover screens and stops the page from scrolling.
+    window.addEventListener('keydown', (e) => {
+      if (started || coverStage.hidden || coverStage.classList.contains('fade-out')) return;
+      const welcomeUp = !welcome.hidden && !welcome.classList.contains('fade-out');
+      if (!welcomeUp) return;
+      if (['ArrowRight', 'Enter', ' ', 'Spacebar', 'PageDown'].includes(e.key)) {
+        e.preventDefault(); beginPresentation();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault(); backToPrep();
+      }
+    });
+
+    // ── Export to PDF (print → Save as PDF, one page per slide) ──
+    const exportPDF = () => {
+      syncWelcome();
+      const name = getName() || 'Patient';
+      const stamp = dateInput.value || iso(today);
+      const prev = document.title;
+      document.title = 'Optimal — Hyperbaric Oxygen Therapy — ' + name + ' — ' + stamp;
+      const cleanup = () => { document.title = prev; window.removeEventListener('afterprint', cleanup); };
+      window.addEventListener('afterprint', cleanup);
+      setTimeout(() => window.print(), 60);
+    };
+    document.getElementById('prep-export').addEventListener('click', exportPDF);
+    exportFab.addEventListener('click', exportPDF);
+    // The closing slide carries the same export, so the meeting can end on a
+    // saved record without hunting for the floating control.
+    document.querySelectorAll('[data-export-pdf]').forEach((b) =>
+      b.addEventListener('click', exportPDF));
+
+    // Reveal the floating controls on mouse activity once presenting.
+    let fabTimer;
+    window.addEventListener('mousemove', () => {
+      if (!started) return;
+      exportFab.classList.add('avail');
+      fsFab.classList.add('avail');
+      clearTimeout(fabTimer);
+      fabTimer = setTimeout(() => {
+        exportFab.classList.remove('avail');
+        fsFab.classList.remove('avail');
+      }, 2600);
+    }, { passive: true });
+
+    // Land on the name field, ready to type.
+    requestAnimationFrame(() => nameInput.focus({ preventScroll: true }));
+  })();
+</script>
+
+</body>
+</html>
