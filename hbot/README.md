@@ -45,9 +45,9 @@ The engine, cover screens, PDF export, fullscreen and motion all come from
 `../intro/`, unchanged. The QR code (`assets/images/qr-evidence.svg`) opens
 `beoptimal.ca/services/hyperbaric-oxygen-therapy#evidence`.
 
-## Wording that differs from the page (needs Peter's sign-off)
+## Wording that differs from the page (approved by Peter, Oct 24, 2026)
 
-Body copy is the page's, verbatim, except for these changes.
+Body copy is the page's, verbatim, except for these changes. All of them are approved; treat them as client-approved copy, like the rest of the deck.
 
 **Page references now point at the deck:**
 - "linked further down" became "cited at the end".
