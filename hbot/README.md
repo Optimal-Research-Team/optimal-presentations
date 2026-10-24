@@ -91,12 +91,12 @@ page's new copy.
 - **Closing disclaimer:** trimmed.
 
 **New in v2 (please check):**
-- **Session schematic:** "One session, schematic", "Exact parameters are decided with the physician" (from the protocol FAQ answer), and the labels PRESSURE UP / OXYGEN / AIR BREAK / PRESSURE DOWN. It shows the *shape* of a session only, with no counts or durations.
+- **Session schematic:** "One session, schematic" and the labels PRESSURE UP / OXYGEN / AIR BREAK / PRESSURE DOWN. It shows the *shape* of a session only, with no counts or durations. The note "Exact parameters are decided with the physician" was **approved by Peter on Oct 24**.
 - **Role split on slide 9:**
   - Partner physician (MD): Screens you / Sets your protocol / Supervises every session / Holds clinical responsibility.
   - Optimal: The introduction / No HBOT screening / No protocol management / No results review.
   - Every line restates the page's two paragraphs, which sit on the same slide.
-- **FAQ:** "What protocol do you follow?" (new page wording) replaces "Who administers the treatment, and where?". The page's answer to that one still says *"Optimal coordinates your screening, program, and follow-up"*, which contradicts the new "Who runs your sessions" section. Fix the page, then decide whether the deck should carry it.
+- **FAQ:** "Who administers the treatment, and where?" now ends with Peter's sentence (Oct 24): *"Optimal coordinates your referral to our partner site for physician-guided assessment and treatment."* It replaces "Optimal coordinates your screening, program, and follow-up", which contradicted "Who runs your sessions". The landing-page session was asked to make the same change on beoptimal.ca.
 
 ## Editing
 

@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parents[2]
 SRC = (ROOT / 'intro' / 'index.html').read_text()
 OUT = ROOT / 'hbot' / 'index.html'
 NAME = 'Hyperbaric Oxygen Therapy'
-VERSION = 'hbot-deck v2.0.0'
+VERSION = 'hbot-deck v2.0.1'
 NB = '  ·  '
 
 # ── Tokens: the landing page's --op-* set, at the 1920 artboard's ~2x scale ──
@@ -421,7 +421,7 @@ slides.append(f'''<section data-label="Questions" data-speaker-notes="The four q
   <div style="flex:1;margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:34px 96px;align-content:center">
     {qa('Is HBOT approved by Health Canada for longevity or anti-aging?', 'No. HBOT is approved by Health Canada for a defined set of medical conditions. Its use for aging, longevity, or general wellness is investigational and is not approved by Health Canada as a treatment for aging or disease prevention. We offer it as a private wellness service on that basis.')}
     {qa('Is this covered by OHIP or my insurance?', 'Not for this indication. Because it&rsquo;s offered as a longevity and wellness service — not an OHIP-eligible medical treatment — HBOT here is paid privately. Some employer Health Spending Accounts (HSA) may apply; we can discuss this on your info call.')}
-    {qa('What protocol do you follow?', 'Our program is modelled on a published clinical protocol that uses intermittent oxygen breathing across a series of sessions. Exact parameters will be discussed and decided with the administering physician during your consultation.')}
+    {qa('Who administers the treatment, and where?', 'Sessions are delivered at our partner hyperbaric clinic and are administered under the supervision of the physician (MD) who runs that facility. Optimal coordinates your referral to our partner site for physician-guided assessment and treatment.')}
     {qa('Will this make me live longer or reverse aging?', 'We can&rsquo;t say that, and we won&rsquo;t. Research has observed changes in some aging-associated biomarkers, but lifespan extension, disease prevention in healthy people, and reversal of biological aging have not been demonstrated as clinical outcomes.')}
   </div>
   {footer()}
