@@ -2,7 +2,7 @@
 
 Optimal Clinic patient orientation presentation for the **Cycle & Hormone Care Program**. Duplicated from the Menopause & Perimenopause Foundation Program deck and rebranded; content otherwise identical at the time of duplication.
 
-**Live:** https://optimal-research-team.github.io/cycle-hormone-care-presentation/
+**Live:** https://optimal-research-team.github.io/optimal-presentations/cycle-hormone-care/
 
 ## Features
 
