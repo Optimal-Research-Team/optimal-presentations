@@ -30,7 +30,6 @@ and it runs.
 | Restart | `R` |
 | Fullscreen | `F`, the floating control, or **Fullscreen** on the preparation screen (`Esc` exits) |
 | Deep link a slide | `#12` in the URL — `#1` is the Title slide (printed "02 / 25") |
-| Pre-set the name | `?name=Sarah` |
 | Export a PDF | **Export as PDF** on the closing slide, the floating control, or the preparation screen |
 
 ### Exporting for the chart

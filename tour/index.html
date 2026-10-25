@@ -1028,12 +1028,8 @@
     const today = new Date();
     dateInput.value = iso(today);
 
-    // A name can also arrive in the URL (?name=Sarah) for a pre-set kiosk.
-    const qsName = new URLSearchParams(location.search).get('name');
-    if (qsName) {
-      nameInput.value = qsName.trim().replace(/\s+/g, ' ')
-        .replace(/\S+/g, (w) => w[0].toUpperCase() + w.slice(1));
-    }
+    // Names are typed here only, never taken from the URL: a ?name= link would put
+    // a patient's name in server logs and browser history.
 
     // Lock deck keyboard nav while a cover screen is up (deck-stage checks this).
     window.__deckLocked = true;
