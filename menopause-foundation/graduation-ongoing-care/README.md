@@ -3,13 +3,28 @@
 The deck for the **Ongoing Care** Menopause & Perimenopause Program — presented at the
 Offboarding ("Graduation") visit that closes the Foundation Program.
 
-> **Current state (Oct 21, 2026) — v6.2, "The Graduate Close", seven slides:**
-> 1 Congratulations (the brand forest plate plays once, fog to sun) · 2 None of this was luck
-> (three receipts + her Foundation Program receipt, six of six steps, stamped) · 3 The moving
-> target (the A2 hypothalamus in real-time 3-D) · 4 Your choice (fork: Ongoing Care vs
-> pay-per-visit) · 5 The Transition Visit (year dial) · 6 Your graduate offer (price, graduate
-> rate with a "Save $380" sticker, value stack) · 7 Thank you (a living dot-matrix over the
-> green gradient). The year comes before the price, then the close (Peter, Oct 21).
+> **Current state (Nov 4, 2026): v7, eighteen slides.** Rebuilt from the Ongoing Care Agreement
+> (draft dated Nov 4, 2026, still marked for legal counsel review) and the Ongoing Care landing
+> page (canvas "Ongoing Care Lander v2"), using the landing page's photos, engravings and silk loop.
+>
+> 1 Congratulations · 2 None of this was luck (receipt) · 3 The moving target (3-D hypothalamus) ·
+> 4 What happens after week 12 (stop or continue) · 5 Keep feeling like yourself (silk) · 6 Care that
+> keeps up with you (four promises + phone) · 7 When something changes (six engravings) · 8 Your next
+> twelve months (five stops) · 9 The transition visit · 10 The body scan · 11 Member evenings ·
+> 12 Your choice (Ongoing Care vs single visits) · 13 Pricing · 14 What it covers, and urgent care ·
+> 15 Your plan, plainly (the terms) · 16 Your questions · 17 Keep your momentum · 18 Thank you.
+> The year still comes before the price (Peter, Oct 21).
+>
+> **Sources for each claim:** prices, scope and terms come from the agreement; everything else
+> follows the landing page's wording. If the agreement changes after legal review, update `CONFIG`
+> in `app.js`, slides 14 and 15, and `cue-card.html`.
+>
+> Wording written for the deck, not taken from either source (for Peter's review): the sub-lines on
+> slide 9, "The same InBody scan you had in Foundation" on slide 10, "Examples. Evenings are optional…"
+> on slide 11, "Four of them comes to $1,300" on slide 13, "Illustrative screens" on slide 6, and the
+> three next steps on slide 17 (the landing page's steps describe its web form; "No payment today" was
+> left out because it isn't in the agreement). The landing page's testimonials are left out on purpose:
+> CNO no-testimonials rule.
 >
 > Prep needs only **her first name + Strong/Modest** (`CONFIG.MINIMAL_PREP`). The
 > questionnaire-driven results slides and their transcription fields are **paused** behind
@@ -27,7 +42,8 @@ Lives inside the `menopause-foundation-presentation` project and reuses its slid
 | File | Purpose |
 |---|---|
 | `index.html` | Prep form ("slide 0") + the deck slides (markup and all CSS) |
-| `app.js` | Form logic, derivations, deck rendering, the slide-1 forest video (`forestVideo`), the slide-2 receipt count, the slide-3 stepper sync (`stages35`), the year dial (`buildYearOrbitSVG`), the closing dot-matrix shader (`closingTexture`, WebGL; decorative, hidden in print). `CONFIG` at the top is the single source of truth for prices, clinic contact, and the template version |
+| `assets/lander/` | The landing page's photos, engravings and silk loop (local copies; `reception-bonsai` and `inbody-botanical` were upscaled) |
+| `app.js` | Form logic, derivations, deck rendering, the silk loops (`loopVideos`), the slide-2 receipt count, the slide-3 stepper sync (`stages35`), the timed rows on slides 6 and 8 (`makeCycler`), the closing texture |
 | `hypo3d.js` | The 3-D hypothalamus (`<hypo-3d>` custom element) — a self-contained, tree-shaken Three.js r186.1 bundle. Built from `src/` by `tools/build-hypo3d.sh`; see `HYPO3D.md` |
 | `cue-card.html` | Printable presenter cue card (static, no PHI). **Presenter notes never render on the deck screen — it is shared with the patient** |
 | `optimal-logo.js` | Vendored `<optimal-logo>` brand mark (zero network) |
@@ -37,27 +53,26 @@ Lives inside the `menopause-foundation-presentation` project and reuses its slid
 
 1. Before the visit, open the route → prep form
 2. Type her first name; pick **Strong** or **Modest** (Modest softens the road-ahead line)
-3. **Generate** → present slides 1–7 with the printed cue card in hand (the savings sticker on slide 6 is computed from `CONFIG`: visit-by-visit total − graduate rate)
+3. **Generate** → present slides 1–18 with the printed cue card in hand (the pricing slide's figures are computed from `CONFIG`: $83 = yearly ÷ 12, $193 = monthly × 12 − yearly, $1,300 = four single visits)
 4. Optional: `Cmd/Ctrl+P` → Save as PDF → file into the chart → **delete the local copy immediately**
 5. Record the patient's decision in the booking system (this tool records nothing)
 6. Clear & close — refresh also wipes everything
 
 Keyboard: `←`/`→` navigate · click left ⅓ back / right ⅔ forward · `Esc` returns to the
-prep form (form state kept until refresh/close).
+prep form (form state kept until refresh/close). On slides 6 and 8 the rows step by themselves;
+clicking a row or stop holds it instead of turning the page.
 
 ### Modes
 
 - **Then-test** (no intake questionnaire on file): intake-side values are the retrospective
   ratings captured at the offboarding survey. Labels change, category rows hide, and the
-  hormone-picture slide auto-skips. The deck stays complete-feeling — 8 slides, no gaps.
+  hormone-picture slide auto-skips. The deck stays complete-feeling, with no gaps.
 - **Strong / Modest** (§5.4): Modest changes copy only — the road-ahead line on slide 3
   ("The moving target") leads with "Hormone care is iterative — the first 12 weeks tell us
   what to adjust next." (With the questionnaire section restored, Modest also retitles the
   results slide and neutralises its delta chip.)
 - **Worsening guard**: if final flagged ≥ intake flagged, the form warns and suggests
   Modest; presenting Strong anyway requires ticking an explicit override.
-- **Bucket** (§5.5): Standard → Ongoing Care vs pay-per-visit. Longevity → Optimal
-  Women's as the NP's recommendation (first-month-free line) vs condensed Ongoing Care.
 
 ### Demo mode
 
@@ -97,8 +112,8 @@ Re-verifiable in ~5 minutes. Run quarterly.
 - [ ] **N2 — Zero network requests after page load; no runtime CDNs.**
   DevTools → Network → load `/graduation-ongoing-care/`, fill + generate + navigate all slides.
   Every request must be same-origin (fonts come from `graduation-ongoing-care/fonts/`; the 3-D
-  model is the single local file `hypo3d.js` and generates every texture in code; slide 1's
-  footage is `../assets/video/forest-dawn.mp4`, a crop of the logo sting's forest plate). Filter by
+  model is the single local file `hypo3d.js` and generates every texture in code; the photos and
+  silk loop are in `assets/lander/`). Filter by
   "3rd-party requests": must be empty.
 
 - [ ] **N3 — No storage.** DevTools → Application → Local Storage / Session Storage /
@@ -121,7 +136,7 @@ Re-verifiable in ~5 minutes. Run quarterly.
   texture on the GPU and is not a network call.)
 
 - [ ] **N5 — All state in JS memory only; unload destroys it.** Refresh mid-prep: the form
-  must come back empty (deadline reset to today+7).
+  must come back empty.
 
 - [ ] **N6 — The artifact is a form, not a record.** The chart is the sole system of record
   via the printed PDF. This tool has no save, no export other than print, no outcome
@@ -131,7 +146,7 @@ Re-verifiable in ~5 minutes. Run quarterly.
 
 `CONFIG.TEMPLATE_VERSION` in `app.js` (shown in the prep header and stamped into every
 printed page's footer). **Bump it on any change that alters rendered output**, so filed
-PDFs stay auditable against the template that produced them. The cue card's slide-7 price
+PDFs stay auditable against the template that produced them. The cue card's pricing
 line is static text — if prices change in `CONFIG`, update `cue-card.html` too and reprint.
 
 ## Open items (from the PRD)

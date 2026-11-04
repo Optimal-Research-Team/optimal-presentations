@@ -13,32 +13,29 @@
 
   /* ════════════════════════════════════════════════════════════════════
      §5.6 Config constants — single source of truth.
-     Derived figures are COMPUTED (slide-7 anchor = PRN30 + PRN45).
+     Derived figures are COMPUTED ($83 = yearly ÷ 12, $193 = monthly × 12 − yearly).
+     Prices follow the Ongoing Care Agreement (draft, Nov 4 2026).
      Bump TEMPLATE_VERSION on any change that alters rendered output.
      ════════════════════════════════════════════════════════════════════ */
   const CONFIG = {
-    PRICE_ANNUAL: 795,
-    PRICE_EARLY: 695,
-    PRICE_MEMBER_EXTRA: 195,
-    PRICE_PRN30: 325,
-    PRICE_PRN45: 425,
-    PRICE_WOMENS_MONTHLY: 295,
+    PRICE_YEARLY: 995,
+    PRICE_MONTHLY: 99,
+    PRICE_VISIT: 325,   // an extra NP visit, or a single NP visit with no plan
     CLINIC: {
       name: 'Optimal Clinic',
       address: '630 Huronia Road, Unit 5, Barrie ON',
       email: 'care@beoptimal.ca',
+      phone: '(437) 370-0291',
       web: 'beoptimal.ca',
     },
-    TEMPLATE_VERSION: 'ongoing-care-deck v6.2.1',
+    TEMPLATE_VERSION: 'ongoing-care-deck v7.0.0',
     /* Questionnaire/results section (slides 2–4 + their form fields).
        OFF until questionnaire data can be pulled directly — everything it
        gates is intact; flip to true to restore the full 9-slide deck.
        (Reminder scheduled for Nov 18, 2026.) */
     QUESTIONNAIRE_SECTION: false,
     /* Minimal prep: the form asks for the first name + Strong/Modest only.
-       Program dates, offer deadline, bucket, and held slot derive
-       automatically (graduation day = today; 12-week program; deadline
-       today+7; Standard bucket; no held slot). */
+       Program dates derive automatically (graduation day = today; 12-week program). */
     MINIMAL_PREP: true,
   };
 
@@ -121,12 +118,6 @@
     const aTxt = a.toLocaleDateString('en-CA', ay === by ? { month: 'long', day: 'numeric' } : { month: 'long', day: 'numeric', year: 'numeric' });
     return `${aTxt} – ${b.toLocaleDateString('en-CA', { month: 'long', day: 'numeric', year: 'numeric' })}`;
   };
-  const fmtSlot = (dtLocal) => {
-    if (!dtLocal) return '';
-    const d = new Date(dtLocal);
-    return d.toLocaleDateString('en-CA', { weekday: 'long', month: 'long', day: 'numeric' }) +
-      ' at ' + d.toLocaleTimeString('en-CA', { hour: 'numeric', minute: '2-digit' });
-  };
   const isoFrom = (date) => {
     const p = (n) => String(n).padStart(2, '0');
     return `${date.getFullYear()}-${p(date.getMonth() + 1)}-${p(date.getDate())}`;
@@ -144,8 +135,8 @@
   let lastState = null;   // last rendered deck state (memory only, wiped on refresh)
 
   const fFirst = $('#f-first'), fStart = $('#f-start'), fEnd = $('#f-end');
-  const fQuote = $('#f-quote'), fWin = $('#f-win'), fDeadline = $('#f-deadline');
-  const fSlot = $('#f-slot'), fThenTest = $('#f-thentest'), fOverride = $('#f-override');
+  const fQuote = $('#f-quote'), fWin = $('#f-win');
+  const fThenTest = $('#f-thentest'), fOverride = $('#f-override');
   const fIntakeFlagged = $('#f-intake-flagged'), fFinalFlagged = $('#f-final-flagged');
 
   const catRows = $('#cat-rows'), winRows = $('#win-rows');
@@ -173,10 +164,10 @@
   }
 
   /* ── Minimal prep (see CONFIG.MINIMAL_PREP) ──
-     Name + Strong/Modest only. Dates, deadline, bucket, and the held slot
-     derive automatically; their fields hide but stay in the DOM. */
+     Name + Strong/Modest only. Dates derive automatically; their fields
+     hide but stay in the DOM. */
   if (CONFIG.MINIMAL_PREP) {
-    [fStart, fEnd, fDeadline, fSlot, $('#b-std')].forEach((el) => {
+    [fStart, fEnd].forEach((el) => {
       const wrap = el && el.closest('.f');
       if (wrap) wrap.hidden = true;
     });
@@ -325,8 +316,7 @@
     const s1 = CONFIG.MINIMAL_PREP
       ? !!fFirst.value.trim()
       : !!(fFirst.value.trim() && fStart.value && fEnd.value && fEnd.value > fStart.value &&
-        (!CONFIG.QUESTIONNAIRE_SECTION || (fQuote.value.trim() && fWin.value.trim())) &&
-        fDeadline.value && fDeadline.value >= todayIso());
+        (!CONFIG.QUESTIONNAIRE_SECTION || (fQuote.value.trim() && fWin.value.trim())));
     const s2 = flaggedVal(fIntakeFlagged) !== null && flaggedVal(fFinalFlagged) !== null;
     const nCats = catDataRows().filter(catRowComplete).length;
     const s3 = nCats >= MIN_ROWS && nCats <= MAX_ROWS;
@@ -346,7 +336,6 @@
      Live guards & mode toggles
      ════════════════════════════════════════════════════════════════════ */
   function resultsMode() { return $('#m-modest').checked ? 'modest' : 'strong'; }
-  function bucket() { return $('#b-lon').checked ? 'longevity' : 'standard'; }
 
   function updateDeltaPreview() {
     const a = parseInt(fIntakeFlagged.value, 10);
@@ -403,15 +392,13 @@
      Defaults / demo / clear
      ════════════════════════════════════════════════════════════════════ */
   function setDefaults() {
-    fDeadline.value = isoFrom(daysFromToday(7));   // §5.1: default today+7d
-    fDeadline.min = todayIso();                     // ≥ today
     for (let i = 0; i < 4; i++) { addCatRow(); addWinRow(); }
   }
 
   function clearAll({ confirmFirst = true } = {}) {
     if (confirmFirst && !window.confirm('Clear everything? Nothing is saved — this cannot be undone.')) return;
-    [fFirst, fQuote, fWin, fSlot, fIntakeFlagged, fFinalFlagged, fStart, fEnd].forEach((el) => { el.value = ''; });
-    $('#b-std').checked = true; $('#m-strong').checked = true;
+    [fFirst, fQuote, fWin, fIntakeFlagged, fFinalFlagged, fStart, fEnd].forEach((el) => { el.value = ''; });
+    $('#m-strong').checked = true;
     fThenTest.checked = false; fOverride.checked = false;
     catDataRows().forEach((r) => r.remove());
     winDataRows().forEach((r) => r.remove());
@@ -434,8 +421,6 @@
     fWin.value = SAMPLE.win;
     fIntakeFlagged.value = SAMPLE.intakeFlagged;
     fFinalFlagged.value = SAMPLE.finalFlagged;
-    const slot = daysFromToday(10); slot.setHours(14, 30, 0, 0);
-    fSlot.value = isoFrom(slot) + 'T14:30';
 
     catDataRows().forEach((r) => r.remove());
     winDataRows().forEach((r) => r.remove());
@@ -474,7 +459,6 @@
       bad |= markInvalid(fStart, $('#e-start'), !fStart.value);
       const endBad = !fEnd.value || (fStart.value && fEnd.value <= fStart.value);
       bad |= markInvalid(fEnd, $('#e-end'), endBad);
-      bad |= markInvalid(fDeadline, $('#e-deadline'), !fDeadline.value || fDeadline.value < todayIso());
     }
     if (Q) {
       bad |= markInvalid(fQuote, $('#e-quote'), !fQuote.value.trim());
@@ -550,9 +534,7 @@
       end: M ? todayIso() : fEnd.value,                        // graduation day = today
       quote: fQuote.value.trim(),
       win: fWin.value.trim(),
-      deadline: M ? isoFrom(daysFromToday(7)) : fDeadline.value,
-      bucket: M ? 'standard' : bucket(), mode: resultsMode(), thenTest: tt,
-      heldSlot: M ? null : (fSlot.value || null),
+      mode: resultsMode(), thenTest: tt,
       intakeFlagged: a, finalFlagged: b,
       categories: cats, wins,
     };
@@ -705,105 +687,6 @@
     return svg + '</svg>';
   }
 
-  /* Year Orbit (slide 8) — the membership year as a self-drawing ring:
-     twelve months, three visit nodes, a "today" marker at graduation. */
-  const MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
-  const MONTHS_FULL = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
-  function buildYearOrbitSVG(s) {
-    // The year dial: a forest disc on cream. Month segments ring the face, a
-    // sweep travels the year once, and each visit marker pops as it passes.
-    // Visit labels sit outside the disc so nothing crowds the face.
-    const cx = 380, cy = 372, R = 262, RR = 232;
-    const FF = 'Public Sans, Inter, system-ui, sans-serif';
-    const FD = 'Castoro, Iowan Old Style, Palatino Linotype, Georgia, serif';
-    const A = (f) => (f * 360 - 90) * Math.PI / 180;
-    const pt = (f, r) => [cx + r * Math.cos(A(f)), cy + r * Math.sin(A(f))];
-    const f1 = (n) => n.toFixed(1);
-    const startM = Number(s.end.slice(5, 7)) - 1;
-    const txt = (x, y, str, size, weight, fill, anchor, ls = 0, family = FF, extra = '') =>
-      `<text x="${f1(x)}" y="${f1(y)}" font-family="${family}" font-size="${size}" font-weight="${weight}"` +
-      ` fill="${fill}" text-anchor="${anchor}" letter-spacing="${ls}"${extra}>${str}</text>`;
-    const arc = (fa, fb, r) => {
-      const [x1, y1] = pt(fa, r), [x2, y2] = pt(fb, r);
-      return `M ${f1(x1)} ${f1(y1)} A ${r} ${r} 0 ${fb - fa > 0.5 ? 1 : 0} 1 ${f1(x2)} ${f1(y2)}`;
-    };
-    const SWEEP0 = 0.55, SWEEP = 2.4;            // matches .yd-sweep / .yd-comet in CSS
-    const at = (f) => (SWEEP0 + f * SWEEP).toFixed(2);
-
-    let svg = `<svg viewBox="0 0 760 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Your membership year — three visits">`;
-    svg += `<defs>
-      <radialGradient id="ydFace" cx=".34" cy=".26" r=".9"><stop offset="0" stop-color="#3D6234"/><stop offset=".55" stop-color="#2C4E25"/><stop offset="1" stop-color="#1A2E16"/></radialGradient>
-      <radialGradient id="ydSheen" cx=".3" cy=".18" r=".6"><stop offset="0" stop-color="#FFFCF7" stop-opacity=".16"/><stop offset="1" stop-color="#FFFCF7" stop-opacity="0"/></radialGradient>
-      <filter id="ydShadow" x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="16"/></filter>
-      <radialGradient id="ydComet"><stop offset="0" stop-color="#FFFCF7"/><stop offset=".35" stop-color="#E7F0E2" stop-opacity=".7"/><stop offset="1" stop-color="#87A482" stop-opacity="0"/></radialGradient>
-    </defs>`;
-
-    // the disc, its contact shadow and a quiet bezel on the cream
-    svg += `<g class="yd-disc">` +
-      `<ellipse cx="${cx}" cy="${cy + R + 6}" rx="${R * 0.78}" ry="20" fill="#1C3118" opacity=".28" filter="url(#ydShadow)"/>` +
-      `<circle cx="${cx}" cy="${cy}" r="${R + 14}" fill="none" stroke="#DFD7CA" stroke-width="1.2"/>` +
-      `<circle cx="${cx}" cy="${cy}" r="${R}" fill="url(#ydFace)"/>` +
-      `<circle cx="${cx}" cy="${cy}" r="${R}" fill="url(#ydSheen)"/>` +
-      `<circle cx="${cx}" cy="${cy}" r="${R - 1}" fill="none" stroke="#FFFCF7" stroke-opacity=".10" stroke-width="1.5"/>` +
-      `<circle cx="${cx}" cy="${cy}" r="152" fill="none" stroke="#FFFCF7" stroke-opacity=".09" stroke-width="1.2"/>` +
-      `</g>`;
-
-    // twelve month segments with gaps, month initials inside the ring
-    for (let i = 0; i < 12; i++) {
-      const fa = i / 12 + 0.006, fb = (i + 1) / 12 - 0.006;
-      svg += `<path class="yd-seg" style="--d:${(0.35 + i * 0.04).toFixed(2)}s" d="${arc(fa, fb, RR)}" fill="none" stroke="#FFFCF7" stroke-opacity=".20" stroke-width="7" stroke-linecap="round"/>`;
-      const [lx, ly] = pt((i + 0.5) / 12, RR - 36);
-      svg += `<g class="yd-seg" style="--d:${(0.45 + i * 0.04).toFixed(2)}s">` +
-        txt(lx, ly + 4.5, MONTHS[(startM + i) % 12], 12.5, 700, 'rgba(255,252,247,.55)', 'middle', 1.8) + `</g>`;
-    }
-    // the sweep travels the year once; a comet rides its tip
-    svg += `<path class="yd-sweep" pathLength="1" d="M ${cx} ${cy - RR} A ${RR} ${RR} 0 1 1 ${cx - 0.01} ${cy - RR}" fill="none" stroke="#C9DCC2" stroke-width="7" stroke-linecap="round"/>`;
-    svg += `<g class="yd-comet"><circle cx="${cx}" cy="${cy - RR}" r="18" fill="url(#ydComet)"/><circle cx="${cx}" cy="${cy - RR}" r="4.5" fill="#FFFCF7"/></g>`;
-
-    // visit markers (fracs chosen for label clearance; the copy carries true timing)
-    const node = (f, lead) => {
-      const [x, y] = pt(f, RR);
-      const ring = lead
-        ? `<circle cx="${f1(x)}" cy="${f1(y)}" r="20" fill="#FFFCF7" fill-opacity=".18"/><circle cx="${f1(x)}" cy="${f1(y)}" r="12" fill="#FFFCF7"/><circle cx="${f1(x)}" cy="${f1(y)}" r="5" fill="#2C4E25"/>`
-        : `<circle cx="${f1(x)}" cy="${f1(y)}" r="12" fill="#1C3118" stroke="#FFFCF7" stroke-width="2.5"/><circle cx="${f1(x)}" cy="${f1(y)}" r="4.5" fill="#C9DCC2"/>`;
-      return { x, y, markup: `<g class="yd-node" style="--d:${at(f)}s">${ring}</g>` };
-    };
-    const n1 = node(0.07, true), n2 = node(0.5, false), n3 = node(0.96, false);
-    svg += n1.markup + n2.markup + n3.markup;
-    if (s.heldSlot) svg += `<circle class="yd-pulse" cx="${f1(n1.x)}" cy="${f1(n1.y)}" r="20" stroke="#C05A3C" stroke-width="1.5" fill="none"/>`;
-
-    // labels outside the disc, each with a short leader
-    const lead = (x1, y1, x2, y2) => `<line x1="${f1(x1)}" y1="${f1(y1)}" x2="${f1(x2)}" y2="${f1(y2)}" stroke="#87A482" stroke-width="1.3"/>`;
-    const transMeta = s.heldSlot ? 'WEEKS 1–3 · HELD FOR YOU' : 'WEEKS 1–3 · 30 MIN';
-    svg += `<g class="yd-lab" style="--d:${(Number(at(0.07)) + 0.1).toFixed(2)}s">` +
-      lead(n1.x + 13, n1.y - 15, 556, 100) +
-      txt(566, 92, 'Transition Visit', 27, 400, '#2C4E25', 'start', 0, FD) +
-      txt(566, 117, transMeta, 12, 700, '#76736D', 'start', 1.5) + `</g>`;
-    svg += `<g class="yd-lab" style="--d:${(Number(at(0.5)) + 0.1).toFixed(2)}s">` +
-      lead(cx, n2.y + 20, cx, cy + R + 22) +
-      txt(cx, cy + R + 56, 'Mid-Year Review', 27, 400, '#2C4E25', 'middle', 0, FD) +
-      txt(cx, cy + R + 81, 'NP · SYMPTOMS, LABS, DOSE CHECK', 12, 700, '#76736D', 'middle', 1.5) + `</g>`;
-    svg += `<g class="yd-lab" style="--d:${(Number(at(0.96)) + 0.1).toFixed(2)}s">` +
-      lead(n3.x - 12, n3.y - 15, 262, 100) +
-      txt(252, 92, 'Annual Optimization', 27, 400, '#2C4E25', 'end', 0, FD) +
-      txt(252, 117, 'NP · FULL REVIEW · 45 MIN', 12, 700, '#76736D', 'end', 1.5) + `</g>`;
-
-    // you-are-here at the top of the year
-    svg += `<circle class="yd-here" style="--d:.5s" cx="${cx}" cy="${cy - RR}" r="7.5" fill="#C05A3C" stroke="#FFFCF7" stroke-width="2"/>`;
-    svg += `<circle class="yd-pulse" cx="${cx}" cy="${cy - RR}" r="13" stroke="#C05A3C" stroke-width="1.4" fill="none"/>`;
-    svg += `<g class="yd-lab" style="--d:.6s">` + lead(cx, cy - RR - 12, cx, 70) +
-      txt(cx, 56, 'TODAY · GRADUATION', 12, 700, '#C05A3C', 'middle', 2) + `</g>`;
-
-    // the face
-    svg += `<g class="yd-lab" style="--d:.5s">` + txt(cx, cy - 62, 'YOUR OPTIMAL YEAR', 13, 700, '#A9C2A2', 'middle', 2.4) + `</g>`;
-    svg += `<g class="yd-lab" style="--d:.6s">` + txt(cx, cy - 6, 'Twelve months,', 46, 400, '#FFFCF7', 'middle', -0.5, FD) + `</g>`;
-    svg += `<g class="yd-lab" style="--d:.68s">` + txt(cx, cy + 46, 'three visits.', 46, 400, '#FFFCF7', 'middle', -0.5, FD, ' font-style="italic"') + `</g>`;
-    svg += `<g class="yd-lab" style="--d:.8s">` + txt(cx, cy + 94, `BEGINS ${MONTHS_FULL[startM].toUpperCase()} ${s.end.slice(0, 4)}`, 12, 700, 'rgba(255,252,247,.55)', 'middle', 1.8) + `</g>`;
-
-    return svg + '</svg>';
-  }
-
   function fillPageNumbers() {
     const pad2 = (n) => String(n).padStart(2, '0');
     const sections = $$('#deck > section');
@@ -831,29 +714,21 @@
     $$('.g2 [data-bind="intake_flagged"]').forEach((el) => { el.dataset.final = String(s.intakeFlagged); });
     bind('delta_from', String(s.intakeFlagged));
     bind('delta_to', String(s.finalFlagged));
-    bind('deadline_date', fmtDate(s.deadline));
-    bind('deadline_date2', fmtDate(s.deadline));
     bind('clinic_address', CONFIG.CLINIC.address);
     bind('clinic_email', CONFIG.CLINIC.email);
     bind('clinic_web', CONFIG.CLINIC.web);
+    bind('clinic_phone', CONFIG.CLINIC.phone);
 
-    // §5.6 — prices always from constants; anchor is computed
-    bind('ANNUAL', money(CONFIG.PRICE_ANNUAL));
-    bind('ANNUAL_NUM', Number(CONFIG.PRICE_ANNUAL).toLocaleString('en-CA'));
+    // §5.6 — prices always from constants; everything else is computed
+    const yearlyPerMonth = Math.round(CONFIG.PRICE_YEARLY / 12);
+    bind('YEARLY', money(CONFIG.PRICE_YEARLY));
+    bind('YEARLY_MO_NUM', String(yearlyPerMonth));
     // authoritative count-up target — never trust mid-animation textContent
-    $$('.g7 [data-bind="ANNUAL_NUM"]').forEach((el) => { el.dataset.final = String(CONFIG.PRICE_ANNUAL); });
-    bind('ANNUAL2', money(CONFIG.PRICE_ANNUAL));
-    bind('EARLY', money(CONFIG.PRICE_EARLY));
-    bind('MEMBER_EXTRA', money(CONFIG.PRICE_MEMBER_EXTRA));
-    bind('PRN30', money(CONFIG.PRICE_PRN30));
-    bind('PRN45', money(CONFIG.PRICE_PRN45));
-    bind('PRN_SUM', money(CONFIG.PRICE_PRN30 + CONFIG.PRICE_PRN45));
-    bind('PRN30_B', money(CONFIG.PRICE_PRN30));
-    // value stack: Transition (30 min) + Mid-Year (30 min) + Annual (45 min), all from CONFIG
-    bind('STACK_SUM', money(CONFIG.PRICE_PRN30 * 2 + CONFIG.PRICE_PRN45));
-    bind('DAY_RATE', '$' + (CONFIG.PRICE_ANNUAL / 365).toFixed(2));
-    bind('SAVE_EARLY', money(CONFIG.PRICE_PRN30 * 2 + CONFIG.PRICE_PRN45 - CONFIG.PRICE_EARLY));
-    bind('WOMENS_MONTHLY', money(CONFIG.PRICE_WOMENS_MONTHLY));
+    $$('.g7 [data-bind="YEARLY_MO_NUM"]').forEach((el) => { el.dataset.final = String(yearlyPerMonth); });
+    bind('MONTHLY_NUM', String(CONFIG.PRICE_MONTHLY));
+    bind('SAVE_YEARLY', money(CONFIG.PRICE_MONTHLY * 12 - CONFIG.PRICE_YEARLY));
+    bind('VISIT', money(CONFIG.PRICE_VISIT));
+    bind('FOUR_VISITS', money(CONFIG.PRICE_VISIT * 4));
 
     // §5.8 — identifying print footer on every page
     bind('print_foot', `${s.first} · ${fmtDate(todayIso())} · ${CONFIG.TEMPLATE_VERSION}`);
@@ -948,15 +823,6 @@
       ? 'Hormone care is iterative — the first 12 weeks tell us what to adjust next.'
       : 'Hormone needs shift through perimenopause, menopause, and beyond. The plan that works today gets adjusted over time.');
 
-    // ── slide 6 (§5.5 bucket variant) ──
-    $('#paths-standard').style.display = s.bucket === 'standard' ? '' : 'none';
-    $('#paths-longevity').style.display = s.bucket === 'longevity' ? '' : 'none';
-
-    // ── slide 8 (held slot + year orbit) ──
-    const held = $('#held-slot-box');
-    if (s.heldSlot) { bind('held_slot', fmtSlot(s.heldSlot)); held.classList.add('show'); }
-    else held.classList.remove('show');
-    $('.g8 .orbit').innerHTML = buildYearOrbitSVG(s);
   }
 
   /* ════════════════════════════════════════════════════════════════════
@@ -975,14 +841,16 @@
     // so kick slide 1's entry animation manually.
     $$('#deck > section.play').forEach((sec) => sec.classList.remove('play'));
     const first = $('#deck > section.g1');
-    if (first) { void first.offsetWidth; first.classList.add('play'); playBrandLogos(first); forestVideo.start(); }
+    if (first) { void first.offsetWidth; first.classList.add('play'); playBrandLogos(first); }
     const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 0));
     setTimeout(() => idle(() => stages35.warm(), { timeout: 2000 }), 3500);
   }
   function showPrep() {
-    forestVideo.stop();
+    loopVideos.sync(null);
     closingTexture.stop();
     stages35.leave();
+    pillars.leave();
+    yearStops.leave();
     window.__deckLocked = true;
     prep.hidden = false;
     navzones.hidden = true;
@@ -1043,8 +911,19 @@
   }, { passive: true });
 
   // Desktop click zones: left ⅓ back, right ⅔ forward — §5.3
-  navzones.querySelector('.nz-back').addEventListener('click', () => deck.prev());
-  navzones.querySelector('.nz-fwd').addEventListener('click', () => deck.next());
+  // The zones sit over the deck, so a row the presenter can pick (slides 6 and 8) is found by position.
+  const pickAt = (e) => {
+    const hit = document.elementsFromPoint(e.clientX, e.clientY).find((n) => n.closest('[data-pick]'));
+    return hit ? hit.closest('[data-pick]') : null;
+  };
+  const zoneClick = (turn) => (e) => {
+    const el = pickAt(e);
+    if (!el) { turn(); return; }
+    (el.closest('.g12') ? pillars : yearStops).pick(el);
+  };
+  navzones.querySelector('.nz-back').addEventListener('click', zoneClick(() => deck.prev()));
+  navzones.querySelector('.nz-fwd').addEventListener('click', zoneClick(() => deck.next()));
+  navzones.addEventListener('mousemove', (e) => navzones.classList.toggle('over-pick', !!pickAt(e)), { passive: true });
 
   // Count the slide-2 stat up from 0, synced to the waffle cascade.
   let cuRaf = 0;
@@ -1064,17 +943,17 @@
     cuRaf = requestAnimationFrame(tick);
   }
 
-  // Count the slide-7 annual price up from 0, synced to its .ar rise (--d:.16s).
+  // Count the yearly plan's monthly figure up from 0, synced to its .ar rise.
   let cuRaf7 = 0;
   function countUpG7() {
-    const el = document.querySelector('.g7 [data-bind="ANNUAL_NUM"]');
+    const el = document.querySelector('.g7 [data-bind="YEARLY_MO_NUM"]');
     if (!el) return;
     const target = parseInt(el.dataset.final || '0', 10) || 0;
-    const fmt = (n) => Number(n).toLocaleString('en-CA');
+    const fmt = (n) => String(n);
     if (!target || matchMedia('(prefers-reduced-motion: reduce)').matches) { el.textContent = fmt(target); return; }
     cancelAnimationFrame(cuRaf7);
     const dur = 900;                        // lands just after the riseIn settles
-    const t0 = performance.now() + 160;     // starts the frame the .ar rise begins
+    const t0 = performance.now() + 220;     // starts the frame the .ar rise begins
     const tick = (now) => {
       const p = Math.min(1, Math.max(0, (now - t0) / dur));
       el.textContent = fmt(Math.round(target * (1 - Math.pow(1 - p, 3)))); // ease-out cubic
@@ -1088,23 +967,64 @@
     if (typeof el.play === 'function') el.play();
   });
 
-  /* Slide 1 — the brand forest plate plays once (fog → sun) and holds on the
-     sunlit frame. Print, reduced motion and playback failure show the still. */
-  const forestVideo = (() => {
-    const box = document.querySelector('.g1 .g1-forest');
-    if (!box) return { start() {}, stop() {} };
-    const video = box.querySelector('.g1-video');
-    video.addEventListener('error', () => box.classList.add('still'));
+  /* The green silk loops play only while their slide is up. Print, reduced
+     motion and playback failure show the still underneath. */
+  const loopVideos = {
+    els: $$('#deck video.loopvid'),
+    sync(sec) {
+      const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      this.els.forEach((v) => {
+        if (sec && !still && sec.contains(v)) { const go = v.play(); if (go && go.catch) go.catch(() => {}); }
+        else v.pause();
+      });
+    },
+  };
+
+  /* Slides 6 and 8 step through their items on a timer: `.on` marks the current
+     item, `.done` the ones already passed, and `.auto` on the slide runs the
+     progress line. Clicking an item (zoneClick) selects it and holds there. */
+  function makeCycler(sec, itemSel, ms, linkedSel) {
+    const items = [...sec.querySelectorAll(itemSel)];
+    const linked = linkedSel ? [...sec.querySelectorAll(linkedSel)] : [];
+    sec.style.setProperty('--cycle', `${ms}ms`);
+    let i = 0, timer = 0;
+    function show(n) {
+      i = n;
+      items.forEach((el, k) => {
+        el.classList.toggle('on', k === n);
+        el.classList.toggle('done', k < n);
+      });
+      linked.forEach((el, k) => el.classList.toggle('on', k === n));
+    }
+    function run() {
+      sec.classList.remove('auto');
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      void sec.offsetWidth;   // restarts the progress line
+      sec.classList.add('auto');
+      timer = setTimeout(() => { show((i + 1) % items.length); run(); }, ms);
+    }
     return {
-      start() {
-        if (matchMedia('(prefers-reduced-motion: reduce)').matches) { box.classList.add('still'); return; }
-        try { video.currentTime = 0; } catch (_) {}
-        const go = video.play();
-        if (go && go.catch) go.catch(() => box.classList.add('still'));
-      },
-      stop() { video.pause(); },
+      enter() { clearTimeout(timer); show(0); run(); },
+      leave() { clearTimeout(timer); sec.classList.remove('auto'); },
+      pick(el) { clearTimeout(timer); sec.classList.remove('auto'); show(items.indexOf(el)); },
     };
-  })();
+  }
+  const pillars = makeCycler($('.g12'), '.pl', 6000, '.ps');
+  const yearStops = makeCycler($('.g14'), '.yc', 6000);
+
+  /* The phone's metal edge: stacked rounded layers, plus the side buttons. */
+  const phoneEdge = $('.g12 .ph-depth');
+  [2.6, 2.2, 1.8, 1.4, 1, .7, .5, .3, .1, 0, 0, 0, .1, .3, .5, .7, 1, 1.4, 1.8, 2.2, 2.6].forEach((inset, k) => {
+    const light = [36, 37, 39, 42, 47, 53, 60, 66, 71, 75, 76, 75, 71, 66, 60, 53, 47, 42, 39, 37, 36][k];
+    const layer = document.createElement('span');
+    layer.style.cssText = `inset:${inset}px;border-radius:${48 - inset}px;background:hsl(36,8%,${light}%);transform:translateZ(${-(k + 1)}px)`;
+    phoneEdge.appendChild(layer);
+  });
+  [['left', 104, 26], ['left', 148, 48], ['left', 206, 48], ['right', 170, 76]].forEach(([side, top, h]) => {
+    const btn = document.createElement('span');
+    btn.style.cssText = `${side}:-8px;top:${top}px;width:12px;height:${h}px;border-radius:3px;background:linear-gradient(180deg,#B5AEA2,#8F897E);transform:translateZ(-11px) rotateY(${side === 'left' ? -90 : 90}deg)`;
+    phoneEdge.appendChild(btn);
+  });
 
   /* ════════════════════════════════════════════════════════════════════
      Closing slide — a living dot-matrix over the green gradient: an LED-
@@ -1276,8 +1196,8 @@
   // Printing must never capture a mid-animation state the CSS blocks can't reach.
   window.addEventListener('beforeprint', () => {
     cancelAnimationFrame(cuRaf7); cancelAnimationFrame(cuRaf);
-    const p7 = document.querySelector('.g7 [data-bind="ANNUAL_NUM"]');
-    if (p7 && p7.dataset.final) p7.textContent = Number(p7.dataset.final).toLocaleString('en-CA');
+    const p7 = document.querySelector('.g7 [data-bind="YEARLY_MO_NUM"]');
+    if (p7 && p7.dataset.final) p7.textContent = p7.dataset.final;
     const p2 = document.querySelector('.g2 [data-bind="intake_flagged"]');
     if (p2 && p2.dataset.final) p2.textContent = p2.dataset.final;
     document.querySelectorAll('optimal-logo').forEach((el) => { if (typeof el.finish === 'function') el.finish(); });
@@ -1302,7 +1222,9 @@
       if (sec.classList.contains('g5')) countReceipt();
     }
     const live = prep.hidden;   // nothing plays behind the prep form
-    if (live && sec && sec.classList.contains('g1')) forestVideo.start(); else forestVideo.stop();
+    loopVideos.sync(live ? sec : null);
+    if (live && sec && sec.classList.contains('g12')) pillars.enter(); else pillars.leave();
+    if (live && sec && sec.classList.contains('g14')) yearStops.enter(); else yearStops.leave();
     if (live && sec && sec.classList.contains('g35')) stages35.enter(); else stages35.leave();
     if (live && sec && sec.classList.contains('g9')) closingTexture.start(); else closingTexture.stop();
   });
