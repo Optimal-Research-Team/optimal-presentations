@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="version" content="optimal-talks v1.0.0">
+<meta name="theme-color" content="#FFFCF7">
+<title>Educational talks — Optimal Clinic, Barrie</title>
+<link rel="icon" href="../assets/logos/symbol-green-nobg.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Castoro:ital@0;1&amp;family=Public+Sans:wght@400;500;600;700&amp;display=swap">
+<style>
+  /* Optimal brand tokens (optimal-design-system/colors_and_type.css). The selector
+     for group talks, built on the same pattern as the patient launcher one level
+     up: cream canvas, Castoro display, hairline rows, one forest preview panel.
+     To add a talk: copy a row, give it the next data-key, and add it to TALKS. */
+  :root {
+    --cream-50: #FFFCF7;
+    --forest-900: #1A500F;
+    --forest-700: #2C4E25;
+    --sage-100: #DDE7D2;
+    --ink: #040504;
+    --ink-2: #252525;
+    --muted: #75726B;
+    --hair: rgba(44,78,37,.16);
+    --hl: rgba(44,78,37,.075);
+    --ease: cubic-bezier(.2,.7,.2,1);
+    --gutter: clamp(16px, 3.6vw, 56px);
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; background: var(--cream-50); }
+  body {
+    margin: 0; min-height: 100vh; min-height: 100dvh;
+    display: flex; flex-direction: column;
+    background: var(--cream-50); color: var(--ink);
+    font-family: 'Public Sans', system-ui, sans-serif;
+    font-feature-settings: "kern", "liga", "tnum";
+    -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+  }
+  .frame { width: min(1400px, 100%); margin: 0 auto; padding: 0 var(--gutter); }
+
+  /* ── Top bar ── */
+  .bar { border-bottom: 1px solid var(--hair); }
+  .bar .frame { height: 68px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+  .bar-left { display: flex; align-items: center; gap: clamp(16px, 2.4vw, 32px); min-width: 0; }
+  .logo { display: block; height: 26px; width: auto; flex: none; }
+  .crumb { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-size: 14px; font-weight: 500; color: var(--muted); text-decoration: none; white-space: nowrap; transition: color .2s var(--ease); }
+  .crumb svg { width: 16px; height: 16px; transition: transform .25s var(--ease); }
+  .crumb:hover { color: var(--forest-700); }
+  .crumb:hover svg { transform: translateX(-3px); }
+  .crumb:focus-visible { outline: none; color: var(--forest-700); box-shadow: 0 2px 0 var(--forest-700); }
+  .today { font-size: 12px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+
+  main { flex: 1; display: flex; flex-direction: column; justify-content: center; transition: opacity .26s var(--ease), transform .26s var(--ease); }
+  main.leaving { opacity: 0; transform: translateY(-6px); }
+
+  .layout {
+    display: grid; grid-template-columns: minmax(0, 1fr) clamp(400px, 38vw, 580px);
+    gap: clamp(40px, 5vw, 88px); align-items: center;
+    padding-top: clamp(28px, 4vw, 56px); padding-bottom: clamp(24px, 3vw, 44px);
+  }
+
+  /* ── Heading ── */
+  .eyebrow { font-size: 13px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; color: var(--forest-900); }
+  h1 {
+    margin: 14px 0 0; font-family: Castoro, serif; font-weight: 400;
+    font-size: clamp(44px, 5.6vw, 84px); line-height: 1; letter-spacing: -.035em; color: var(--ink);
+  }
+  h1 em { font-style: italic; color: var(--forest-700); }
+  .lead { margin: clamp(16px, 1.6vw, 24px) 0 0; max-width: 34em; font-size: clamp(17px, 1.35vw, 20px); line-height: 1.5; color: var(--ink-2); }
+
+  /* ── The list: big rows, hairlines, no boxes ── */
+  .group { margin-top: clamp(30px, 3.6vw, 52px); }
+  .group h2 {
+    margin: 0 0 6px; display: flex; align-items: center; gap: 14px;
+    font-size: 12px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--muted);
+  }
+  .group h2::after { content: ""; flex: 1; height: 1px; background: var(--hair); }
+  .rows { list-style: none; margin: 0; padding: 0; }
+  .rows li { border-bottom: 1px solid var(--hair); }
+
+  .row {
+    position: relative; display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; align-items: center; gap: 0 12px;
+    padding: 20px 18px 20px 14px; margin: 0 -14px;
+    border-radius: 14px; color: inherit; text-decoration: none;
+    transition: background .22s var(--ease);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .num { font-family: Castoro, serif; font-size: 22px; color: var(--muted); font-variant-numeric: tabular-nums; transition: color .22s var(--ease); }
+  .name {
+    display: block; font-family: Castoro, serif; font-weight: 400;
+    font-size: clamp(30px, 2.9vw, 44px); line-height: 1.06; letter-spacing: -.024em; color: var(--ink);
+  }
+  .name em { font-style: italic; color: var(--forest-700); transition: color .22s var(--ease); }
+  .meta { display: block; margin-top: 7px; font-size: 16px; line-height: 1.4; color: var(--muted); }
+  .arrow { width: 22px; height: 22px; color: var(--forest-700); opacity: 0; transform: translateX(-8px); transition: opacity .25s var(--ease), transform .3s var(--ease); }
+  .mthumb { display: none; transition: transform .45s var(--ease), box-shadow .3s var(--ease); }
+  .row-pdf { display: none; }
+
+  /* ── Highlight: the same forest bar, sage wash and sliding arrow as the launcher ── */
+  .row::before {
+    content: ""; position: absolute; left: 0; top: 14px; bottom: 14px; width: 3px; border-radius: 3px;
+    background: var(--forest-700); transform: scaleY(0); transform-origin: center;
+    transition: transform .32s var(--ease);
+  }
+  .txt { display: block; min-width: 0; transition: transform .32s var(--ease); }
+  @media (hover: hover) {
+    .row:hover { background: var(--hl); }
+    .row:hover::before { transform: scaleY(1); }
+    .row:hover .txt { transform: translateX(6px); }
+    .row:hover .num, .row:hover .name em { color: var(--forest-900); }
+    .row:hover .arrow { opacity: 1; transform: none; }
+  }
+  @media (min-width: 961px) {
+    .row.is-selected { background: var(--hl); }
+    .row.is-selected::before { transform: scaleY(1); }
+    .row.is-selected .txt { transform: translateX(6px); }
+    .row.is-selected .num, .row.is-selected .name em { color: var(--forest-900); }
+    .row.is-selected .arrow { opacity: 1; transform: none; }
+  }
+  .row:focus-visible { background: var(--hl); outline: none; box-shadow: inset 0 0 0 2px rgba(44,78,37,.35); }
+  .row:focus-visible::before { transform: scaleY(1); }
+  .row:focus-visible .arrow { opacity: 1; transform: none; }
+  .row:active { background: rgba(44,78,37,.12); }
+
+  /* ── Preview panel: the selected talk, big ── */
+  .preview {
+    position: sticky; top: 24px;
+    border-radius: 22px; padding: clamp(18px, 1.6vw, 26px);
+    background:
+      radial-gradient(120% 70% at 50% 0%, rgba(81,144,68,.16), transparent 70%),
+      linear-gradient(165deg, #172B13 0%, #0C1709 100%);
+    color: var(--cream-50);
+    box-shadow: 0 30px 60px -28px rgba(12,23,9,.6);
+  }
+  .pv-media { position: relative; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden; background: #14250F; box-shadow: 0 0 0 1px rgba(255,252,247,.18), 0 22px 44px -14px rgba(0,0,0,.75); }
+  .pv-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.02); transition: opacity .38s var(--ease), transform .7s var(--ease); }
+  .pv-media img.on { opacity: 1; transform: none; }
+  .pv-body { padding: clamp(18px, 1.8vw, 26px) 4px 2px; }
+  .pv-ctx { font-size: 12px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: rgba(255,252,247,.6); }
+  .pv-name { margin: 10px 0 0; font-family: Castoro, serif; font-weight: 400; font-size: clamp(30px, 2.6vw, 40px); line-height: 1.04; letter-spacing: -.025em; color: var(--cream-50); }
+  .pv-name em { font-style: italic; color: var(--sage-100); }
+  .pv-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: clamp(16px, 1.8vw, 24px) 0 0; padding-top: 16px; border-top: 1px solid rgba(255,252,247,.2); }
+  .pv-facts div { min-width: 0; }
+  .pv-facts dt { font-size: 11px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,252,247,.55); }
+  .pv-facts dd { margin: 6px 0 0; font-family: Castoro, serif; font-size: 17px; line-height: 1.25; color: var(--cream-50); }
+  .pv-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: clamp(18px, 2vw, 26px); }
+  .pv-open, .pv-pdf {
+    display: inline-flex; align-items: center; gap: 10px; min-height: 48px;
+    font-size: 16px; font-weight: 600; letter-spacing: .01em; text-decoration: none;
+    border-radius: 999px; padding: 12px 24px;
+    transition: transform .18s var(--ease), background .2s, border-color .2s;
+  }
+  .pv-open { color: var(--forest-700); background: var(--cream-50); }
+  .pv-open:hover { background: #fff; transform: translateY(-1px); }
+  .pv-pdf { color: var(--cream-50); border: 1px solid rgba(255,252,247,.34); }
+  .pv-pdf:hover { background: rgba(255,252,247,.08); border-color: rgba(255,252,247,.6); transform: translateY(-1px); }
+  .pv-open:focus-visible, .pv-pdf:focus-visible { outline: none; box-shadow: 0 0 0 4px rgba(221,231,210,.4); }
+  .pv-open svg, .pv-pdf svg { width: 18px; height: 18px; flex: none; }
+  kbd { font: 600 12px/1 'Public Sans', system-ui, sans-serif; padding: 3px 6px; border-radius: 5px; border: 1px solid currentColor; opacity: .9; }
+
+  /* ── Footer ── */
+  .foot { border-top: 1px solid var(--hair); }
+  .foot .frame { min-height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 8px 32px; flex-wrap: wrap; padding-top: 12px; padding-bottom: 12px; font-size: 14px; line-height: 1.45; color: var(--muted); }
+  .foot kbd { color: var(--ink-2); border-color: rgba(44,78,37,.3); }
+
+  /* ── Entrance: staggered rise, one curve, no bounce ── */
+  .rv { animation: rise .62s var(--ease) both; animation-delay: calc(.06s + var(--i, 0) * .05s); }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+  @media (max-height: 760px) and (min-width: 961px) {
+    .layout { padding-top: 20px; padding-bottom: 16px; }
+    h1 { font-size: 56px; }
+    .group { margin-top: 24px; }
+    .row { padding-top: 12px; padding-bottom: 12px; }
+    .name { font-size: 32px; }
+    .pv-name { font-size: 30px; }
+    .pv-body { padding-top: 14px; }
+    .pv-facts { margin-top: 12px; padding-top: 12px; }
+    .pv-actions { margin-top: 14px; }
+    .pv-open, .pv-pdf { min-height: 44px; padding: 10px 20px; font-size: 15px; }
+  }
+  /* Tablet and phone: no preview panel; the row carries its own thumbnail and PDF link. */
+  @media (max-width: 960px) {
+    main { justify-content: flex-start; }
+    .layout { grid-template-columns: 1fr; }
+    .preview { display: none; }
+    .row { grid-template-columns: 148px minmax(0, 1fr) auto; gap: 0 18px; padding: 12px 14px 12px 12px; margin: 0 -12px; }
+    .num { display: none; }
+    .mthumb { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 8px; box-shadow: 0 0 0 1px var(--hair), 0 6px 16px -8px rgba(28,49,24,.35); }
+    .arrow { opacity: 1; transform: none; }
+    .row-pdf {
+      display: inline-flex; align-items: center; gap: 8px; min-height: 48px; margin: 2px 0 8px;
+      font-size: 15px; font-weight: 600; color: var(--forest-700); text-underline-offset: 3px;
+    }
+    .row-pdf svg { width: 18px; height: 18px; flex: none; }
+    .foot .keys { display: none; }
+  }
+  @media (max-width: 520px) {
+    .bar .frame { height: 60px; }
+    .logo { height: 22px; }
+    .today { display: none; }
+    .row { grid-template-columns: 1fr; gap: 12px; padding: 12px; }
+    .arrow { display: none; }
+    .name { font-size: 32px; }
+    .meta { font-size: 15px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rv { animation: none !important; }
+    main, .pv-media img, .arrow, .pv-open, .pv-pdf, .row::before, .txt, .mthumb { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<header class="bar rv" style="--i:0">
+  <div class="frame">
+    <div class="bar-left">
+      <img class="logo" src="../assets/logos/OptimalLogo-Green.png" alt="Optimal" width="85" height="26">
+      <a class="crumb" href="../"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 10H4M9 5l-5 5 5 5"/></svg>Patient presentations</a>
+    </div>
+    <div class="today" id="today">Barrie, ON</div>
+  </div>
+</header>
+
+<main id="main">
+  <div class="frame layout">
+    <div class="pick">
+      <div class="eyebrow rv" style="--i:1">Educational talks</div>
+      <h1 class="rv" style="--i:2">Which talk is <em>today</em>?</h1>
+      <p class="lead rv" style="--i:3">For groups, studios and community partners. Open a talk to present it, or take the PDF with you.</p>
+
+      <section class="group" aria-labelledby="g-women">
+        <h2 id="g-women" class="rv" style="--i:4">Women&rsquo;s health</h2>
+        <ul class="rows">
+          <li class="rv" style="--i:5">
+            <a class="row" data-key="1" href="iron-deficiency/">
+              <span class="num">01</span>
+              <img class="mthumb" src="../assets/thumbs/iron-deficiency.webp" alt="" loading="lazy" decoding="async">
+              <span class="txt"><span class="name">Iron deficiency in <em>women</em></span><span class="meta">Testing, high and low iron, the evidence, treatment</span></span>
+              <svg class="arrow" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg>
+            </a>
+            <a class="row-pdf" href="iron-deficiency/iron-deficiency-in-women.pdf" download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>Download PDF</a>
+          </li>
+        </ul>
+      </section>
+    </div>
+
+    <aside class="preview rv" style="--i:4" aria-label="Selected talk">
+      <div class="pv-media"><img id="pv-a" class="on" src="../assets/thumbs/iron-deficiency.webp" alt="" width="960" height="540"><img id="pv-b" alt="" width="960" height="540"></div>
+      <div class="pv-body">
+        <div class="pv-ctx" id="pv-ctx">Women&rsquo;s health</div>
+        <h2 class="pv-name" id="pv-name">Iron deficiency in <em>women</em></h2>
+        <dl class="pv-facts" id="pv-facts">
+          <div><dt>Format</dt><dd>Group talk</dd></div>
+          <div><dt>Covers</dt><dd>Testing to treatment</dd></div>
+          <div><dt>Evidence</dt><dd>17 sources cited</dd></div>
+        </dl>
+        <div class="pv-actions">
+          <a class="pv-open" id="pv-open" href="iron-deficiency/">Open talk <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg></a>
+          <a class="pv-pdf" id="pv-pdf" href="iron-deficiency/iron-deficiency-in-women.pdf" download><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>Download PDF</a>
+        </div>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<footer class="foot rv" style="--i:7">
+  <div class="frame">
+    <span class="keys"><kbd>Enter</kbd> to open · browser Back returns here</span>
+    <span>Each talk opens on a set-up screen. Add the group&rsquo;s name, or leave it blank. PDF export is there too.</span>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const TALKS = {
+    1: { group: 'Women’s health', thumb: 'iron-deficiency', pdf: 'iron-deficiency/iron-deficiency-in-women.pdf', facts: [['Format', 'Group talk'], ['Covers', 'Testing to treatment'], ['Evidence', '17 sources cited']] },
+  };
+
+  document.getElementById('today').textContent = 'Barrie, ON · ' +
+    new Date().toLocaleDateString('en-CA', { weekday: 'short', month: 'short', day: 'numeric' }).replace(/\./g, '');
+
+  const main = document.getElementById('main');
+  const rows = [...document.querySelectorAll('a.row')];
+  const pv = {
+    a: document.getElementById('pv-a'), b: document.getElementById('pv-b'),
+    ctx: document.getElementById('pv-ctx'), name: document.getElementById('pv-name'),
+    facts: document.getElementById('pv-facts'), open: document.getElementById('pv-open'), pdf: document.getElementById('pv-pdf'),
+  };
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+
+  // Preload every preview so switching never shows a blank frame.
+  Object.values(TALKS).forEach((d) => { const i = new Image(); i.src = `../assets/thumbs/${d.thumb}.webp`; });
+
+  let current = null;
+  const select = (row) => {
+    if (!row || row === current) return;
+    current?.classList.remove('is-selected');
+    row.classList.add('is-selected');
+    current = row;
+    const d = TALKS[row.dataset.key];
+    const [on, off] = pv.a.classList.contains('on') ? [pv.a, pv.b] : [pv.b, pv.a];
+    const src = `../assets/thumbs/${d.thumb}.webp`;
+    if (!on.getAttribute('src')?.endsWith(`${d.thumb}.webp`)) { off.src = src; off.classList.add('on'); on.classList.remove('on'); }
+    pv.ctx.textContent = d.group;
+    pv.name.innerHTML = row.querySelector('.name').innerHTML;
+    pv.facts.innerHTML = d.facts.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('');
+    pv.open.href = row.getAttribute('href');
+    pv.pdf.href = d.pdf;
+  };
+
+  // Fade the page, then hand off to the talk.
+  const open = (href) => {
+    try { localStorage.setItem('optimal-talks:last', current?.dataset.key || ''); } catch (e) {}
+    if (reduce) { location.href = href; return; }
+    main.classList.add('leaving');
+    setTimeout(() => { location.href = href; }, 200);
+  };
+  const plainClick = (e) => !(e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey);
+
+  rows.forEach((row) => {
+    row.addEventListener('pointerenter', () => select(row));
+    row.addEventListener('focus', () => select(row));
+    row.addEventListener('click', (e) => { if (plainClick(e)) { e.preventDefault(); select(row); open(row.href); } });
+  });
+  pv.open.addEventListener('click', (e) => { if (plainClick(e)) { e.preventDefault(); open(pv.open.href); } });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const i = rows.indexOf(current);
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      const next = rows[(i + (e.key === 'ArrowDown' ? 1 : -1) + rows.length) % rows.length];
+      select(next); next.focus();
+    } else if (e.key === 'Enter' && current && (document.activeElement === document.body || document.activeElement === current)) {
+      e.preventDefault(); open(current.href);
+    } else {
+      const row = rows.find((r) => r.dataset.key === e.key);
+      if (row) { e.preventDefault(); select(row); open(row.href); }
+    }
+  });
+
+  // Start on the talk opened last on this screen (a per-device convenience).
+  let last = null;
+  try { last = localStorage.getItem('optimal-talks:last'); } catch (e) {}
+  select(rows.find((r) => r.dataset.key === last) || rows[0]);
+
+  // Back button restores this page from the bfcache, still faded. Bring it back.
+  addEventListener('pageshow', (e) => { if (e.persisted) main.classList.remove('leaving'); });
+})();
+</script>
+</body>
+</html>
