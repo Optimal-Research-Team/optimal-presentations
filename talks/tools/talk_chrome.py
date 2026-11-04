@@ -3,9 +3,11 @@
 Each talk's build script calls apply(html) after it has spliced in its slides. Generated decks
 stay self-contained: this file is only read at build time.
 
-  1. No foliage. The patient decks' leaf wallpaper doesn't appear on talks, so the set-up and
-     welcome screens sit on the same forest field as the part dividers.
-  2. The motion layer: a true crossfade between slides, headlines that come into focus word by
+  1. No foliage. The patient decks' leaf wallpaper doesn't appear on talks, so the set-up screen
+     sits on a forest field.
+  2. No welcome slide. A talk's slides are its author's: Begin goes straight to their first page,
+     and the PDF has exactly their pages.
+  3. The motion layer: a true crossfade between slides, headlines that come into focus word by
      word, hairlines that draw, numbers that count, and engravings that ink in. The tools are
      utility classes (.ir-*) that a slide's own diagrams can use. Print and reduced motion
      always show the finished state.
@@ -30,19 +32,18 @@ COVER_CSS = '''<style>
     to   { transform: translate3d(16%, 14%, 0); }
   }
 
-  /* Back links line up with the slides' 120px margin */
-  .all-decks, .welcome-back {
+  /* The back link lines up with the slides' 120px margin */
+  .all-decks {
     top: 52px; left: 120px; padding: 0; gap: 10px;
     font-size: 19px; color: rgba(255,252,247,.72);
     background: none; border: 0; border-radius: 0;
     -webkit-backdrop-filter: none; backdrop-filter: none;
   }
-  .all-decks:hover, .all-decks:focus-visible, .welcome-back:hover {
+  .all-decks:hover, .all-decks:focus-visible {
     background: none; color: #FFFCF7; border: 0;
   }
   .all-decks svg { width: 20px; height: 20px; transition: transform .2s var(--deck-ease); }
   .all-decks:hover svg { transform: translateX(-3px); }
-  .welcome-back .arr { font-size: 20px; }
 
   /* Set-up: the headline on the left, the form on the right */
   .prep-card .opt-logo { position: absolute; top: 44px; right: 120px; height: 44px; margin: 0; z-index: 2; }
@@ -64,34 +65,15 @@ COVER_CSS = '''<style>
   .prep-actions { gap: 14px; margin-top: 18px; flex-wrap: nowrap; }
   .prep-btn { font-size: 19px; padding: 18px 30px; white-space: nowrap; }
   .prep-btn.ghost { border-color: rgba(255,252,247,.34); color: rgba(255,252,247,.9); }
-  .prep-btn:focus-visible, .welcome-begin:focus-visible, .all-decks:focus-visible, .welcome-back:focus-visible {
+  .prep-btn:focus-visible, .all-decks:focus-visible {
     outline: 3px solid #DDE7D2; outline-offset: 4px;
   }
   .prep-card > *:nth-child(2) { animation-delay: .12s; }
   .prep-card > *:nth-child(3) { animation-delay: .26s; }
   .prep-card .opt-logo { animation: dk-fade .8s ease .1s both; }
 
-  /* Welcome: the logo the wallpaper used to carry, then the greeting */
-  #welcome-screen { align-items: center; }
-  .welcome-inner { padding: 0 120px; text-shadow: none; }
-  .welcome-logo { display: block; height: 62px; width: auto; margin: 0 auto 76px; }
-  .welcome-title { font-size: 172px; line-height: 1; letter-spacing: -.045em; color: #FFFCF7; text-wrap: balance; }
-  .welcome-name { color: #DDE7D2; }
-  .welcome-meta { font-size: 27px; letter-spacing: -.01em; color: rgba(255,252,247,.74); margin-top: 40px; }
-  .welcome-begin { margin-top: 60px; font-size: 22px; padding: 20px 44px; }
-  .welcome-hint { margin-top: 34px; font-size: 15px; color: rgba(255,252,247,.6); }
-  #welcome-screen.is-on .welcome-inner > *:nth-child(1) { animation-delay: .25s; }
-  #welcome-screen.is-on .welcome-inner > *:nth-child(2) { animation-delay: .42s; }
-  #welcome-screen.is-on .welcome-inner > *:nth-child(3) { animation-delay: .62s; }
-  #welcome-screen.is-on .welcome-inner > *:nth-child(4) { animation-delay: .76s; }
-  #welcome-screen.is-on .welcome-inner > *:nth-child(5) { animation-delay: .9s; }
-
   @media print {
-    #welcome-screen {
-      background: linear-gradient(135deg, #2C4E25 0%, #1C3118 100%) !important;
-      -webkit-print-color-adjust: exact; print-color-adjust: exact;
-    }
-    .cover-field::before { display: none !important; }
+    #cover-stage, #cover-canvas, #welcome-screen { display: none !important; }
   }
   @media (prefers-reduced-motion: reduce) {
     .cover-field::before { animation: none; }
@@ -294,7 +276,7 @@ MOTION_JS = '''<script>
             if (!t.trim()) { frag.append(t); return; }
             const w = document.createElement('span');
             w.className = 'ir-w';
-            w.style.setProperty('--i', i++);
+            w.style.setProperty('--i', Math.min(i++, 14));   // long titles shouldn't take long to land
             w.textContent = t;
             frag.append(w);
           });
@@ -328,13 +310,13 @@ MOTION_JS = '''<script>
         }
       });
 
-      // Progress: the welcome screen is printed page 1, so this slide is page idx + 2.
-      const pages = slides.length + 1;
+      // Progress along the talk's own pages.
+      const pages = slides.length;
       const bar = document.createElement('div');
       bar.className = 'ir-prog';
       bar.setAttribute('aria-hidden', 'true');
-      bar.style.setProperty('--from', ((idx + 1) / pages).toFixed(4));
-      bar.style.setProperty('--to', ((idx + 2) / pages).toFixed(4));
+      bar.style.setProperty('--from', (idx / pages).toFixed(4));
+      bar.style.setProperty('--to', ((idx + 1) / pages).toFixed(4));
       slide.append(bar);
     });
 
@@ -412,11 +394,12 @@ def apply(html):
                       '  }\n', html, count=1, flags=re.S)
     assert n == 1, 'prep card block not found'
     html = html.replace('.canopy', '.cover-field').replace('class="canopy"', 'class="cover-field"')
-    html = _swap(html, '<div class="welcome-inner">\n',
-                 '<div class="welcome-inner">\n        <img class="welcome-logo" src="assets/logos/Optimal-Logo-Inverted.png" alt="Optimal">\n')
     assert 'canopy' not in html and 'leaves-overhead' not in html, 'foliage left behind'
 
-    # ── 2. Engine patches ──────────────────────────────────────────────────────
+    # ── 2. Begin goes straight to the author's first page ─────────────────────
+    html = _swap(html, '      openWelcome();\n', '      beginPresentation();\n')
+
+    # ── 3. Engine patches ──────────────────────────────────────────────────────
     # A diagram is one thing: the structural reveal stops at the svg.
     html = _swap(html, '      while (guard++ < 4) {\n',
                  "      while (guard++ < 4 && cur.tagName.toLowerCase() !== 'svg') {\n")
