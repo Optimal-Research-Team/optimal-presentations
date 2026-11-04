@@ -3,27 +3,31 @@
 The deck for the **Ongoing Care** Menopause & Perimenopause Program — presented at the
 Offboarding ("Graduation") visit that closes the Foundation Program.
 
-> **Current state (Nov 4, 2026): v7, eighteen slides.** Rebuilt from the Ongoing Care Agreement
+> **Current state (Nov 4, 2026): v7.1, sixteen slides.** Built from the Ongoing Care Agreement
 > (draft dated Nov 4, 2026, still marked for legal counsel review) and the Ongoing Care landing
 > page (canvas "Ongoing Care Lander v2"), using the landing page's photos, engravings and silk loop.
 >
 > 1 Congratulations · 2 None of this was luck (receipt) · 3 The moving target (3-D hypothalamus) ·
-> 4 What happens after week 12 (stop or continue) · 5 Keep feeling like yourself (silk) · 6 Care that
-> keeps up with you (four promises + phone) · 7 When something changes (six engravings) · 8 Your next
-> twelve months (five stops) · 9 The transition visit · 10 The body scan · 11 Member evenings ·
-> 12 Your choice (Ongoing Care vs single visits) · 13 Pricing · 14 What it covers, and urgent care ·
-> 15 Your plan, plainly (the terms) · 16 Your questions · 17 Keep your momentum · 18 Thank you.
-> The year still comes before the price (Peter, Oct 21).
+> 4 What happens after week 12 (stop or continue) · 5 Your next twelve months (five stops) · 6 Care that
+> keeps up with you (four promises + phone) · 7 When something changes (six engravings) · 8 The
+> transition visit · 9 The body scan · 10 Member evenings · 11 Your choice (Ongoing Care vs single
+> visits) · 12 Pricing (two plans only) · 13 Your plan, plainly (eight policy cards) · 14 Your questions ·
+> 15 Keep your momentum · 16 Thank you. The year still comes before the price (Peter, Oct 21).
 >
-> **Sources for each claim:** prices, scope and terms come from the agreement; everything else
-> follows the landing page's wording. If the agreement changes after legal review, update `CONFIG`
-> in `app.js`, slides 14 and 15, and `cue-card.html`.
+> **Peter's cuts, Nov 4:** the "Keep feeling like yourself" opener, the "Without a plan…" line, the
+> pricing slide's "Prefer no plan", "Using your benefits" and "Both plans include" blocks, and the
+> scope and urgent care slide. Don't add them back. The scope and urgent care points are on the cue
+> card for the presenter to say, and in the agreement (§1, §8).
+>
+> **Sources for each claim:** prices and terms come from the agreement; everything else follows the
+> landing page's wording. If the agreement changes after legal review, update `CONFIG` in `app.js`,
+> slide 13 and `cue-card.html`.
 >
 > Wording written for the deck, not taken from either source (for Peter's review): the sub-lines on
-> slide 9, "The same InBody scan you had in Foundation" on slide 10, "Examples. Evenings are optional…"
-> on slide 11, "Four of them comes to $1,300" on slide 13, "Illustrative screens" on slide 6, and the
-> three next steps on slide 17 (the landing page's steps describe its web form; "No payment today" was
-> left out because it isn't in the agreement). The landing page's testimonials are left out on purpose:
+> slide 8, "The same InBody scan you had in Foundation" on slide 9, "Examples. Evenings are optional…"
+> on slide 10, "Illustrative screens" on slide 6, the shortened policy cards on slide 13, and the three
+> next steps on slide 15 (the landing page's steps describe its web form; "No payment today" was left
+> out because it isn't in the agreement). The landing page's testimonials are left out on purpose:
 > CNO no-testimonials rule.
 >
 > Prep needs only **her first name + Strong/Modest** (`CONFIG.MINIMAL_PREP`). The
@@ -43,7 +47,7 @@ Lives inside the `menopause-foundation-presentation` project and reuses its slid
 |---|---|
 | `index.html` | Prep form ("slide 0") + the deck slides (markup and all CSS) |
 | `assets/lander/` | The landing page's photos, engravings and silk loop (local copies; `reception-bonsai` and `inbody-botanical` were upscaled) |
-| `app.js` | Form logic, derivations, deck rendering, the silk loops (`loopVideos`), the slide-2 receipt count, the slide-3 stepper sync (`stages35`), the timed rows on slides 6 and 8 (`makeCycler`), the closing texture |
+| `app.js` | Form logic, derivations, deck rendering, the silk loops (`loopVideos`), the slide-2 receipt count, the slide-3 stepper sync (`stages35`), the timed rows on slides 5 and 6 (`makeCycler`), the closing texture |
 | `hypo3d.js` | The 3-D hypothalamus (`<hypo-3d>` custom element) — a self-contained, tree-shaken Three.js r186.1 bundle. Built from `src/` by `tools/build-hypo3d.sh`; see `HYPO3D.md` |
 | `cue-card.html` | Printable presenter cue card (static, no PHI). **Presenter notes never render on the deck screen — it is shared with the patient** |
 | `optimal-logo.js` | Vendored `<optimal-logo>` brand mark (zero network) |
@@ -53,13 +57,13 @@ Lives inside the `menopause-foundation-presentation` project and reuses its slid
 
 1. Before the visit, open the route → prep form
 2. Type her first name; pick **Strong** or **Modest** (Modest softens the road-ahead line)
-3. **Generate** → present slides 1–18 with the printed cue card in hand (the pricing slide's figures are computed from `CONFIG`: $83 = yearly ÷ 12, $193 = monthly × 12 − yearly, $1,300 = four single visits)
+3. **Generate** → present slides 1–16 with the printed cue card in hand (the pricing slide's figures are computed from `CONFIG`: $83 = yearly ÷ 12, $193 = monthly × 12 − yearly)
 4. Optional: `Cmd/Ctrl+P` → Save as PDF → file into the chart → **delete the local copy immediately**
 5. Record the patient's decision in the booking system (this tool records nothing)
 6. Clear & close — refresh also wipes everything
 
 Keyboard: `←`/`→` navigate · click left ⅓ back / right ⅔ forward · `Esc` returns to the
-prep form (form state kept until refresh/close). On slides 6 and 8 the rows step by themselves;
+prep form (form state kept until refresh/close). On slides 5 and 6 the rows step by themselves;
 clicking a row or stop holds it instead of turning the page.
 
 ### Modes

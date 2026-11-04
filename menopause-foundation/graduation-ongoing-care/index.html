@@ -313,7 +313,7 @@
   .display .italic, .italic { font-style: italic; }
   .lead { font-family: var(--font-sans); font-size: 30px; line-height: 1.4; color: var(--grey-600); letter-spacing: -0.01em; max-width: 1300px; }
 
-  .ring-word { position: relative; display: inline-block; padding: 0 .15em; }
+  .ring-word { position: relative; display: inline-block; padding: 0 .15em; margin-right: -.07em; }
   .ring-word::before {
     content: ""; position: absolute; left: -6%; right: -6%; top: 6%; bottom: 4%;
     border: 1.6px solid var(--forest-ring-50); border-radius: 50%;
@@ -965,7 +965,7 @@
     color: var(--grey-500); max-width: 860px;
   }
 
-  /* ════════════ Slide 4 — Your choice ════════════ */
+  /* ════════════ Slide 11 — Your choice ════════════ */
   /* decision fork: one start node, two drawn branches, an explicit "or" */
   .g6 .fork { position: relative; margin-top: 20px; }
   .g6 .fork-node { display: flex; justify-content: center; }
@@ -1050,11 +1050,11 @@
   .g6 .ppv { margin: auto 0; display: flex; flex-direction: column; }
   .g6 .ppv li { display: flex; justify-content: space-between; align-items: baseline; gap: 20px; padding: 20px 0; border-top: 1px solid var(--bone-200); }
   .g6 .ppv li:last-child { border-bottom: 1px solid var(--bone-200); }
-  .g6 .ppv .vname { font-family: var(--font-display); font-size: 29px; letter-spacing: -0.02em; color: var(--forest-700); }
+  .g6 .ppv .vname { font-family: var(--font-display); font-size: 33px; letter-spacing: -0.02em; color: var(--forest-700); }
   .g6 .ppv .vsub { display: block; font-family: var(--font-sans); font-size: 15px; color: var(--grey-500); margin-top: 4px; letter-spacing: 0; }
   .g6 .ppv .vprice { font-family: var(--font-display); font-size: 54px; font-weight: 400; line-height: 1; font-variant-numeric: lining-nums; letter-spacing: -0.03em; color: var(--grey-800); font-variant-numeric: tabular-nums; white-space: nowrap; }
   .g6 .excl { padding-top: 22px; display: flex; flex-direction: column; gap: 10px; }
-  .g6 .excl li { position: relative; padding-left: 26px; font-family: var(--font-sans); font-size: 18px; color: var(--grey-500); }
+  .g6 .excl li { position: relative; padding-left: 26px; font-family: var(--font-sans); font-size: 20px; color: var(--grey-500); }
   .g6 .excl li::before { content: ""; position: absolute; left: 2px; top: 50%; width: 12px; height: 1.5px; background: var(--grey-500); opacity: .7; }
 
 
@@ -1117,7 +1117,8 @@
   .g9 .left9 { display: flex; flex-direction: column; min-height: 0; max-width: 1120px; }
   .g9 .eyebrow { display: flex; align-items: center; gap: 14px; color: var(--forest-500); }
   .g9 .eyebrow::before { content: ""; width: 32px; height: 1px; background: var(--forest-500); flex: 0 0 auto; }
-  .g9 .ring-word::before { border-color: rgba(255,252,247,0.4); }
+  .g9 .ring-word::before { border-color: rgba(255,252,247,0.4); left: -2%; right: -2%; }
+  .g9 h1 .ring-word { margin-left: -.15em; }
   .g9 h1 {
     font-family: var(--font-display); font-size: 88px; line-height: 1.0;
     letter-spacing: -0.04em; color: var(--cream-50); font-weight: 400;
@@ -1151,6 +1152,8 @@
 
   /* ════════════ v7 slides (Nov 4 2026): the agreement + the landing page ════════════ */
   deck-stage em { font-style: italic; }
+  /* Castoro defaults to old-style figures; lining ones read cleaner in dates, months and prices */
+  deck-stage { font-variant-numeric: lining-nums; }
 
   /* — green silk: the landing page's loop, playing only on its own slides (app.js · loopVideos) — */
   .silk { position: absolute; inset: 0; background: #0F1F0D; overflow: hidden; }
@@ -1159,8 +1162,7 @@
     position: absolute; inset: 0;
     background: linear-gradient(100deg, rgba(10,22,9,.78) 0%, rgba(10,22,9,.46) 45%, rgba(10,22,9,.12) 78%), linear-gradient(180deg, rgba(10,22,9,.3), transparent 30%);
   }
-  :is(.g11, .g12) .eyebrow { color: #A4C29D; }
-  :is(.g11, .g12) .ring-word::before { border-color: rgba(255,252,247,.42); }
+  .g12 .eyebrow { color: #A4C29D; }
 
   /* Slide 1 — the landing page's hero */
   .g1 .photo img { object-position: 50% 26%; }
@@ -1175,14 +1177,14 @@
   .g10-photos img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .g10-photos .p-a { left: 0; top: 0; width: 470px; bottom: 26px; }
   .g10-photos .p-b { right: 0; bottom: 0; width: 210px; height: 74%; outline: 6px solid var(--cream-50); }
-  .g10-cap { margin-top: 24px; font-size: 20px; line-height: 1.45; color: var(--grey-600); text-wrap: pretty; }
+  .g10-cap { margin-top: 24px; font-size: 21px; line-height: 1.45; color: var(--grey-600); text-wrap: pretty; }
   .g10-cap b { display: block; margin-bottom: 4px; font-size: 14px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--forest-700); }
   .g10-cmp { display: grid; grid-template-columns: 1fr 1.16fr; align-items: stretch; min-height: 0; }
   .g10-cmp h3 { font-family: var(--font-display); font-weight: 400; font-size: 38px; letter-spacing: -0.025em; line-height: 1; }
   .g10-cmp ul { flex: 1; display: grid; grid-auto-rows: 1fr; margin-top: 26px; }
   .g10-cmp li { display: flex; flex-direction: column; justify-content: center; gap: 6px; border-top: 1px solid; }
   .g10-cmp .cl { font-size: 14px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
-  .g10-cmp .ct { font-size: 23px; line-height: 1.3; letter-spacing: -0.01em; text-wrap: pretty; }
+  .g10-cmp .ct { font-size: 24px; line-height: 1.3; letter-spacing: -0.01em; text-wrap: pretty; }
   .g10-cmp .c-foot { text-wrap: balance; padding-top: 22px; font-family: var(--font-display); font-size: 25px; line-height: 1.2; letter-spacing: -0.015em; }
   .c-stop { display: flex; flex-direction: column; padding: 34px 34px 28px 0; }
   .c-stop h3, .c-stop .c-foot { color: var(--grey-600); }
@@ -1202,32 +1204,6 @@
   .c-go .ct { position: relative; padding-left: 32px; color: var(--cream-50); }
   .c-go .ct svg { position: absolute; left: 0; top: 5px; width: 20px; height: 20px; }
   .c-go .ct svg path { fill: none; stroke: #A4C29D; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-
-  /* ════════════ Slide 5 — Keep feeling like yourself (silk) ════════════ */
-  .g11 .slide-frame { justify-content: center; padding-bottom: 150px; }
-  .g11 h1 {
-    margin-top: 26px; font-family: var(--font-display); font-weight: 400; font-size: 132px; line-height: 1;
-    letter-spacing: -0.04em; color: var(--cream-50);
-  }
-  .g11-sub { margin-top: 28px; font-size: 32px; line-height: 1.35; letter-spacing: -0.012em; color: rgba(255,252,247,.86); }
-  .g11-line { position: relative; margin-top: 78px; width: 1180px; height: 118px; color: var(--cream-50); }
-  .ln-seg { position: absolute; top: 0; height: 42px; }
-  .ln-seg span { display: block; font-size: 15px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: #A4C29D; }
-  .ln-seg i { position: absolute; left: 0; right: 0; top: 41px; height: 2px; background: rgba(255,252,247,.22); overflow: hidden; }
-  .ln-seg b { position: absolute; inset: 0; background: var(--cream-50); transform-origin: left center; transform: scaleX(0); }
-  .ln-done { left: 7px; width: 660px; } .ln-next { left: 667px; width: 506px; }
-  .ln-done span { margin-left: -7px; }
-  .g11.play .ln-done b { animation: yrDraw 1100ms cubic-bezier(.45,0,.3,1) .7s forwards; }
-  .ln-next b { background: #A4C29D; }
-  .g11.play .ln-next b { animation: yrDraw 1200ms cubic-bezier(.45,0,.3,1) 1.9s forwards; }
-  .ln-node { position: absolute; top: 35px; width: 14px; height: 14px; margin-left: -7px; border-radius: 50%; background: #1b3119; border: 2px solid rgba(255,252,247,.8); }
-  .ln-0 { left: 7px; background: var(--cream-50); border-color: var(--cream-50); }
-  .ln-1 { left: 667px; width: 20px; height: 20px; top: 32px; margin-left: -10px; background: var(--cream-50); border-color: var(--cream-50); box-shadow: 0 0 0 7px rgba(164,194,157,.3); }
-  .ln-2 { left: 1173px; border-color: #A4C29D; }
-  .ln-lab { position: absolute; top: 68px; white-space: nowrap; font-size: 19px; line-height: 1.32; color: rgba(255,252,247,.76); }
-  .ln-lab b { display: block; font-family: var(--font-display); font-weight: 400; font-size: 25px; letter-spacing: -0.015em; color: var(--cream-50); }
-  .ln-l1 { left: 667px; transform: translateX(-50%); text-align: center; }
-  .ln-l2 { left: 1180px; transform: translateX(-100%); text-align: right; }
 
   /* ════════════ Slide 6 — Care that keeps up with you (silk + phone) ════════════ */
   .g12 .slide-frame { padding: 84px 120px 122px; }
@@ -1252,7 +1228,7 @@
   .pl-prog { position: absolute; left: 0; right: 0; bottom: -1px; height: 1px; overflow: hidden; }
   .pl-prog b { position: absolute; inset: 0; background: var(--cream-50); transform: scaleX(0); transform-origin: left center; }
   .auto .pl.on .pl-prog b { animation: yrDraw var(--cycle, 6s) linear forwards; }
-  .g12-note { position: absolute; right: 120px; bottom: 86px; width: 560px; text-align: center; font-size: 14px; letter-spacing: .02em; color: rgba(255,252,247,.55); }
+  .g12-note { position: absolute; right: 120px; bottom: 86px; width: 560px; text-align: center; font-size: 15px; letter-spacing: .02em; color: rgba(255,252,247,.66); }
 
   /* the phone, ported from the landing page; drawn here instead of a screenshot so the type stays sharp */
   .ph-stage { position: relative; display: flex; align-items: center; justify-content: center; perspective: 1500px; }
@@ -1317,20 +1293,18 @@
 
   /* ════════════ Slide 7 — When something changes ════════════ */
   .g13 .slide-frame { padding: 84px 120px 118px; }
-  .changes { flex: 1; min-height: 0; margin-top: 30px; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: 1fr 1fr; column-gap: 56px; }
-  .changes li { display: grid; grid-template-columns: 148px 1fr; gap: 28px; align-items: center; border-top: 1px solid var(--bone-200); }
-  .changes li > div { min-height: 138px; }
-  .changes h3 { font-family: var(--font-display); font-weight: 400; font-size: 32px; line-height: 1.08; letter-spacing: -0.028em; color: var(--forest-700); }
+  .changes { flex: 1; min-height: 0; margin-top: 34px; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: 1fr 1fr; column-gap: 44px; }
+  .changes li { display: grid; grid-template-columns: 156px 1fr; gap: 26px; align-items: center; border-top: 1px solid var(--bone-200); }
+  .changes li > div { min-height: 158px; }
+  .changes h3 { font-family: var(--font-display); font-weight: 400; font-size: 33px; white-space: nowrap; line-height: 1.08; letter-spacing: -0.028em; color: var(--forest-700); }
   .changes h3 em { color: var(--forest-900); }
-  .changes p { margin-top: 12px; font-size: 21px; line-height: 1.42; letter-spacing: -0.006em; color: var(--grey-600); }
-  .ch-img { display: flex; align-items: center; justify-content: center; height: 176px; }
-  .ch-img img { max-width: 148px; max-height: 176px; width: auto; height: auto; display: block; opacity: 0; transform: scale(.93); }
+  .changes p { margin-top: 12px; text-wrap: pretty; font-size: 23px; line-height: 1.42; letter-spacing: -0.006em; color: var(--grey-600); }
+  .ch-img { display: flex; align-items: center; justify-content: center; height: 212px; }
+  .ch-img img { max-width: 156px; max-height: 212px; width: auto; height: auto; display: block; opacity: 0; transform: scale(.93); }
   .g13.play .ch-img img { animation: chIn 820ms cubic-bezier(.2,.7,.2,1) forwards; animation-delay: calc(.2s + var(--i) * .1s); }
   @keyframes chIn { to { opacity: 1; transform: none; } }
-  .ch-foot { padding-top: 20px; border-top: 1px solid var(--bone-200); font-family: var(--font-display); font-size: 27px; line-height: 1.25; letter-spacing: -0.016em; color: var(--grey-800); }
-  .ch-foot b { font-weight: 400; color: var(--forest-900); }
 
-  /* ════════════ Slide 8 — Your next twelve months ════════════
+  /* ════════════ Slide 5 — Your next twelve months ════════════
      Five stops. The open one widens; the rail runs node to node and fills as the year advances. */
   .g14 .slide-frame { padding: 84px 120px 104px; }
   .g14-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 48px; }
@@ -1366,7 +1340,7 @@
   .yc-more svg { width: 17px; height: 17px; flex: none; }
   .yc-more svg path { fill: none; stroke: var(--forest-500); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
-  /* ════════════ Slide 9 — The transition visit ════════════ */
+  /* ════════════ Slide 8 — The transition visit ════════════ */
   .g8 .slide-frame { padding-bottom: 118px; }
   .g8 .cols { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 820px; gap: 76px; align-items: stretch; }
   .g8-right { display: flex; flex-direction: column; gap: 22px; min-height: 0; }
@@ -1404,7 +1378,7 @@
   .g8-photo { position: relative; flex: 1; min-height: 0; margin: 0; border-radius: 20px; overflow: hidden; background: var(--bone-100); box-shadow: var(--shadow-photo); }
   .g8-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 54% 50%; }
 
-  /* ════════════ Slide 10 — The body scan ════════════ */
+  /* ════════════ Slide 9 — The body scan ════════════ */
   .g15 { background: #FCF2EA; }
   .g15-art {
     position: absolute; right: 0; top: 0; bottom: 0; width: 1000px; margin: 0; display: flex; align-items: center; justify-content: center; overflow: hidden;
@@ -1426,7 +1400,7 @@
   .g15.play .g15-track span { animation: wfPop 420ms cubic-bezier(.34,1.45,.4,1) forwards; animation-delay: calc(.55s + var(--k) * .22s); }
   .g15-note { margin-top: 44px; padding-top: 20px; border-top: 1px solid var(--bone-200); font-size: 21px; line-height: 1.4; color: var(--grey-500); }
 
-  /* ════════════ Slide 11 — Member evenings ════════════ */
+  /* ════════════ Slide 10 — Member evenings ════════════ */
   .g16-bg { position: absolute; inset: 0; overflow: hidden; background: #1a1f16; }
   .g16-bg img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 60% 50%; }
   .g16-bg::after {
@@ -1446,40 +1420,40 @@
   .g16-events .by { font-size: 19px; color: rgba(255,252,247,.72); }
   .g16-note { margin-top: 18px; font-size: 18px; color: rgba(255,252,247,.6); }
 
-  /* ════════════ Slide 13 — Pricing ════════════ */
+  /* ════════════ Slide 12 — Pricing ════════════ */
   .g7 {
     background: radial-gradient(1000px 820px at 86% 8%, rgba(135,164,130,.13), rgba(135,164,130,0) 62%), var(--cream-50);
   }
   .g7 .slide-frame { padding: 84px 120px 112px; }
   .g7-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; }
   .g7-sub { padding-bottom: 8px; font-size: 25px; line-height: 1.35; letter-spacing: -0.01em; color: var(--grey-600); max-width: 440px; text-align: right; }
-  .g7-plans { flex: 1; min-height: 0; margin-top: 34px; display: grid; grid-template-columns: 590px 420px 1fr; gap: 28px; align-items: stretch; }
-  .plan { position: relative; display: flex; flex-direction: column; padding: 32px 36px; border-radius: 20px; }
+  .g7-plans { flex: 1; min-height: 0; margin-top: 36px; display: grid; grid-template-columns: 1.24fr 1fr; gap: 28px; align-items: stretch; }
+  .plan { position: relative; display: flex; flex-direction: column; padding: 46px 56px 44px; border-radius: 24px; }
   .plan.yearly {
     background: radial-gradient(110% 90% at 0% 0%, rgba(255,252,247,.1), rgba(255,252,247,0) 55%), linear-gradient(150deg, var(--forest-700) 0%, var(--forest-grad-end) 100%);
     box-shadow: 0 26px 56px -30px rgba(28,49,24,.6); color: var(--cream-50);
   }
   .plan.monthly { border: 1px solid var(--bone-200); background: rgba(255,255,255,.5); color: var(--grey-800); }
-  .p-tag { font-size: 13px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: #A4C29D; }
+  .p-tag { font-size: 15px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: #A4C29D; }
   .plan.monthly .p-tag { color: var(--grey-500); }
-  .plan h3 { margin-top: 10px; font-family: var(--font-display); font-weight: 400; font-size: 54px; line-height: 1; letter-spacing: -0.03em; }
+  .plan h3 { margin-top: 10px; font-family: var(--font-display); font-weight: 400; font-size: 68px; line-height: 1; letter-spacing: -0.03em; }
   .plan.monthly h3 { color: var(--forest-700); }
   .plan .price {
-    margin-top: auto; display: flex; align-items: baseline; font-family: var(--font-display); font-size: 196px; line-height: .98;
+    margin-top: auto; display: flex; align-items: baseline; font-family: var(--font-display); font-size: 252px; line-height: .98;
     letter-spacing: -0.045em; font-feature-settings: "lnum" 1; font-variant-numeric: lining-nums tabular-nums;
   }
-  .plan .price .cur { align-self: flex-start; margin-top: 24px; margin-right: 6px; font-size: 74px; color: #A4C29D; letter-spacing: 0; }
-  .plan .price small { margin-left: 14px; font-style: italic; font-size: 42px; letter-spacing: -0.02em; color: rgba(255,252,247,.68); }
-  .plan.monthly .price { color: var(--forest-700); font-size: 136px; }
-  .plan.monthly .price .cur { color: var(--forest-500); font-size: 54px; margin-top: 14px; }
-  .plan.monthly .price small { color: var(--grey-500); font-size: 32px; }
-  .p-bill { margin-top: 8px; font-size: 22px; line-height: 1.3; letter-spacing: -0.008em; color: rgba(255,252,247,.88); }
+  .plan .price .cur { align-self: flex-start; margin-top: 32px; margin-right: 8px; font-size: 92px; color: #A4C29D; letter-spacing: 0; }
+  .plan .price small { margin-left: 18px; font-style: italic; font-size: 52px; letter-spacing: -0.02em; color: rgba(255,252,247,.68); }
+  .plan.monthly .price { color: var(--forest-700); font-size: 184px; margin-bottom: 13px; }
+  .plan.monthly .price .cur { color: var(--forest-500); font-size: 70px; margin-top: 22px; }
+  .plan.monthly .price small { color: var(--grey-500); font-size: 42px; }
+  .p-bill { margin-top: 10px; font-size: 28px; line-height: 1.3; letter-spacing: -0.008em; color: rgba(255,252,247,.88); }
   .plan.monthly .p-bill { color: var(--grey-600); }
-  .plan ul { margin-top: 20px; padding-top: 18px; border-top: 1px solid rgba(255,252,247,.18); display: flex; flex-direction: column; gap: 9px; font-size: 20px; line-height: 1.32; color: rgba(255,252,247,.86); }
+  .plan ul { margin-top: 24px; padding-top: 22px; border-top: 1px solid rgba(255,252,247,.18); display: flex; flex-direction: column; gap: 10px; font-size: 24px; line-height: 1.32; color: rgba(255,252,247,.86); }
   .plan.monthly ul { border-top-color: var(--bone-200); color: var(--grey-600); }
   /* the savings sticker, slapped on the yearly plan at an angle */
   .g7 .g7-sticker {
-    position: absolute; right: 26px; top: 22px; z-index: 2; width: 138px; height: 138px; border-radius: 50%;
+    position: absolute; right: 44px; top: 40px; z-index: 2; width: 182px; height: 182px; border-radius: 50%;
     display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
     background: var(--cream-50); color: var(--forest-700); transform: rotate(12deg);
     box-shadow: 0 10px 24px -8px rgba(0,0,0,.45), inset 0 0 0 1.5px rgba(44,78,37,.28);
@@ -1487,50 +1461,34 @@
   }
   .g7.play .g7-sticker { animation: stampIn 560ms cubic-bezier(.34,1.45,.4,1) 1s forwards; }
   @keyframes stampIn { from { opacity: 0; transform: rotate(24deg) scale(1.5); } to { opacity: 1; transform: rotate(12deg) scale(1); } }
-  .g7-sticker .st-k { font-size: 12px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--forest-500); }
-  .g7-sticker b { font-family: var(--font-display); font-weight: 400; font-size: 42px; line-height: 1.04; letter-spacing: -0.03em; font-variant-numeric: lining-nums; }
-  .g7-sticker .st-s { font-size: 12px; line-height: 1.2; color: var(--grey-500); }
-  .plan-both { display: flex; flex-direction: column; padding: 32px 0 8px 24px; min-height: 0; }
-  .pb-k { font-size: 13px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--grey-500); }
-  .plan-both ul { flex: 1; margin-top: 14px; display: grid; grid-auto-rows: 1fr; }
-  .plan-both li { display: grid; grid-template-columns: 26px 1fr; gap: 10px; align-items: center; border-top: 1px solid var(--bone-200); font-size: 21px; line-height: 1.28; letter-spacing: -0.006em; color: var(--grey-700); }
-  .plan-both svg { width: 18px; height: 18px; }
-  .plan-both svg path { fill: none; stroke: var(--forest-500); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-  .g7-foot { margin-top: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 56px; font-size: 20px; line-height: 1.42; color: var(--grey-600); }
-  .g7-foot b { font-weight: 600; color: var(--forest-700); }
+  .g7-sticker .st-k { font-size: 15px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--forest-500); }
+  .g7-sticker b { font-family: var(--font-display); font-weight: 400; font-size: 56px; line-height: 1.04; letter-spacing: -0.03em; font-variant-numeric: lining-nums; }
+  .g7-sticker .st-s { font-size: 15px; line-height: 1.2; color: var(--grey-500); }
 
-  /* ════════════ Slide 14 — What it covers ════════════ */
-  .g17 .slide-frame { padding: 84px 120px 112px; }
-  .g17-grid { flex: 1; min-height: 0; margin-top: 38px; display: grid; grid-template-columns: 1fr 1fr 500px; gap: 48px; }
-  .sc-col { display: flex; flex-direction: column; min-height: 0; }
-  .sc-col ul { flex: 1; display: grid; grid-template-rows: repeat(8, 1fr); text-wrap: balance; }
-  .sc-col h3 { font-family: var(--font-display); font-weight: 400; font-size: 36px; letter-spacing: -0.025em; color: var(--forest-700); padding-bottom: 14px; }
-  .sc-col li { position: relative; display: flex; align-items: center; padding-left: 34px; border-top: 1px solid var(--bone-200); font-size: 23px; line-height: 1.26; letter-spacing: -0.008em; color: var(--grey-700); }
-  .sc-col li svg { position: absolute; left: 0; top: calc(50% - 10px); width: 20px; height: 20px; }
-  .sc-col li svg path { fill: none; stroke: var(--forest-500); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-  .sc-out li { color: var(--grey-500); }
-  .sc-out li::before { content: ""; position: absolute; left: 3px; top: 50%; width: 13px; height: 1.5px; background: var(--grey-500); }
-  .sc-out li.sc-note { padding-left: 0; font-size: 19px; line-height: 1.36; color: var(--grey-600); }
-  .sc-out li.sc-note::before { display: none; }
-  .urgent { padding: 32px 34px; border-radius: 20px; background: linear-gradient(150deg, var(--forest-700) 0%, var(--forest-grad-end) 100%); color: var(--cream-50); display: flex; flex-direction: column; }
-  .u-k { font-family: var(--font-display); font-size: 36px; line-height: 1.05; letter-spacing: -0.025em; }
-  .u-lead { margin-top: 14px; font-size: 21px; line-height: 1.38; color: rgba(255,252,247,.88); }
-  .urgent ul { flex: 1; margin-top: 14px; display: grid; grid-auto-rows: 1fr; }
-  .urgent li { display: flex; align-items: center; border-top: 1px solid rgba(255,252,247,.18); font-size: 23px; line-height: 1.26; }
-  .u-988 { padding-top: 16px; border-top: 1px solid rgba(255,252,247,.18); font-size: 20px; line-height: 1.38; color: rgba(255,252,247,.88); }
-  .u-988 b { font-weight: 700; color: var(--cream-50); }
+  /* ════════════ Slides 13–14 — The terms, the questions ════════════ */
+  .g18 .slide-frame { padding: 84px 120px 112px; }
+  .terms { flex: 1; min-height: 0; margin-top: 34px; display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: 1fr 1fr; gap: 20px; }
+  .terms li {
+    display: flex; flex-direction: column; gap: 16px; padding: 32px 32px 28px;
+    border: 1px solid var(--bone-200); border-radius: 20px; background: rgba(255,255,255,.62);
+    box-shadow: 0 1px 1.5px rgba(28,49,24,.03), 0 16px 32px -26px rgba(28,49,24,.22);
+  }
+  .terms h3 { font-family: var(--font-display); font-weight: 400; font-size: 44px; line-height: 1.06; letter-spacing: -0.028em; color: var(--forest-700); }
+  .terms p { font-size: 30px; line-height: 1.3; letter-spacing: -0.012em; color: var(--grey-600); text-wrap: pretty; }
+  /* renewal gets the weight: it's the term people should never miss */
+  .terms li:first-child { border-color: transparent; background: linear-gradient(150deg, var(--forest-700) 0%, var(--forest-grad-end) 100%); box-shadow: 0 22px 44px -28px rgba(28,49,24,.6); }
+  .terms li:first-child h3 { color: var(--cream-50); }
+  .terms li:first-child p { color: rgba(255,252,247,.9); }
+  .terms-foot { padding-top: 22px; font-size: 21px; line-height: 1.4; color: var(--grey-600); }
+  .terms-foot b { font-weight: 600; color: var(--forest-700); }
 
-  /* ════════════ Slides 15–16 — The terms, the questions ════════════ */
-  :is(.g18, .g19) .slide-frame { padding: 84px 120px 112px; }
-  :is(.terms, .faq) { flex: 1; min-height: 0; margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: 1fr; column-gap: 64px; }
-  :is(.terms, .faq) li { display: flex; flex-direction: column; padding-top: 20px; border-top: 1px solid var(--bone-200); }
-  :is(.terms, .faq) h3 { font-family: var(--font-display); font-weight: 400; font-size: 29px; line-height: 1.12; letter-spacing: -0.022em; color: var(--forest-700); }
-  :is(.terms, .faq) p { margin-top: 7px; font-size: 21px; line-height: 1.38; letter-spacing: -0.006em; color: var(--grey-600); }
-  :is(.terms, .faq) p b { font-weight: 600; color: var(--grey-800); }
-  .faq p { font-size: 23px; }
-  .terms-foot { padding-top: 14px; border-top: 1px solid var(--bone-200); font-size: 18px; line-height: 1.4; color: var(--grey-500); }
+  .g19 .slide-frame { padding: 84px 120px 112px; }
+  .faq { flex: 1; min-height: 0; margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: 1fr; column-gap: 64px; }
+  .faq li { display: flex; flex-direction: column; padding-top: 22px; border-top: 1px solid var(--bone-200); }
+  .faq h3 { font-family: var(--font-display); font-weight: 400; font-size: 33px; line-height: 1.1; letter-spacing: -0.024em; color: var(--forest-700); }
+  .faq p { margin-top: 8px; font-size: 24px; line-height: 1.36; letter-spacing: -0.008em; color: var(--grey-600); text-wrap: pretty; }
 
-  /* ════════════ Slide 17 — Keep your momentum ════════════ */
+  /* ════════════ Slide 15 — Keep your momentum ════════════ */
   .g20-photo { position: absolute; right: 0; top: 0; bottom: 0; width: 920px; margin: 0; overflow: hidden; background: var(--bone-100); }
   .g20-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 74% 40%; }
   .g20-left { position: relative; z-index: 1; width: 760px; flex: 1; display: flex; flex-direction: column; justify-content: center; }
@@ -1540,14 +1498,14 @@
   .g20-steps li:last-child { padding-bottom: 0; }
   .g20-steps li:not(:last-child)::before { content: ""; position: absolute; left: 27px; top: 56px; bottom: 0; width: 2px; background: var(--bone-200); }
   .g20-steps .n { display: flex; align-items: center; justify-content: center; width: 56px; height: 56px; border-radius: 50%; background: var(--forest-700); color: var(--cream-50); font-family: var(--font-display); font-size: 27px; font-variant-numeric: lining-nums; }
-  .g20-steps b { display: block; padding-top: 2px; font-family: var(--font-display); font-weight: 400; font-size: 34px; line-height: 1.1; letter-spacing: -0.024em; color: var(--forest-700); }
-  .g20-steps div span { display: block; margin-top: 3px; font-size: 22px; color: var(--grey-600); }
+  .g20-steps b { display: block; padding-top: 2px; font-family: var(--font-display); font-weight: 400; font-size: 37px; line-height: 1.1; letter-spacing: -0.024em; color: var(--forest-700); }
+  .g20-steps div span { display: block; margin-top: 3px; font-size: 24px; color: var(--grey-600); }
   .g20-note { margin-top: 44px; padding-top: 22px; border-top: 1px solid var(--bone-200); font-size: 24px; line-height: 1.38; letter-spacing: -0.01em; color: var(--grey-700); }
   .g20-note b { font-weight: 600; color: var(--forest-700); }
   .g20-call { margin-top: 8px; font-size: 21px; color: var(--grey-500); }
   .g20 .footer-bar { right: 1000px; }
 
-  /* Slide 18 additions */
+  /* Slide 16 additions */
   .g9-floor {
     position: absolute; left: 0; right: 0; bottom: 0; height: 400px; pointer-events: none;
     background: linear-gradient(0deg, rgba(20,40,16,.96) 0%, rgba(20,40,16,.9) 50%, rgba(20,40,16,0) 100%);
@@ -1558,8 +1516,7 @@
 
   /* — presentation-only motion must never hide content on paper, or for reduced motion — */
   @media print, (prefers-reduced-motion: reduce) {
-    .ln-seg b, .pl-prog b, .yc-seg b, .g8 .tick path { animation: none !important; }
-    .ln-seg b { transform: scaleX(1) !important; }
+    .pl-prog b, .yc-seg b, .g8 .tick path { animation: none !important; }
     .pl-prog b { transform: scaleX(0) !important; }
     .g8 .tick path { stroke-dashoffset: 0 !important; }
     .ph-sway { animation: none !important; transform: rotateX(4deg) rotateY(-14deg) !important; }
@@ -1920,7 +1877,7 @@
   </footer>
 </div>
 
-<!-- ══════════════════ THE DECK — 18 slides (v7, Nov 4 2026) ══════════════════ -->
+<!-- ══════════════════ THE DECK — 16 slides (v7.1, Nov 4 2026) ══════════════════ -->
 <deck-stage id="deck" width="1920" height="1080">
 
   <!-- 1 — Congratulations (editorial title page, mirrors the Foundation title slide) -->
@@ -2244,25 +2201,69 @@
     <div class="print-foot" data-bind="print_foot"></div>
   </section>
 
-  <!-- 5 — The offer opens on the landing page's green silk -->
-  <section class="g11 on-dark" data-label="05 Keep feeling like yourself">
-    <div class="silk" aria-hidden="true"><img src="assets/lander/silk-poster.webp" alt=""><video class="loopvid" muted loop playsinline preload="auto" src="assets/lander/silk-loop.mp4"></video><i class="silk-scrim"></i></div>
+  <!-- 5 — Your next twelve months (the landing page's stepper; it advances itself, click a stop to hold it) -->
+  <section class="g14" data-label="05 Your next twelve months">
     <div class="slide-frame">
-      <div class="eyebrow ar" style="--d:.1s">Ongoing Care · For Foundation Program patients</div>
-      <h1 class="ar" style="--d:.2s">Keep feeling like <span class="italic ring-word">yourself</span>.</h1>
-      <p class="g11-sub ar" style="--d:.34s">The NP and plan that got you here, for the year ahead.</p>
-      <div class="g11-line ar" style="--d:.5s" aria-label="Foundation Program complete. You are here, week 12. Next: Ongoing Care, with your next NP visit in 3 months.">
-        <div class="ln-seg ln-done"><span>Foundation</span><i><b></b></i></div>
-        <div class="ln-seg ln-next"><span>Ongoing Care</span><i><b></b></i></div>
-        <span class="ln-node ln-0"></span>
-        <span class="ln-node ln-1"></span>
-        <span class="ln-node ln-2"></span>
-        <div class="ln-lab ln-l1"><b>You are here</b>Week 12</div>
-        <div class="ln-lab ln-l2"><b>Next NP visit</b>In 3 months</div>
+      <div class="g14-head">
+        <div class="title-block">
+          <div class="eyebrow ar">The year ahead</div>
+          <h2 class="display display-md ar" style="--d:.08s">Your next twelve <span class="italic ring-word">months</span>.</h2>
+        </div>
+        <dl class="g14-meta ar" style="--d:.2s">
+          <div><dt>You are here</dt><dd>Foundation complete</dd></div>
+          <div><dt>All year</dt><dd>Care coordinator messaging · Monthly events</dd></div>
+        </dl>
       </div>
+      <ol class="yr14 ar" style="--d:.28s">
+        <li class="yc on" data-pick style="--n:0">
+          <div class="yc-rail"><span class="yc-node"></span><i class="yc-seg"><b></b></i></div>
+          <div class="yc-img"><img src="assets/lander/reception-bonsai.webp" style="--narrow:44% 50%; object-position:72% 50%" alt="A clinic reception with a bonsai"></div>
+          <div class="yc-text">
+            <div class="yc-when">Weeks 1–2</div>
+            <h3>Transition visit</h3>
+            <div class="yc-more"><p>Meet your care coordinator, map your year and confirm your pharmacy.</p><ul><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>Care coordinator · 30 min</li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>In clinic</li></ul></div>
+          </div>
+        </li>
+        <li class="yc" data-pick style="--n:1">
+          <div class="yc-rail"><span class="yc-node"></span><i class="yc-seg"><b></b></i></div>
+          <div class="yc-img"><img src="assets/lander/inbody-botanical.webp" style="object-position:50% 50%" alt="An InBody scanner among botanical illustrations"></div>
+          <div class="yc-text">
+            <div class="yc-when">Month 3</div>
+            <h3>NP visit + body scan</h3>
+            <div class="yc-more"><p>Symptom check and dose review. Prescriptions renewed.</p><ul><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>NP · 30 min</li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>Body scan</li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>Prescriptions renewed</li></ul></div>
+          </div>
+        </li>
+        <li class="yc" data-pick style="--n:2">
+          <div class="yc-rail"><span class="yc-node"></span><i class="yc-seg"><b></b></i></div>
+          <div class="yc-img"><img src="assets/lander/morning-stretch.webp" style="object-position:50% 28%" alt="A woman stretching at a morning window"></div>
+          <div class="yc-text">
+            <div class="yc-when">Month 6</div>
+            <h3>Mid-year review</h3>
+            <div class="yc-more"><p>Repeat bloodwork when your NP recommends it.</p><ul><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>NP · 30 min</li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>Body scan</li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>Labs if indicated</li></ul></div>
+          </div>
+        </li>
+        <li class="yc" data-pick style="--n:3">
+          <div class="yc-rail"><span class="yc-node"></span><i class="yc-seg"><b></b></i></div>
+          <div class="yc-img"><img src="assets/lander/coffee.webp" style="object-position:50% 50%" alt="Coffee at a table with a friend"></div>
+          <div class="yc-text">
+            <div class="yc-when">Month 9</div>
+            <h3>NP visit + body scan</h3>
+            <div class="yc-more"><p>Fine-tune your plan for the months ahead.</p><ul><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>NP · 30 min</li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>Body scan</li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>Prescriptions renewed</li></ul></div>
+          </div>
+        </li>
+        <li class="yc" data-pick style="--n:4">
+          <div class="yc-rail"><span class="yc-node"></span></div>
+          <div class="yc-img"><img src="assets/lander/forest-hike.webp" style="object-position:72% 40%" alt="A woman walking on a forest trail"></div>
+          <div class="yc-text">
+            <div class="yc-when">Month 12</div>
+            <h3>Annual review</h3>
+            <div class="yc-more"><p>See your year in symptoms and scans, then plan the next.</p><ul><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>NP · 30 min</li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>Body scan</li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>Renew your year</li></ul></div>
+          </div>
+        </li>
+      </ol>
     </div>
     <div class="footer-bar">
-      <img src="../assets/logos/Optimal-Logo-Inverted.png" class="logo" alt="">
+      <img src="../assets/logos/OptimalLogo-Green.png" class="logo" alt="">
       <div class="footer-meta"><span class="pagenum"></span><span>Ongoing Care · Menopause &amp; Perimenopause Program</span></div>
     </div>
     <div class="print-foot" data-bind="print_foot"></div>
@@ -2387,7 +2388,6 @@
           <div class="ar" style="--d:0.76s"><h3>If muscle starts to <em>slide</em></h3><p>Your quarterly body scan shows it early, so your plan can keep up.</p></div>
         </li>
       </ul>
-      <p class="ch-foot ar" style="--d:1s">Without a plan, each of these means booking a one-off visit at <b data-bind="VISIT"></b> and starting the conversation fresh.</p>
     </div>
     <div class="footer-bar">
       <img src="../assets/logos/OptimalLogo-Green.png" class="logo" alt="">
@@ -2396,76 +2396,8 @@
     <div class="print-foot" data-bind="print_foot"></div>
   </section>
 
-  <!-- 8 — Your next twelve months (the landing page's stepper; it advances itself, click a stop to hold it) -->
-  <section class="g14" data-label="08 Your next twelve months">
-    <div class="slide-frame">
-      <div class="g14-head">
-        <div class="title-block">
-          <div class="eyebrow ar">The year ahead</div>
-          <h2 class="display display-md ar" style="--d:.08s">Your next twelve <span class="italic ring-word">months</span>.</h2>
-        </div>
-        <dl class="g14-meta ar" style="--d:.2s">
-          <div><dt>You are here</dt><dd>Foundation complete</dd></div>
-          <div><dt>All year</dt><dd>Care coordinator messaging · Monthly events</dd></div>
-        </dl>
-      </div>
-      <ol class="yr14 ar" style="--d:.28s">
-        <li class="yc on" data-pick style="--n:0">
-          <div class="yc-rail"><span class="yc-node"></span><i class="yc-seg"><b></b></i></div>
-          <div class="yc-img"><img src="assets/lander/reception-bonsai.webp" style="--narrow:44% 50%; object-position:72% 50%" alt="A clinic reception with a bonsai"></div>
-          <div class="yc-text">
-            <div class="yc-when">Weeks 1–2</div>
-            <h3>Transition visit</h3>
-            <div class="yc-more"><p>Meet your care coordinator, map your year and confirm your pharmacy.</p><ul><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>Care coordinator · 30 min</li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>In clinic</li></ul></div>
-          </div>
-        </li>
-        <li class="yc" data-pick style="--n:1">
-          <div class="yc-rail"><span class="yc-node"></span><i class="yc-seg"><b></b></i></div>
-          <div class="yc-img"><img src="assets/lander/inbody-botanical.webp" style="object-position:50% 50%" alt="An InBody scanner among botanical illustrations"></div>
-          <div class="yc-text">
-            <div class="yc-when">Month 3</div>
-            <h3>NP visit + body scan</h3>
-            <div class="yc-more"><p>Symptom check and dose review. Prescriptions renewed.</p><ul><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>NP · 30 min</li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>Body scan</li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>Prescriptions renewed</li></ul></div>
-          </div>
-        </li>
-        <li class="yc" data-pick style="--n:2">
-          <div class="yc-rail"><span class="yc-node"></span><i class="yc-seg"><b></b></i></div>
-          <div class="yc-img"><img src="assets/lander/morning-stretch.webp" style="object-position:50% 28%" alt="A woman stretching at a morning window"></div>
-          <div class="yc-text">
-            <div class="yc-when">Month 6</div>
-            <h3>Mid-year review</h3>
-            <div class="yc-more"><p>Repeat bloodwork when your NP recommends it.</p><ul><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>NP · 30 min</li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>Body scan</li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>Labs if indicated</li></ul></div>
-          </div>
-        </li>
-        <li class="yc" data-pick style="--n:3">
-          <div class="yc-rail"><span class="yc-node"></span><i class="yc-seg"><b></b></i></div>
-          <div class="yc-img"><img src="assets/lander/coffee.webp" style="object-position:50% 50%" alt="Coffee at a table with a friend"></div>
-          <div class="yc-text">
-            <div class="yc-when">Month 9</div>
-            <h3>NP visit + body scan</h3>
-            <div class="yc-more"><p>Fine-tune your plan for the months ahead.</p><ul><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>NP · 30 min</li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>Body scan</li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>Prescriptions renewed</li></ul></div>
-          </div>
-        </li>
-        <li class="yc" data-pick style="--n:4">
-          <div class="yc-rail"><span class="yc-node"></span></div>
-          <div class="yc-img"><img src="assets/lander/forest-hike.webp" style="object-position:72% 40%" alt="A woman walking on a forest trail"></div>
-          <div class="yc-text">
-            <div class="yc-when">Month 12</div>
-            <h3>Annual review</h3>
-            <div class="yc-more"><p>See your year in symptoms and scans, then plan the next.</p><ul><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>NP · 30 min</li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>Body scan</li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>Renew your year</li></ul></div>
-          </div>
-        </li>
-      </ol>
-    </div>
-    <div class="footer-bar">
-      <img src="../assets/logos/OptimalLogo-Green.png" class="logo" alt="">
-      <div class="footer-meta"><span class="pagenum"></span><span>Ongoing Care · Menopause &amp; Perimenopause Program</span></div>
-    </div>
-    <div class="print-foot" data-bind="print_foot"></div>
-  </section>
-
-  <!-- 9 — Your first step: the transition visit (before the price — Peter, Oct 21) -->
-  <section class="g8" data-label="09 Your first step">
+  <!-- 8 — Your first step: the transition visit (before the price — Peter, Oct 21) -->
+  <section class="g8" data-label="08 Your first step">
     <div class="slide-frame">
       <div class="cols">
         <div class="g8-left">
@@ -2505,8 +2437,8 @@
     <div class="print-foot" data-bind="print_foot"></div>
   </section>
 
-  <!-- 10 — The body scan -->
-  <section class="g15" data-label="10 A body scan every quarter">
+  <!-- 9 — The body scan -->
+  <section class="g15" data-label="09 A body scan every quarter">
     <figure class="g15-art ap" style="--d:.1s"><img src="assets/lander/inbody-botanical.webp" alt="An InBody body composition scanner among botanical illustrations"></figure>
     <div class="slide-frame">
       <div class="g15-left">
@@ -2531,8 +2463,8 @@
     <div class="print-foot" data-bind="print_foot"></div>
   </section>
 
-  <!-- 11 — Member evenings -->
-  <section class="g16 on-dark" data-label="11 Member evenings">
+  <!-- 10 — Member evenings -->
+  <section class="g16 on-dark" data-label="10 Member evenings">
     <div class="g16-bg ap" style="--d:.05s"><img class="kb" style="--kb-s:1.07; --kb-x:1%; --kb-dur:38s" src="assets/lander/evening-wide.webp" alt="A member evening at the clinic: a speaker presents to a seated group at dusk"><i class="grain" aria-hidden="true"></i></div>
     <div class="slide-frame">
       <div class="g16-left">
@@ -2554,9 +2486,9 @@
     <div class="print-foot" data-bind="print_foot"></div>
   </section>
 
-  <!-- 4 — Your choice (bucket variants) -->
+  <!-- 11 — Your choice -->
   <!-- imagery policy: photo-free — the drawn fork and year track are the visual -->
-  <section class="g6" data-label="12 Your choice">
+  <section class="g6" data-label="11 Your choice">
     <div class="slide-frame">
       <div class="title-block">
         <div class="eyebrow ar">After graduation</div>
@@ -2649,8 +2581,8 @@
   </section>
 
 
-  <!-- 13 — Pricing (the Nov 4 agreement; every figure comes from CONFIG) -->
-  <section class="g7" data-label="13 Pricing">
+  <!-- 12 — Pricing (the Nov 4 agreement; every figure comes from CONFIG) -->
+  <section class="g7" data-label="12 Pricing">
     <div class="slide-frame">
       <div class="g7-head">
         <div class="title-block">
@@ -2681,21 +2613,6 @@
             <li>The same care as yearly</li>
           </ul>
         </article>
-        <div class="plan-both">
-          <div class="pb-k ar" style="--d:.42s">Both plans include</div>
-          <ul>
-            <li class="ar" style="--d:0.50s"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg><span>Transition visit with your care coordinator</span></li>
-            <li class="ar" style="--d:0.57s"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg><span>An NP visit every 3 months, 30 min each</span></li>
-            <li class="ar" style="--d:0.64s"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg><span>A body scan every quarter</span></li>
-            <li class="ar" style="--d:0.71s"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg><span>Prescriptions renewed at every visit</span></li>
-            <li class="ar" style="--d:0.78s"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg><span>Repeat labs when indicated (OHIP-covered)</span></li>
-            <li class="ar" style="--d:0.85s"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg><span>Messaging with your care coordinator, plus monthly member events</span></li>
-          </ul>
-        </div>
-      </div>
-      <div class="g7-foot ar" style="--d:1s">
-        <p><b>Prefer no plan?</b> Single NP visits, <span data-bind="VISIT"></span> each, with no body scans, care coordinator messaging or events. Four of them comes to <span data-bind="FOUR_VISITS"></span>.</p>
-        <p><b>Using your benefits?</b> NP receipts may be claimable on extended health plans or a health spending account, and may count as a medical expense on your taxes.</p>
       </div>
     </div>
     <div class="footer-bar">
@@ -2705,79 +2622,24 @@
     <div class="print-foot" data-bind="print_foot"></div>
   </section>
 
-  <!-- 14 — What it covers and what it doesn't (agreement §1, §8) -->
-  <section class="g17" data-label="14 What it covers">
-    <div class="slide-frame">
-      <div class="title-block">
-        <div class="eyebrow ar">Know the scope</div>
-        <h2 class="display display-md ar" style="--d:.08s">Focused hormone care, not primary <span class="italic ring-word">care</span>.</h2>
-      </div>
-      <div class="g17-grid">
-        <div class="sc-col ar" style="--d:.18s">
-          <h3>Included</h3>
-          <ul class="sc-in">
-            <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>Transition visit with your care coordinator</li>
-            <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>An NP visit every 3 months</li>
-            <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>A body scan at each NP visit</li>
-            <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>Prescriptions renewed at each NP visit</li>
-            <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>Repeat labs when your NP recommends them</li>
-            <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>Care coordinator messaging in the portal</li>
-            <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>Monthly member events</li>
-            <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>A note to your family physician, if you authorize it</li>
-          </ul>
-        </div>
-        <div class="sc-col ar" style="--d:.28s">
-          <h3>Not included</h3>
-          <ul class="sc-out">
-            <li>Routine primary care</li>
-            <li>Chronic conditions unrelated to hormonal health</li>
-            <li>Cancer screening</li>
-            <li>Vaccinations</li>
-            <li>Mental health treatment beyond a hormone-care visit</li>
-            <li>Urgent or acute care</li>
-            <li>After-hours coverage</li>
-            <li class="sc-note">Keep your family physician or walk-in clinic for these. Ongoing Care is private-pay and not insured by OHIP.</li>
-          </ul>
-        </div>
-        <aside class="urgent ar" style="--d:.42s">
-          <div class="u-k">When to seek urgent care</div>
-          <p class="u-lead">Call 911 or go to your nearest emergency department, then tell the clinic:</p>
-          <ul>
-            <li>Severe or sudden headaches</li>
-            <li>Calf pain or swelling</li>
-            <li>Chest pain</li>
-            <li>Persistent heavy bleeding</li>
-            <li>Significant mood deterioration or thoughts of self-harm</li>
-          </ul>
-          <p class="u-988">You can also call or text <b>9-8-8</b>, the Suicide Crisis Helpline, at any time.</p>
-        </aside>
-      </div>
-    </div>
-    <div class="footer-bar">
-      <img src="../assets/logos/OptimalLogo-Green.png" class="logo" alt="">
-      <div class="footer-meta"><span class="pagenum"></span><span>Ongoing Care · Menopause &amp; Perimenopause Program</span></div>
-    </div>
-    <div class="print-foot" data-bind="print_foot"></div>
-  </section>
-
-  <!-- 15 — The terms in plain words (agreement §2, §5, §6, §13) -->
-  <section class="g18" data-label="15 Your plan, plainly">
+  <!-- 13 — The terms as short cards (agreement §2, §5, §13) -->
+  <section class="g18" data-label="13 Your plan, plainly">
     <div class="slide-frame">
       <div class="title-block">
         <div class="eyebrow ar">Before you sign</div>
         <h2 class="display display-md ar" style="--d:.08s">Your plan, <span class="italic ring-word">plainly</span>.</h2>
       </div>
       <ul class="terms">
-        <li class="ar" style="--d:0.16s"><h3>Renewal</h3><p>Yearly renews automatically; we remind you at least 30 days before. Monthly continues month to month until you cancel.</p></li>
-        <li class="ar" style="--d:0.21s"><h3>Cancelling</h3><p>Yearly: cancel any time before your renewal date, and care continues to the end of your year. Monthly: cancel any time, and billing stops from your next billing date; any months left in the 3-month minimum are still charged. In writing, to <b data-bind="clinic_email"></b>.</p></li>
-        <li class="ar" style="--d:0.26s"><h3>Refunds</h3><p>Fees are non-refundable. Your rights under Ontario's Consumer Protection Act still apply, and prevail where they're more generous.</p></li>
-        <li class="ar" style="--d:0.31s"><h3>Unused and missed visits</h3><p>Included visits don't carry forward and have no cash value. A visit missed without notice may be counted as used.</p></li>
-        <li class="ar" style="--d:0.36s"><h3>Extra NP visits</h3><p><span data-bind="VISIT"></span> each, when you or your NP feel one is needed.</p></li>
-        <li class="ar" style="--d:0.41s"><h3>Rescheduling</h3><p>More than 1 business day's notice: no penalty. Less: one short-notice reschedule per year of enrolment. Arriving late shortens the visit.</p></li>
-        <li class="ar" style="--d:0.46s"><h3>Prescription renewals</h3><p>These depend on safe monitoring. Your NP may need a visit or bloodwork first, and may decline a renewal that's no longer appropriate. Testosterone is at your NP's discretion only.</p></li>
-        <li class="ar" style="--d:0.51s"><h3>Coming back after a gap</h3><p>Re-entry is through a new Foundation Program at then-current rates, because your baselines need re-establishing.</p></li>
+        <li class="ar" style="--d:0.14s"><h3>Renewal</h3><p>Yearly renews automatically. We remind you at least 30 days before.</p></li>
+        <li class="ar" style="--d:0.19s"><h3>Cancelling</h3><p>Yearly: any time before renewal. Monthly: any time; the 3-month minimum still applies.</p></li>
+        <li class="ar" style="--d:0.24s"><h3>Refunds</h3><p>Fees are non-refundable. Your Ontario consumer rights still apply.</p></li>
+        <li class="ar" style="--d:0.29s"><h3>Unused visits</h3><p>They don't carry forward or hold cash value. No-shows may count as used.</p></li>
+        <li class="ar" style="--d:0.34s"><h3>Extra NP visits</h3><p><span data-bind="VISIT"></span> each, when you or your NP feel one is needed.</p></li>
+        <li class="ar" style="--d:0.39s"><h3>Rescheduling</h3><p>No penalty with over 1 business day's notice. Less notice: once a year.</p></li>
+        <li class="ar" style="--d:0.44s"><h3>Prescriptions</h3><p>Renewals depend on safe monitoring. Your NP may need a visit or bloodwork first.</p></li>
+        <li class="ar" style="--d:0.49s"><h3>After a gap</h3><p>Returning means a new Foundation Program, at then-current rates.</p></li>
       </ul>
-      <p class="terms-foot ar" style="--d:.7s">Your Ongoing Care Agreement has the full terms. Taxes, if any, are additional. Prices may change for future billing periods with at least 30 days' written notice.</p>
+      <p class="terms-foot ar" style="--d:.62s">To cancel, email <b data-bind="clinic_email"></b>. Your Ongoing Care Agreement has the full terms.</p>
     </div>
     <div class="footer-bar">
       <img src="../assets/logos/OptimalLogo-Green.png" class="logo" alt="">
@@ -2786,8 +2648,8 @@
     <div class="print-foot" data-bind="print_foot"></div>
   </section>
 
-  <!-- 16 — Questions -->
-  <section class="g19" data-label="16 Your questions">
+  <!-- 14 — Questions -->
+  <section class="g19" data-label="14 Your questions">
     <div class="slide-frame">
       <div class="title-block">
         <div class="eyebrow ar">Before you decide</div>
@@ -2811,8 +2673,8 @@
     <div class="print-foot" data-bind="print_foot"></div>
   </section>
 
-  <!-- 17 — Next steps -->
-  <section class="g20" data-label="17 Keep your momentum">
+  <!-- 15 — Next steps -->
+  <section class="g20" data-label="15 Keep your momentum">
     <figure class="g20-photo ap" style="--d:.05s"><img class="kb" style="--kb-s:1.06; --kb-x:-1%; --kb-dur:36s" src="assets/lander/forest-hike.webp" alt="A woman walking and smiling on a forest trail in autumn light"><i class="grain" aria-hidden="true"></i></figure>
     <div class="slide-frame">
       <div class="g20-left">
@@ -2836,8 +2698,8 @@
     <div class="print-foot" data-bind="print_foot"></div>
   </section>
 
-  <!-- 9 — Thank you (dark closer) -->
-  <section class="g9 on-dark" data-label="18 Thank you">
+  <!-- 16 — Thank you (dark closer) -->
+  <section class="g9 on-dark" data-label="16 Thank you">
     <div class="bg ap" style="--d:.05s">
       <img class="kb" style="--kb-s:1.06; --kb-x:-0.8%; --kb-y:-0.8%; --kb-dur:36s" src="../assets/images/clinic-waiting.jpg" alt="The Optimal Clinic waiting room — green tile, olive chairs, bonsai">
       <i class="grain" aria-hidden="true"></i>

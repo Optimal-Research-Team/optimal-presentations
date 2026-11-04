@@ -28,7 +28,7 @@
       phone: '(437) 370-0291',
       web: 'beoptimal.ca',
     },
-    TEMPLATE_VERSION: 'ongoing-care-deck v7.0.0',
+    TEMPLATE_VERSION: 'ongoing-care-deck v7.1.0',
     /* Questionnaire/results section (slides 2–4 + their form fields).
        OFF until questionnaire data can be pulled directly — everything it
        gates is intact; flip to true to restore the full 9-slide deck.
@@ -728,7 +728,6 @@
     bind('MONTHLY_NUM', String(CONFIG.PRICE_MONTHLY));
     bind('SAVE_YEARLY', money(CONFIG.PRICE_MONTHLY * 12 - CONFIG.PRICE_YEARLY));
     bind('VISIT', money(CONFIG.PRICE_VISIT));
-    bind('FOUR_VISITS', money(CONFIG.PRICE_VISIT * 4));
 
     // §5.8 — identifying print footer on every page
     bind('print_foot', `${s.first} · ${fmtDate(todayIso())} · ${CONFIG.TEMPLATE_VERSION}`);
@@ -911,7 +910,7 @@
   }, { passive: true });
 
   // Desktop click zones: left ⅓ back, right ⅔ forward — §5.3
-  // The zones sit over the deck, so a row the presenter can pick (slides 6 and 8) is found by position.
+  // The zones sit over the deck, so a row the presenter can pick (slides 5 and 6) is found by position.
   const pickAt = (e) => {
     const hit = document.elementsFromPoint(e.clientX, e.clientY).find((n) => n.closest('[data-pick]'));
     return hit ? hit.closest('[data-pick]') : null;
@@ -967,7 +966,7 @@
     if (typeof el.play === 'function') el.play();
   });
 
-  /* The green silk loops play only while their slide is up. Print, reduced
+  /* The green silk loop plays only while its slide is up. Print, reduced
      motion and playback failure show the still underneath. */
   const loopVideos = {
     els: $$('#deck video.loopvid'),
@@ -980,7 +979,7 @@
     },
   };
 
-  /* Slides 6 and 8 step through their items on a timer: `.on` marks the current
+  /* Slides 5 and 6 step through their items on a timer: `.on` marks the current
      item, `.done` the ones already passed, and `.auto` on the slide runs the
      progress line. Clicking an item (zoneClick) selects it and holds there. */
   function makeCycler(sec, itemSel, ms, linkedSel) {
