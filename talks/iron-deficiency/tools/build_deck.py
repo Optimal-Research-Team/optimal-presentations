@@ -3,20 +3,27 @@
     python3 talks/iron-deficiency/tools/build_deck.py      # from the repo root
 
 The chrome (cover screens, reveal engine, PDF export, fullscreen) is copied from
-../../intro/index.html so every Optimal deck behaves the same. The slides are below.
+../../intro/index.html so every Optimal deck behaves the same. ../../tools/talk_chrome.py then
+applies what all talks share: no foliage on the cover screens, and the motion layer. The slides
+are below.
 
 Copy source: the clinical team's draft talk (Nov 4 2026). Citations were checked against
 PubMed and the CMAJ full text. Any change to a fact needs a citation and clinical review.
 """
 import math
 import re
+import sys
 from pathlib import Path
 
+sys.dont_write_bytecode = True
 ROOT = Path(__file__).resolve().parents[3]
+sys.path.insert(0, str(ROOT / 'talks' / 'tools'))
+import talk_chrome  # noqa: E402
+
 DECK = ROOT / 'talks' / 'iron-deficiency'
 SRC = (ROOT / 'intro' / 'index.html').read_text()
 NAME = 'Iron Deficiency in Women'
-VERSION = 'iron-deficiency-talk v1.0.0'
+VERSION = 'iron-deficiency-talk v1.1.0'
 NB = '  ·  '
 
 # ── Tokens: the same set as the HBOT deck, at the 1920 artboard's ~2x scale ──
@@ -35,7 +42,7 @@ SECTION = ("position:relative;width:1920px;height:1080px;box-sizing:border-box;o
            "font-family:'Public Sans',system-ui,sans-serif;")
 LIGHT = SECTION + f"background:{CREAM};color:{INK};"
 DARK = SECTION + f"background:linear-gradient(135deg,{GREEN} 0%,#1C3118 100%);color:{CREAM};"
-PAD = "padding:88px 120px 150px;display:flex;flex-direction:column"
+PAD = "padding:88px 120px 172px;display:flex;flex-direction:column"
 
 # ── Sources: numbered once, cited by key on the slides, listed on the last slide
 #    and on sources.html (the QR code opens that page) ───────────────────────────
@@ -65,22 +72,22 @@ def cite(*keys, note=''):
     """One quiet line above the footer: who said this, so it can be looked up."""
     txt = '; '.join(SHORT[k] for k in keys)
     tail = f' {note}' if note else ''
-    return (f'<div style="position:absolute;left:120px;right:120px;bottom:100px;font-size:21px;line-height:1.35;color:{MUTED}">'
+    return (f'<div class="ir-cite" style="position:absolute;left:120px;right:120px;bottom:100px;font-size:21px;line-height:1.35;color:{MUTED}">'
             f'Source: {txt}.{tail}</div>')
 
 
 def paper(key, kind):
     """The study slides lead with the paper itself, as the draft did."""
     s = next(x for x in SOURCES if x[0] == key)
-    return (f'<div style="position:absolute;left:120px;right:120px;bottom:100px;font-size:21px;line-height:1.35;color:{MUTED}">'
+    return (f'<div class="ir-cite" style="position:absolute;left:120px;right:120px;bottom:100px;font-size:21px;line-height:1.35;color:{MUTED}">'
             f'{kind}. {s[2]} {s[3]} {s[4]}</div>')
 
 
-def ring(word, inset='-8px -24px', rot=-2.5):
+def ring(word, inset='-8px -24px', rot=-2.5, delay='.95s', margin='0'):
     """The design system's hand-drawn ring. One per slide at most, and few in the deck."""
-    return (f'<span style="position:relative;display:inline-block"><em>{word}</em>'
+    return (f'<span style="position:relative;display:inline-block;margin:{margin}"><em>{word}</em>'
             f'<span class="dk-ring" style="position:absolute;inset:{inset};border:3px solid rgba(26,80,18,.5);'
-            f'border-radius:50%;transform:rotate({rot}deg);pointer-events:none;--rot:{rot}deg"></span></span>')
+            f'border-radius:50%;transform:rotate({rot}deg);pointer-events:none;--rot:{rot}deg;--ring-d:{delay}"></span></span>')
 
 
 def footer(dark=False):
@@ -111,12 +118,25 @@ def add(label, notes, style, body, cls='sl'):
     slides.append(f'<section data-label="{label}" data-speaker-notes="{notes}" style="{style}" class="{cls}">\n{body}\n</section>')
 
 
+def part_ticks(n):
+    """Where this part sits in the talk: earlier parts full, this one drawing in."""
+    cells = ''
+    for i in range(1, 5):
+        inner = ''
+        if i < n:
+            inner = f'<span style="display:block;height:100%;background:{CREAM}"></span>'
+        elif i == n:
+            inner = f'<span class="ir-bar" style="--d:.55s;display:block;height:100%;background:{CREAM}"></span>'
+        cells += f'<span style="display:block;width:64px;height:3px;background:rgba(255,252,247,.22)">{inner}</span>'
+    return f'<div style="display:flex;gap:8px">{cells}</div>'
+
+
 def divider(n, title, img, notes):
     add(f'Part {n} divider', notes, DARK + 'padding:88px 120px 96px;display:flex;flex-direction:column', f'''
   <div class="dk-panel" style="position:absolute;top:140px;right:120px;width:800px;height:800px;display:flex;align-items:center;justify-content:center">
-    <img src="assets/images/{img}.webp" alt="" style="max-width:100%;max-height:100%;display:block" loading="eager" decoding="async">
+    <img class="ir-ink" style="--d:.2s;--dur:1700ms;max-width:100%;max-height:100%;display:block" src="assets/images/{img}.webp" alt="" loading="eager" decoding="async">
   </div>
-  <div style="{EYEBROW_D}">Part {n} of 4</div>
+  <div style="display:flex;align-items:center;gap:32px"><div style="{EYEBROW_D}">Part {n} of 4</div>{part_ticks(n)}</div>
   <div style="flex:1;display:flex;align-items:center">
     <h1 style="margin:0;max-width:860px;{SERIF};font-size:118px;line-height:1.02;letter-spacing:-.035em;color:{CREAM}">{title}</h1>
   </div>
@@ -126,7 +146,7 @@ def divider(n, title, img, notes):
 # 1 ── Title ───────────────────────────────────────────────────────────────────
 add('Title', 'Welcome the group. This is a talk about iron in women: how we measure it, what happens when it runs high or low, and what the treatment options are. Educational only.', LIGHT + 'padding:88px 120px 96px', f'''
   <div class="dk-panel" style="position:absolute;top:96px;right:92px;width:800px;height:800px">
-    <img src="assets/images/blood-field.webp" alt="Illustrative blood smear seen through a microscope" style="width:100%;height:100%;object-fit:contain;display:block" loading="eager" decoding="async">
+    <img class="ir-iris" src="assets/images/blood-field.webp" alt="Illustrative blood smear seen through a microscope" style="width:100%;height:100%;object-fit:contain;display:block" loading="eager" decoding="async">
     <div style="margin-top:14px;text-align:center;font-size:20px;font-style:italic;color:{MUTED}">Blood smear, illustrative</div>
   </div>
   <div style="width:900px;height:100%;display:flex;flex-direction:column">
@@ -163,7 +183,7 @@ def pyramid():
         y0, y1 = i * rh, i * rh + rh - gap
         h0, h1 = half * y0 / total, half * y1 / total
         d = f'{(4 - i) * 0.16 + 0.35:.2f}s'
-        polys.append(f'<polygon class="ir-build" style="--d:{d}" points="{half - h0:.1f},{y0} {half + h0:.1f},{y0} {half + h1:.1f},{y1} {half - h1:.1f},{y1}" fill="{fill}"/>')
+        polys.append(f'<polygon class="ir-tier" style="--d:{d}" points="{half - h0:.1f},{y0} {half + h0:.1f},{y0} {half + h1:.1f},{y1} {half - h1:.1f},{y1}" fill="{fill}"/>')
         edge = f'border-top:2px solid {LINE};' if i else ''
         labels.append(f'<div class="ir-build" style="--d:{d};height:{rh}px;box-sizing:border-box;{edge}display:flex;align-items:center;{SERIF};font-size:36px;line-height:1.14;letter-spacing:-.02em;color:{INK}">{text}</div>')
     return (f'<div style="display:grid;grid-template-columns:640px 1fr;gap:48px;width:1160px">'
@@ -191,21 +211,23 @@ def hexagon():
         a = math.radians(-90 + i * 60)
         x, y = cx + rn * math.cos(a), cy + rn * math.sin(a)
         ix, iy = cx + rh * math.cos(a), cy + rh * math.sin(a)
-        d = f'{0.3 + i * 0.12:.2f}s'
+        d = 0.5 + i * 0.1
         on = n == 'Minerals'
-        parts.append(f'<line class="ir-build" style="--d:{d}" x1="{ix:.1f}" y1="{iy:.1f}" x2="{x:.1f}" y2="{y:.1f}" stroke="{SAGE}" stroke-width="2.5"/>')
         fill = GREEN if on else CREAM
         tcol = CREAM if on else INK
         style = 'italic' if on else 'normal'
-        parts.append(f'<g class="ir-build" style="--d:{d}"><circle cx="{x:.1f}" cy="{y:.1f}" r="104" fill="{fill}" stroke="{GREEN}" stroke-width="2.5"/>'
-                     f'<text x="{x:.1f}" y="{y + 11:.1f}" text-anchor="middle" {SVGSER} font-size="{27 if n == "Nutraceuticals" else 32}" font-style="{style}" fill="{tcol}">{n}</text></g>')
+        dim = '' if on else ' class="ir-dim"'
+        ex, ey = cx + (rn - 104) * math.cos(a), cy + (rn - 104) * math.sin(a)  # stops at the circle's edge
+        parts.append(f'<g{dim}><line class="ir-draw" pathLength="1" style="--d:{d - .16:.2f}s;--dur:460ms" x1="{ix:.1f}" y1="{iy:.1f}" x2="{ex:.1f}" y2="{ey:.1f}" stroke="{SAGE}" stroke-width="2.5"/>'
+                     f'<g class="ir-pop" style="--d:{d:.2f}s"><circle cx="{x:.1f}" cy="{y:.1f}" r="104" fill="{fill}" stroke="{GREEN}" stroke-width="2.5"/>'
+                     f'<text x="{x:.1f}" y="{y + 11:.1f}" text-anchor="middle" {SVGSER} font-size="{27 if n == "Nutraceuticals" else 32}" font-style="{style}" fill="{tcol}">{n}</text></g></g>')
     a = math.radians(210)
     mx, my = cx + rn * math.cos(a), cy + rn * math.sin(a)
     return (f'<svg viewBox="0 0 900 800" style="width:880px;height:782px;display:block;overflow:visible" role="img" aria-label="Six dietary building blocks around a hexagon, with minerals highlighted">'
-            f'<polygon points="{hexpts}" fill="{SAGE50}" stroke="{GREEN}" stroke-width="2.5"/>'
-            f'<text x="{cx}" y="{cy + 14}" text-anchor="middle" {SVGSER} font-style="italic" font-size="42" fill="{GREEN}">Dietary</text>'
+            f'<g class="ir-pop" style="--d:.2s"><polygon points="{hexpts}" fill="{SAGE50}" stroke="{GREEN}" stroke-width="2.5"/>'
+            f'<text x="{cx}" y="{cy + 14}" text-anchor="middle" {SVGSER} font-style="italic" font-size="42" fill="{GREEN}">Dietary</text></g>'
             f'{"".join(parts)}'
-            f'<ellipse class="ir-build" style="--d:1.15s" cx="{mx:.1f}" cy="{my:.1f}" rx="128" ry="118" transform="rotate(-6 {mx:.1f} {my:.1f})" fill="none" stroke="rgba(26,80,18,.5)" stroke-width="3"/></svg>')
+            f'<g transform="rotate(-6 {mx:.1f} {my:.1f})"><ellipse class="ir-draw" pathLength="1" style="--d:1.3s;--dur:1000ms" cx="{mx:.1f}" cy="{my:.1f}" rx="128" ry="118" fill="none" stroke="rgba(26,80,18,.55)" stroke-width="3" stroke-linecap="round"/></g></svg>')
 
 
 add('Dietary building blocks', 'Diet has six building blocks: protein, water, nutraceuticals, fatty acids, vitamins and minerals. Iron is a mineral, and it is the one we will zoom in on today.', LIGHT + 'padding:88px 120px 110px;display:grid;grid-template-columns:1fr 880px;gap:40px;align-items:center', f'''
@@ -250,7 +272,7 @@ def lab_card():
     for i, name in enumerate(labels):
         y = 190 + i * 196
         rows.append(f'<text x="56" y="{y + 12}" {SVGTXT} font-size="30" fill="{INK2}">{name}</text>'
-                    f'<rect x="520" y="{y - 14}" width="{230 - i * 28}" height="28" rx="4" fill="{SAGE100}"/>'
+                    f'<rect class="ir-grow" style="--d:{.25 + i * .12:.2f}s" x="520" y="{y - 14}" width="{230 - i * 28}" height="28" rx="4" fill="{SAGE100}"/>'
                     + (f'<line x1="56" y1="{y + 98}" x2="804" y2="{y + 98}" stroke="{LINE}" stroke-width="2"/>' if i < 2 else ''))
     return f'''<svg viewBox="0 0 860 730" style="width:860px;height:730px;display:block;overflow:visible" role="img" aria-label="A magnifying glass moves over a lab report and stops on ferritin">
   <rect x="1" y="1" width="858" height="700" rx="8" fill="#fff" stroke="{LINE}" stroke-width="2"/>
@@ -258,9 +280,11 @@ def lab_card():
   <line x1="56" y1="112" x2="804" y2="112" stroke="{GREEN}" stroke-width="2"/>
   {''.join(rows)}
   <g class="ir-lens">
-    <line x1="340" y1="506" x2="424" y2="590" stroke="{GREEN}" stroke-width="30" stroke-linecap="round"/>
-    <circle cx="212" cy="386" r="168" fill="{CREAM}" stroke="{GREEN}" stroke-width="16"/>
-    <text class="ir-lens-word" x="212" y="412" text-anchor="middle" {SVGSER} font-style="italic" font-size="84" fill="{GREEN}">Ferritin</text>
+    <line x1="328" y1="502" x2="410" y2="584" stroke="{GREEN}" stroke-width="28" stroke-linecap="round"/>
+    <circle cx="212" cy="386" r="158" fill="{CREAM}" stroke="{GREEN}" stroke-width="14"/>
+    <circle cx="212" cy="386" r="146" fill="none" stroke="{SAGE100}" stroke-width="2"/>
+    <path d="M112 322 A122 122 0 0 1 176 270" fill="none" stroke="{SAGE200}" stroke-width="5" stroke-linecap="round"/>
+    <text class="ir-lens-word" x="212" y="411" text-anchor="middle" {SVGSER} font-style="italic" font-size="78" fill="{GREEN}">Ferritin</text>
   </g>
 </svg>'''
 
@@ -285,18 +309,18 @@ def venn():
   <defs><clipPath id="ir-venn-clip"><circle cx="350" cy="310" r="300"/></clipPath></defs>
   <circle class="ir-venn-l" cx="350" cy="310" r="300" fill="{SAGE100}"/>
   <circle class="ir-venn-r" cx="630" cy="310" r="300" fill="{SAGE50}" stroke="{SAGE100}" stroke-width="2"/>
-  <circle class="ir-build" style="--d:.75s" cx="630" cy="310" r="300" fill="{GREEN}" clip-path="url(#ir-venn-clip)"/>
-  <g class="ir-build" style="--d:.95s" {SVGSER} font-size="36" text-anchor="middle">
-    <text x="190" y="296" fill="{INK}">Iron deficiency,</text><text x="190" y="340" fill="{INK}">no anemia</text>
-    <text x="490" y="274" fill="{CREAM}" font-style="italic">Iron</text><text x="490" y="318" fill="{CREAM}" font-style="italic">deficiency</text><text x="490" y="362" fill="{CREAM}" font-style="italic">anemia</text>
-    <text x="790" y="296" fill="{INK}">Anemia from</text><text x="790" y="340" fill="{INK}">other causes</text>
+  <g class="ir-fade" style="--d:.8s"><circle cx="630" cy="310" r="300" fill="{GREEN}" clip-path="url(#ir-venn-clip)"/></g>
+  <g {SVGSER} font-size="36" text-anchor="middle">
+    <g class="ir-build" style="--d:.8s"><text x="190" y="296" fill="{INK}">Iron deficiency,</text><text x="190" y="340" fill="{INK}">no anemia</text></g>
+    <g class="ir-build" style="--d:1.1s"><text x="490" y="274" fill="{CREAM}" font-style="italic">Iron</text><text x="490" y="318" fill="{CREAM}" font-style="italic">deficiency</text><text x="490" y="362" fill="{CREAM}" font-style="italic">anemia</text></g>
+    <g class="ir-build" style="--d:.95s"><text x="790" y="296" fill="{INK}">Anemia from</text><text x="790" y="340" fill="{INK}">other causes</text></g>
   </g>
 </svg>'''
 
 
 def stat_big(num, body):
     return (f'<div style="border-top:2px solid {LINE};padding:20px 0 26px">'
-            f'<div style="{SERIF};font-size:96px;line-height:1;letter-spacing:-.03em;color:{GREEN}">{num}</div>'
+            f'<div class="ir-num" style="{SERIF};font-size:96px;line-height:1;letter-spacing:-.03em;color:{GREEN}">{num}</div>'
             f'<div style="margin-top:12px;font-size:27px;line-height:1.38;letter-spacing:-.01em;color:{INK2}">{body}</div></div>')
 
 
@@ -317,19 +341,19 @@ add('Not always anemia', 'Iron deficiency and anemia overlap but they are not th
 # 8 ── The ferritin line ───────────────────────────────────────────────────────
 def scale():
     k = 21  # px per µg/L, on an 80 µg/L ruler
-    return f'''<svg viewBox="0 0 1680 290" style="width:1680px;height:290px;display:block;overflow:visible" role="img" aria-label="A ferritin scale. The lower limit of normal moved from 12 to 15 up to 30 micrograms per litre.">
-  <rect x="0" y="72" width="{15 * k}" height="150" fill="#1C3118"/>
-  <rect x="{15 * k}" y="72" width="{15 * k}" height="150" fill="{GREEN}"/>
-  <rect x="{30 * k}" y="72" width="{20 * k}" height="150" fill="{SAGE}"/>
-  <rect x="{50 * k}" y="72" width="{30 * k}" height="150" fill="{SAGE100}"/>
-  <g class="ir-build" style="--d:.2s"><line x1="{15 * k}" y1="50" x2="{15 * k}" y2="244" stroke="{INK2}" stroke-width="3" stroke-dasharray="7 7"/>
-    <text x="{15 * k}" y="32" text-anchor="middle" {SVGTXT} font-size="24" font-weight="600" fill="{MUTED}">Old lower limit, 12–15</text></g>
-  <g class="ir-marker"><line x1="{30 * k}" y1="50" x2="{30 * k}" y2="244" stroke="{INK}" stroke-width="5"/>
-    <text x="{30 * k}" y="32" text-anchor="middle" {SVGTXT} font-size="24" font-weight="700" fill="{INK}">Lower limit since 2024, 30</text></g>
+    segs = [(0, 15, '#1C3118'), (15, 30, GREEN), (30, 50, SAGE), (50, 80, SAGE100)]
+    rects = ''.join(f'<rect class="ir-seg" style="--d:{.12 + i * .2:.2f}s" x="{a * k + (2 if i else 0)}" y="64" width="{(b - a) * k - (2 if i else 0)}" height="128" fill="{c}"/>' for i, (a, b, c) in enumerate(segs))
+    return f'''<svg viewBox="0 0 1680 264" style="width:1680px;height:264px;display:block;overflow:visible" role="img" aria-label="A ferritin scale. The lower limit of normal moved from 12 to 15 up to 30 micrograms per litre.">
+  <defs><clipPath id="ir-scale-clip"><rect x="0" y="64" width="1680" height="128" rx="6"/></clipPath></defs>
+  <g clip-path="url(#ir-scale-clip)">{rects}</g>
+  <g class="ir-fade" style="--d:.5s"><line x1="{15 * k}" y1="44" x2="{15 * k}" y2="212" stroke="{INK2}" stroke-width="3" stroke-dasharray="7 7"/>
+    <text x="{15 * k + 8}" y="28" text-anchor="end" {SVGTXT} font-size="24" font-weight="600" fill="{MUTED}">Old lower limit, 12–15</text></g>
+  <g class="ir-marker"><line x1="{30 * k}" y1="44" x2="{30 * k}" y2="212" stroke="{INK}" stroke-width="5"/>
+    <text x="{30 * k}" y="28" text-anchor="middle" {SVGTXT} font-size="24" font-weight="700" fill="{INK}">Lower limit since 2024, 30</text></g>
   <g {SVGSER} font-size="34" fill="{INK}" text-anchor="middle">
-    <text x="{15 * k}" y="284">15</text><text x="{30 * k}" y="284">30</text><text x="{50 * k}" y="284">50</text>
+    <text x="{15 * k}" y="254">15</text><text x="{30 * k}" y="254">30</text><text x="{50 * k}" y="254">50</text>
   </g>
-  <text x="1680" y="280" text-anchor="end" {SVGTXT} font-size="23" fill="{MUTED}">Ferritin, µg/L (the same number as ng/mL)</text>
+  <text x="1680" y="250" text-anchor="end" {SVGTXT} font-size="23" fill="{MUTED}">Ferritin, µg/L (the same number as ng/mL)</text>
 </svg>'''
 
 
@@ -376,26 +400,25 @@ def bell():
         pts = ' '.join(f'L{x} {y(x):.1f}' for x in range(a, b + 1, 4))
         return f'M{a} {base} {pts} L{b} {base} Z'
     bands = [(cx - s, cx + s, SAGE200), (cx - 2 * s, cx - s, SAGE100), (cx + s, cx + 2 * s, SAGE100)]
-    fills = ''.join(f'<path class="ir-build" style="--d:.5s" d="{area(a, b)}" fill="{c}"/>' for a, b, c in bands)
+    fills = ''.join(f'<path d="{area(a, b)}" fill="{c}"/>' for a, b, c in bands)
     curve = 'M20 ' + f'{y(20):.1f} ' + ' '.join(f'L{x} {y(x):.1f}' for x in range(24, 984, 4))
     ticks = ''.join(f'<line x1="{cx + i * s}" y1="{y(cx + i * s):.1f}" x2="{cx + i * s}" y2="{base}" stroke="{GREEN}" stroke-width="1.5" stroke-dasharray="6 6"/>' for i in (-2, -1, 1, 2))
     lo = cx - 2 * s
     hi = cx + 2 * s
     return f'''<svg viewBox="0 0 1000 650" style="width:1000px;height:650px;display:block;overflow:visible" role="img" aria-label="A bell curve. The reference range is the middle 95 percent of the people tested, and that group can include people with low iron.">
-  {fills}
-  <g class="ir-build" style="--d:.9s">{ticks}</g>
-  <path class="ir-draw" pathLength="1" d="{curve}" fill="none" stroke="{GREEN}" stroke-width="4" stroke-linecap="round"/>
+  <g class="ir-wipe">{fills}</g>
+  <g class="ir-fade" style="--d:1.25s">{ticks}</g>
+  <path class="ir-draw" pathLength="1" d="{curve}" fill="none" stroke="{GREEN}" stroke-width="5" stroke-linecap="round"/>
+  <circle class="ir-ride" r="9" fill="{GREEN}" style="offset-path:path('{curve}')"/>
   <line x1="0" y1="{base}" x2="1000" y2="{base}" stroke="{INK2}" stroke-width="2"/>
-  <g class="ir-build" style="--d:1.1s">
-    <path d="M{lo} {base + 34} H{hi} M{lo} {base + 24} V{base + 44} M{hi} {base + 24} V{base + 44}" stroke="{INK}" stroke-width="2.5" fill="none"/>
-    <text x="{cx}" y="{base + 86}" text-anchor="middle" {SVGSER} font-size="38" fill="{INK}">The &ldquo;normal&rdquo; range: the middle 95%</text>
-  </g>
-  <g class="ir-build" style="--d:1.4s">
+  <path class="ir-spread" style="--d:1.15s" d="M{lo} {base + 34} H{hi} M{lo} {base + 24} V{base + 44} M{hi} {base + 24} V{base + 44}" stroke="{INK}" stroke-width="2.5" fill="none"/>
+  <text class="ir-build" style="--d:1.4s" x="{cx}" y="{base + 86}" text-anchor="middle" {SVGSER} font-size="38" fill="{INK}">The &ldquo;normal&rdquo; range: the middle 95%</text>
+  <g class="ir-build" style="--d:1.55s">
     <text x="10" y="176" {SVGSER} font-style="italic" font-size="32" fill="{GREEN}">People with low iron</text>
     <text x="10" y="216" {SVGSER} font-style="italic" font-size="32" fill="{GREEN}">were counted in here</text>
-    <path d="M190 232 Q210 310 {cx - 1.5 * s:.0f} 440" stroke="{GREEN}" stroke-width="2.5" fill="none"/>
-    <circle cx="{cx - 1.5 * s:.0f}" cy="440" r="7" fill="{GREEN}"/>
   </g>
+  <path class="ir-draw" pathLength="1" style="--d:1.75s;--dur:620ms" d="M190 232 Q210 310 {cx - 1.5 * s:.0f} 440" stroke="{GREEN}" stroke-width="2.5" fill="none"/>
+  <circle class="ir-pop" style="--d:2.2s" cx="{cx - 1.5 * s:.0f}" cy="440" r="7" fill="{GREEN}"/>
 </svg>'''
 
 
@@ -419,21 +442,22 @@ def dumbbell():
     rows = [('Women', 49.4, 58.0, 120), ('Men', 57.0, 60.2, 250)]
     grid = ''.join(f'<line x1="{x(v)}" y1="48" x2="{x(v)}" y2="300" stroke="{LINE}" stroke-width="2"/><text x="{x(v)}" y="338" text-anchor="middle" {SVGTXT} font-size="23" fill="{MUTED}">{v}%</text>' for v in (45, 50, 55, 60, 65))
     out = []
-    for name, a, b, yy in rows:
+    for i, (name, a, b, yy) in enumerate(rows):
         strong = name == 'Women'
+        lag = i * .18
         out.append(f'<text x="0" y="{yy + 13}" {SVGSER} font-size="40" fill="{GREEN if strong else INK}">{name}</text>'
-                   f'<line class="ir-grow" style="--d:.5s" x1="{x(a)}" y1="{yy}" x2="{x(b)}" y2="{yy}" stroke="{GREEN if strong else SAGE}" stroke-width="{8 if strong else 6}"/>'
-                   f'<circle cx="{x(a)}" cy="{yy}" r="15" fill="{CREAM}" stroke="{GREEN if strong else SAGE}" stroke-width="4"/>'
-                   f'<circle class="ir-build" style="--d:1s" cx="{x(b)}" cy="{yy}" r="19" fill="{GREEN if strong else SAGE}"/>'
-                   f'<text x="{x(a) - 26}" y="{yy + 11}" text-anchor="end" {SVGSER} font-size="34" fill="{INK2}">{a:.1f}</text>'
-                   f'<text class="ir-build" style="--d:1s" x="{x(b) + 32}" y="{yy + 12}" {SVGSER} font-size="40" fill="{GREEN if strong else INK2}">{b:.1f}</text>')
+                   f'<line class="ir-grow" style="--d:{.65 + lag:.2f}s" x1="{x(a)}" y1="{yy}" x2="{x(b)}" y2="{yy}" stroke="{GREEN if strong else SAGE}" stroke-width="{8 if strong else 6}"/>'
+                   f'<circle class="ir-pop" style="--d:{.4 + lag:.2f}s" cx="{x(a)}" cy="{yy}" r="15" fill="{CREAM}" stroke="{GREEN if strong else SAGE}" stroke-width="4"/>'
+                   f'<circle class="ir-pop" style="--d:{1.2 + lag:.2f}s" cx="{x(b)}" cy="{yy}" r="19" fill="{GREEN if strong else SAGE}"/>'
+                   f'<text class="ir-fade" style="--d:{.4 + lag:.2f}s" x="{x(a) - 26}" y="{yy + 11}" text-anchor="end" {SVGSER} font-size="34" fill="{INK2}">{a:.1f}</text>'
+                   f'<text class="ir-fade" style="--d:{1.2 + lag:.2f}s" x="{x(b) + 32}" y="{yy + 12}" {SVGSER} font-size="40" fill="{GREEN if strong else INK2}"><tspan class="ir-num" data-from="{a}" data-delay="{650 + lag * 1000:.0f}">{b:.1f}</tspan></text>')
     return f'''<svg viewBox="0 0 1040 350" style="width:1040px;height:350px;display:block;overflow:visible" role="img" aria-label="Diagnosis rate among patients with ferritin under 30. Women rose from 49.4 to 58.0 percent; men rose from 57.0 to 60.2 percent.">
-  {grid}{''.join(out)}
+  <g class="ir-fade" style="--d:.2s">{grid}</g>{''.join(out)}
 </svg>'''
 
 
 def mini(num, body):
-    return (f'<div style="border-top:2px solid {LINE};padding-top:16px"><div style="{SERIF};font-size:52px;line-height:1;letter-spacing:-.025em;color:{GREEN}">{num}</div>'
+    return (f'<div style="border-top:2px solid {LINE};padding-top:16px"><div class="ir-num" data-delay="1250" style="{SERIF};font-size:52px;line-height:1;letter-spacing:-.025em;color:{GREEN}">{num}</div>'
             f'<div style="margin-top:10px;font-size:23px;line-height:1.34;color:{INK2}">{body}</div></div>')
 
 
@@ -442,7 +466,7 @@ add('Raising the lower limit', 'Rochester Regional Health moved the ferritin low
   <div style="flex:1;display:grid;grid-template-columns:480px 1040px;gap:80px;align-items:center">
     <div>
       <div style="{CAPS}">Ferritin lower limit, women</div>
-      <div style="margin-top:14px;{SERIF};font-size:120px;line-height:1;letter-spacing:-.04em;color:{GREEN}">10 → 30</div>
+      <div style="margin-top:14px;{SERIF};font-size:120px;line-height:1;letter-spacing:-.04em;color:{GREEN}">10 → <span class="ir-num" data-from="10" data-delay="500">30</span></div>
       <p style="margin:26px 0 0;{BODY}">One US health system changed one number on the lab report. About 50,000 patients later, this is what changed.</p>
     </div>
     <div>
@@ -480,7 +504,7 @@ add('Jobs of iron and ferritin', 'Iron does a long list of jobs, well beyond car
       <div>{''.join(job(j) for j in iron_jobs[4:])}</div>
     </div>
   </div>
-  <div style="background:linear-gradient(160deg,{GREEN} 0%,#1C3118 100%);color:{CREAM};border-radius:8px;padding:56px 50px;display:flex;flex-direction:column;justify-content:center;box-shadow:0 4px 25px rgba(0,0,0,.16);margin-bottom:30px">
+  <div style="background:linear-gradient(160deg,{GREEN} 0%,#1C3118 100%);color:{CREAM};border-radius:8px;padding:56px 50px;display:flex;flex-direction:column;justify-content:center;margin-bottom:30px">
     <div style="{EYEBROW_D}">Ferritin</div>
     <div style="margin:18px 0 30px;{SERIF};font-size:66px;line-height:1;letter-spacing:-.03em"><em>The store</em></div>
     {''.join(job(j, dark=True) for j in ferritin_jobs)}
@@ -495,12 +519,20 @@ def cycle():
     e2 = lambda d: .16 + .78 * math.exp(-((d - 13) / 2.6) ** 2) + .32 * math.exp(-((d - 21) / 4) ** 2)
     p4 = lambda d: .05 + .8 * math.exp(-((d - 21) / 4) ** 2)
     path = lambda f: 'M' + ' L'.join(f'{x(d / 4):.1f} {base - f(d / 4) * (base - top):.1f}' for d in range(0, 113))
+    area = lambda f: path(f) + f' L{x(28):.1f} {base} L{x(0):.1f} {base} Z'
     return f'''<svg viewBox="0 0 1040 440" style="width:1040px;height:440px;display:block;overflow:visible" role="img" aria-label="Schematic of estrogen and progesterone across a 28-day cycle">
-  <line x1="{x(14)}" y1="24" x2="{x(14)}" y2="{base}" stroke="{MUTED}" stroke-width="2" stroke-dasharray="6 7"/>
-  <text x="{x(14)}" y="14" text-anchor="middle" {SVGTXT} font-size="21" font-weight="600" letter-spacing="2" fill="{MUTED}">OVULATION</text>
+  <defs>
+    <linearGradient id="ir-cy-e2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="{GREEN}" stop-opacity=".2"/><stop offset="1" stop-color="{GREEN}" stop-opacity="0"/></linearGradient>
+    <linearGradient id="ir-cy-p4" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="{SAGE}" stop-opacity=".3"/><stop offset="1" stop-color="{SAGE}" stop-opacity="0"/></linearGradient>
+  </defs>
+  <g class="ir-wipe"><path d="{area(p4)}" fill="url(#ir-cy-p4)"/><path d="{area(e2)}" fill="url(#ir-cy-e2)"/></g>
+  <g class="ir-fade" style="--d:.15s"><line x1="{x(14)}" y1="24" x2="{x(14)}" y2="{base}" stroke="{MUTED}" stroke-width="2" stroke-dasharray="6 7"/>
+  <text x="{x(14)}" y="14" text-anchor="middle" {SVGTXT} font-size="21" font-weight="600" letter-spacing="2" fill="{MUTED}">OVULATION</text></g>
   <line x1="30" y1="{base}" x2="1010" y2="{base}" stroke="{INK2}" stroke-width="2"/>
   <path class="ir-draw" pathLength="1" d="{path(p4)}" fill="none" stroke="{SAGE}" stroke-width="6" stroke-linecap="round"/>
   <path class="ir-draw" pathLength="1" d="{path(e2)}" fill="none" stroke="{GREEN}" stroke-width="6" stroke-linecap="round"/>
+  <circle class="ir-ride" r="10" fill="{SAGE}" style="offset-path:path('{path(p4)}')"/>
+  <circle class="ir-ride" r="10" fill="{GREEN}" style="offset-path:path('{path(e2)}')"/>
   <g class="ir-build" style="--d:1.5s" {SVGSER} font-size="36">
     <text x="{x(13) - 28}" y="{base - e2(13) * (base - top) + 8}" text-anchor="end" fill="{GREEN}">Estrogen</text>
     <text x="{x(21) + 16}" y="{base - p4(21) * (base - top) - 18}" text-anchor="middle" fill="#5F7C5A">Progesterone</text>
@@ -534,11 +566,17 @@ divider(3, 'Too much, too <em>little</em>.', 'woman-tired-armchair-cream', 'Part
 
 
 # 15 ── High iron ──────────────────────────────────────────────────────────────
-def plate(img, alt, name, body):
-    return (f'<div style="display:flex;flex-direction:column">'
-            f'<div style="height:300px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:18px;box-sizing:border-box"><img src="assets/images/{img}.webp" alt="{alt}" style="max-width:88%;max-height:100%;display:block" loading="eager" decoding="async"></div>'
+def plate(img, alt, name, body, col, d):
+    return (f'<div style="grid-column:{col};display:flex;flex-direction:column">'
+            f'<div style="height:310px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:20px;box-sizing:border-box"><img class="ir-ink" src="assets/images/{img}.webp" alt="{alt}" style="--d:{d:.2f}s;--dur:1300ms;max-width:92%;max-height:100%;display:block" loading="eager" decoding="async"></div>'
             f'<div style="border-top:2px solid {LINE};padding-top:18px;{SERIF};font-size:44px;line-height:1.05;letter-spacing:-.022em;color:{INK}">{name}</div>'
             f'<div style="margin-top:10px;font-size:25px;line-height:1.36;letter-spacing:-.01em;color:{INK2}">{body}</div></div>')
+
+
+def evidence_head(label, col, strong):
+    edge = f'3px solid {GREEN}' if strong else f'3px solid {SAGE200}'
+    tone = GREEN_DEEP if strong else MUTED
+    return f'<div style="grid-column:{col};border-top:{edge};padding-top:16px;{CAPS};color:{tone}">{label}</div>'
 
 
 add('High iron', 'Too much iron is not better. In iron-overload disease, iron collects in the liver and can scar it over time, and severe overload can weaken the heart muscle. Beyond that, the evidence is softer. The link with cardiovascular disease is still debated. Excess iron favours bone loss, particularly with aging and after menopause. For breast cancer, a 2019 meta-analysis found a modest link with serum iron and heme iron intake, but not with ferritin. Remember ferritin can also run high from inflammation, so a high result needs a closer look.', LIGHT + PAD, f'''
@@ -546,22 +584,14 @@ add('High iron', 'Too much iron is not better. In iron-overload disease, iron co
     {head('High iron', 'More isn&rsquo;t <em>better</em>.')}
     <p style="margin:0 0 8px;max-width:760px;{BODY}">Inflammation can also raise ferritin, so a high result needs a closer look.</p>
   </div>
-  <div style="flex:1;display:grid;grid-template-columns:2fr 3fr;gap:64px;align-items:center">
-    <div>
-      <div style="{CAPS};color:{GREEN_DEEP}">Clear in iron overload</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:6px">
-        {plate('liver', 'Engraving of a liver', 'Liver', 'The main store. Overload can scar it over time.')}
-        {plate('heart', 'Engraving of a heart', 'Heart', 'Severe overload can weaken the muscle.')}
-      </div>
-    </div>
-    <div>
-      <div style="{CAPS};color:{GREEN_DEEP}">Still being studied</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:32px;margin-top:6px">
-        {plate('apob-plaque', 'Engraving of an artery in cross-section', 'Arteries', 'The link with cardiovascular disease is still debated.')}
-        {plate('femur', 'Engraving of a femur in section', 'Bone', 'Excess iron favours bone loss, especially after menopause.')}
-        {plate('breast', 'Engraving of breast tissue in cross-section', 'Breast', 'A modest link with serum iron. Not shown for ferritin.')}
-      </div>
-    </div>
+  <div style="flex:1;display:grid;grid-template-columns:1fr 1fr 28px 1fr 1fr 1fr;column-gap:32px;align-content:center">
+    {evidence_head('Clear in iron overload', '1 / 3', True)}
+    {evidence_head('Still being studied', '4 / 7', False)}
+    {plate('liver', 'Engraving of a liver', 'Liver', 'The main store. Overload can scar it over time.', 1, .35)}
+    {plate('heart', 'Engraving of a heart', 'Heart', 'Severe overload can weaken the muscle.', 2, .5)}
+    {plate('apob-plaque', 'Engraving of an artery in cross-section', 'Arteries', 'The link with cardiovascular disease is still debated.', 4, .65)}
+    {plate('femur', 'Engraving of a femur in section', 'Bone', 'Excess iron favours bone loss, especially after menopause.', 5, .8)}
+    {plate('breast', 'Engraving of breast tissue in cross-section', 'Breast', 'A modest link with serum iron. Not shown for ferritin.', 6, .95)}
   </div>
   {cite('easl', 'ahanchi', 'correnti', 'chang')}
   {footer()}''')
@@ -572,31 +602,26 @@ def pct(p):
     return f'<strong style="font-weight:600;color:{GREEN_DEEP}">{p}</strong>'
 
 
-def group(name, items):
-    return (f'<div style="border-top:2px solid {LINE};padding:20px 0 22px;display:grid;grid-template-columns:200px 1fr;gap:18px">'
-            f'<div style="{SERIF};font-size:32px;line-height:1.12;letter-spacing:-.015em;color:{GREEN}">{name}</div>'
-            f'<div style="font-size:27px;line-height:1.36;letter-spacing:-.008em;color:{INK2}">{items}</div></div>')
+SYM_COLS = 'display:grid;grid-template-columns:230px 1fr 1fr;column-gap:56px'
+
+
+def group(name, without, anemia):
+    cell = 'font-size:27px;line-height:1.36;letter-spacing:-.008em'
+    return (f'<div style="{SYM_COLS};border-top:2px solid {LINE};padding:20px 0 22px">'
+            f'<div style="{SERIF};font-size:34px;line-height:1.1;letter-spacing:-.015em;color:{GREEN}">{name}</div>'
+            f'<div style="{cell};color:{INK2}">{without}</div>'
+            f'<div style="{cell};color:{INK2}">{anemia}</div></div>')
 
 
 add('Low iron', 'This is the symptom map from the 2025 CMAJ review, retyped. Percentages are the reported estimated point prevalence in the literature. On the left, iron deficiency without anemia: fatigue is by far the most reported, and it also includes brain fog, mood change, poor exercise tolerance, hair loss, restless legs and pica. On the right, once anemia is present: pallor, headaches, a racing heart and shortness of breath come in. Some of these are subtle, and people may accept them as normal.', LIGHT + PAD, f'''
   {head('Low iron', 'It can show up <em>before</em> anemia.')}
-  <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:70px;align-content:center">
-    <div>
-      <div style="{CAPS};color:{INK};margin-bottom:14px">Iron deficiency without anemia</div>
-      {group('General', f'Physical fatigue {pct("83%")}, exhaustion, muscle weakness or pain, slower run times, poor sleep')}
-      {group('Neurological', 'Brain fog, low mood or irritability, poor memory and concentration, anxiety, depression, headaches, dizziness')}
-      {group('Hair, skin, nails', 'Hair loss, brittle nails, dry skin')}
-      {group('Heart, lungs', 'Palpitations, chest pain, shortness of breath')}
-      {group('Also', f'Cold intolerance {pct("13%")}, restless legs {pct("13%")}, pica {pct("8%")}')}
-    </div>
-    <div>
-      <div style="{CAPS};color:{INK};margin-bottom:14px">Iron deficiency anemia</div>
-      {group('General', f'Pallor {pct("45–50%")}, fatigue {pct("44%")}, muscular weakness')}
-      {group('Neurological', f'Headaches {pct("63%")}, lightheadedness, insomnia, vertigo, fainting {pct("0.3%")}')}
-      {group('Hair, skin, nails', f'Hair loss {pct("30%")}, sore smooth tongue {pct("27%")}, spoon-shaped or brittle nails, cold hands and feet')}
-      {group('Heart, lungs', f'Murmur {pct("10%")}, rapid heart rate {pct("9%")}, palpitations, chest pain, shortness of breath')}
-      {group('Also', f'Restless legs {pct("24%")}')}
-    </div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
+    <div style="{SYM_COLS};padding-bottom:14px"><div></div><div style="{CAPS};color:{INK}">Iron deficiency without anemia</div><div style="{CAPS};color:{INK}">Iron deficiency anemia</div></div>
+    {group('General', f'Physical fatigue {pct("83%")}, exhaustion, muscle weakness or pain, slower run times, poor sleep', f'Pallor {pct("45–50%")}, fatigue {pct("44%")}, muscular weakness')}
+    {group('Neurological', 'Brain fog, low mood or irritability, poor memory and concentration, anxiety, depression, headaches, dizziness', f'Headaches {pct("63%")}, lightheadedness, insomnia, vertigo, fainting {pct("0.3%")}')}
+    {group('Hair, skin, nails', 'Hair loss, brittle nails, dry skin', f'Hair loss {pct("30%")}, sore smooth tongue {pct("27%")}, spoon-shaped or brittle nails, cold hands and feet')}
+    {group('Heart, lungs', 'Palpitations, chest pain, shortness of breath', f'Murmur {pct("10%")}, rapid heart rate {pct("9%")}, palpitations, chest pain, shortness of breath')}
+    {group('Also', f'Cold intolerance {pct("13%")}, restless legs {pct("13%")}, pica {pct("8%")}', f'Restless legs {pct("24%")}')}
   </div>
   {cite('cmaj', note='Adapted from Figure 1. Percentages are reported estimated prevalence.')}
   {footer()}''')
@@ -609,13 +634,18 @@ def lifeline():
     men = lambda t: .1 + .76 * (1 - math.exp(-t / .1))
     women = lambda t: .1 + .2 * (1 - math.exp(-t / .1)) + .4 / (1 + math.exp(-(t - .63) / .035))
     path = lambda f: 'M' + ' L'.join(f'{x(i / 100):.1f} {base - f(i / 100) * (base - top):.1f}' for i in range(0, 101))
+    area = path(women) + f' L{x(1):.1f} {base} L{x(0):.1f} {base} Z'
     return f'''<svg viewBox="0 0 1040 470" style="width:1040px;height:470px;display:block;overflow:visible" role="img" aria-label="Schematic of body iron stores across life. Women stay lower than men before menopause, and rise during and after it.">
-  <rect class="ir-build" style="--d:.3s" x="{x(.56)}" y="{top - 20}" width="{x(.72) - x(.56)}" height="{base - top + 20}" fill="{SAGE50}"/>
+  <defs><linearGradient id="ir-life" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="{GREEN}" stop-opacity=".2"/><stop offset="1" stop-color="{GREEN}" stop-opacity="0"/></linearGradient></defs>
+  <rect class="ir-fade" style="--d:.2s" x="{x(.56)}" y="{top - 20}" width="{x(.72) - x(.56)}" height="{base - top + 20}" fill="{SAGE50}"/>
+  <path class="ir-wipe" d="{area}" fill="url(#ir-life)"/>
   <line x1="50" y1="{base}" x2="1010" y2="{base}" stroke="{INK2}" stroke-width="2"/>
   <line x1="50" y1="{top - 20}" x2="50" y2="{base}" stroke="{INK2}" stroke-width="2"/>
   <text transform="translate(26 {base}) rotate(-90)" {SVGTXT} font-size="22" font-weight="600" letter-spacing="2" fill="{MUTED}">IRON STORES</text>
   <path class="ir-draw" pathLength="1" d="{path(men)}" fill="none" stroke="{SAGE}" stroke-width="6" stroke-linecap="round"/>
   <path class="ir-draw" pathLength="1" d="{path(women)}" fill="none" stroke="{GREEN}" stroke-width="7" stroke-linecap="round"/>
+  <circle class="ir-ride" r="10" fill="{SAGE}" style="offset-path:path('{path(men)}')"/>
+  <circle class="ir-ride" r="11" fill="{GREEN}" style="offset-path:path('{path(women)}')"/>
   <g class="ir-build" style="--d:1.5s" {SVGSER} font-size="38">
     <text x="{x(.3)}" y="{base - men(.3) * (base - top) - 20}" fill="#5F7C5A">Men</text>
     <text x="{x(.3)}" y="{base - women(.3) * (base - top) + 54}" fill="{GREEN}" font-style="italic">Women</text>
@@ -641,10 +671,11 @@ add('After menopause', 'Iron metabolism changes with the hormonal changes of men
 
 
 # 18 ── The evidence is mixed ──────────────────────────────────────────────────
-def mixed(n, text):
-    return (f'<div style="display:grid;grid-template-columns:120px 1fr;align-items:baseline;border-top:1px solid rgba(255,252,247,.28);padding:28px 0">'
-            f'<div style="{SERIF};font-size:40px;color:rgba(255,252,247,.6)">{n}</div>'
-            f'<div style="{SERIF};font-size:44px;line-height:1.16;letter-spacing:-.02em;color:{CREAM}">{text}</div></div>')
+def mixed(n, text, last=False):
+    bottom = 'border-bottom:1px solid rgba(255,252,247,.28);' if last else ''
+    return (f'<div style="display:grid;grid-template-columns:120px 1fr;align-items:baseline;border-top:1px solid rgba(255,252,247,.28);{bottom}padding:32px 0">'
+            f'<div style="{SERIF};font-size:44px;color:rgba(255,252,247,.6)">{n}</div>'
+            f'<div style="{SERIF};font-size:50px;line-height:1.14;letter-spacing:-.022em;color:{CREAM}">{text}</div></div>')
 
 
 add('The evidence is mixed', 'Before the studies, set expectations. Some studies indicate that low or suboptimal iron has effects beyond anemia, and earlier than current cut-offs. But the evidence is mixed, samples are small and the time frames are limited. There is not enough to make strong recommendations for everyone, and there is enough to keep exploring it as part of a multimodal approach to a variety of concerns.', DARK + 'padding:88px 120px 130px;display:flex;flex-direction:column', f'''
@@ -654,17 +685,27 @@ add('The evidence is mixed', 'Before the studies, set expectations. Some studies
     {mixed('01', 'Low iron may matter beyond anemia, and earlier than current cut-offs.')}
     {mixed('02', 'Studies are small and cover limited periods of time.')}
     {mixed('03', 'Not enough to make strong recommendations for everyone.')}
-    {mixed('04', 'Enough to explore further, as part of a multimodal approach.')}
+    {mixed('04', 'Enough to explore further, as part of a multimodal approach.', last=True)}
   </div>
   {footer(dark=True)}''', 'sl sl-dark')
 
 
 # 19 ── Meta-analysis (2025) ───────────────────────────────────────────────────
-def effect(label, d):
+def effect(label, d, i):
+    ticks = ''.join(f'<span style="position:absolute;top:0;bottom:0;left:{p}%;width:2px;background:{SAGE300}"></span>' for p in (25, 62.5))
     return (f'<div style="display:grid;grid-template-columns:340px 1fr 90px;align-items:center;gap:20px;border-top:2px solid {LINE};padding:15px 0">'
             f'<div style="{SERIF};font-size:33px;letter-spacing:-.018em">{label}</div>'
-            f'<div style="height:30px;background:{SAGE50}"><div class="ir-bar" style="height:100%;width:{d / 0.8 * 100:.1f}%;background:{GREEN}"></div></div>'
-            f'<div style="{SERIF};font-size:36px;color:{GREEN};text-align:right">{d:.2f}</div></div>')
+            f'<div style="position:relative;height:30px;background:{SAGE50}"><div class="ir-bar" style="--d:{.4 + i * .1:.2f}s;height:100%;width:{d / 0.8 * 100:.1f}%;background:{GREEN}"></div>{ticks}</div>'
+            f'<div class="ir-num" data-delay="{400 + i * 100}" style="{SERIF};font-size:36px;color:{GREEN};text-align:right">{d:.2f}</div></div>')
+
+
+def effect_scale():
+    """The rule of thumb, placed on the bars it explains."""
+    mark = lambda p, t: f'<span style="position:absolute;left:{p}%;top:0;transform:translateX(-50%);white-space:nowrap;font-size:22px;color:{MUTED}">{t}</span>'
+    labels = f'{mark(25, "0.2 small")}{mark(62.5, "0.5 medium")}{mark(100, "0.8 large")}'
+    return (f'<div style="display:grid;grid-template-columns:340px 1fr 90px;align-items:center;gap:20px;border-top:2px solid {LINE};padding:12px 0 14px">'
+            f'<div style="font-size:22px;color:{MUTED}">As a rule of thumb, d of</div>'
+            f'<div style="position:relative;height:28px">{labels}</div><div></div></div>')
 
 
 def noeffect(label, note):
@@ -678,14 +719,14 @@ add('Meta-analysis', 'Despite iron being critical in energy metabolism and neuro
   <div style="flex:1;display:grid;grid-template-columns:1040px 1fr;gap:70px;align-items:center">
     <div>
       <div style="{CAPS};margin-bottom:12px">Randomized trials, no anemia. Effect size d</div>
-      {effect('Short-term memory', .53)}
-      {effect('Cognitive intelligence', .46)}
-      {effect('Physical well-being', .42)}
-      {effect('Anxiety', .34)}
-      {effect('Fatigue', .34)}
+      {effect('Short-term memory', .53, 0)}
+      {effect('Cognitive intelligence', .46, 1)}
+      {effect('Physical well-being', .42, 2)}
+      {effect('Anxiety', .34, 3)}
+      {effect('Fatigue', .34, 4)}
+      {effect_scale()}
       {noeffect('Attention', 'No improvement')}
       {noeffect('Depression', 'No improvement in randomized trials')}
-      <div style="border-top:2px solid {LINE};padding-top:12px;font-size:22px;color:{MUTED}">As a rule of thumb, d of 0.2 is small, 0.5 medium, 0.8 large.</div>
     </div>
     <div>
       {stat_big('18', 'studies, 12 of them randomized. 1,408 children, adolescents and menstruating adults.')}
@@ -697,10 +738,10 @@ add('Meta-analysis', 'Despite iron being critical in energy metabolism and neuro
 
 
 # 20 ── Symptoms above the old cut-off (2021) ──────────────────────────────────
-def level(cut, n, pctv, sym, sub):
+def level(cut, n, pctv, sym, sub, i):
     return (f'<div style="display:grid;grid-template-columns:230px 560px 1fr;align-items:center;gap:40px;border-top:2px solid {LINE};padding:30px 0">'
             f'<div><div style="{CAPS};font-size:20px">Ferritin</div><div style="margin-top:6px;{SERIF};font-size:64px;line-height:1;letter-spacing:-.03em;color:{GREEN}">≤{cut}</div></div>'
-            f'<div><div style="height:44px;background:{SAGE50}"><div class="ir-bar" style="height:100%;width:{pctv}%;background:{GREEN}"></div></div>'
+            f'<div><div style="height:44px;background:{SAGE50}"><div class="ir-bar" style="--d:{.45 + i * .16:.2f}s;height:100%;width:{pctv}%;background:{GREEN}"></div></div>'
             f'<div style="margin-top:10px;font-size:25px;color:{INK2}">{n} women, {pctv}%</div></div>'
             f'<div><div style="{SERIF};font-size:40px;line-height:1.1;letter-spacing:-.02em">{sym}</div><div style="margin-top:8px;font-size:25px;line-height:1.35;color:{INK2}">{sub}</div></div></div>')
 
@@ -708,9 +749,9 @@ def level(cut, n, pctv, sym, sub):
 add('Symptoms and ferritin', 'A cross-sectional study of 554 non-anemic menstruating women in France, aged 18 to 50. Over half had a ferritin below 50. Restless legs were significantly more common at 50 or below, and recent hair loss at 20 or below. These are correlations, not causes, and only those two symptoms held up. But both sit well above the old lab cut-off of 12 to 15.', LIGHT + PAD, f'''
   {head('Study · 2021', 'Symptoms appear <em>above</em> the old cut-off.')}
   <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
-    {level(50, 304, 54.9, 'Restless legs', '2.8 times the odds')}
-    {level(20, 103, 18.6, 'Recent hair loss', '2.3 times the odds. Also more limits from emotional problems.')}
-    {level(15, 60, 10.8, 'Recent hair loss', '2.2 times the odds')}
+    {level(50, 304, 54.9, 'Restless legs', '2.8 times the odds', 0)}
+    {level(20, 103, 18.6, 'Recent hair loss', '2.3 times the odds. Also more limits from emotional problems.', 1)}
+    {level(15, 60, 10.8, 'Recent hair loss', '2.2 times the odds', 2)}
     <div style="border-top:2px solid {LINE};padding-top:18px;font-size:25px;color:{MUTED}">554 non-anemic menstruating women, aged 18–50. A correlation, measured at one point in time.</div>
   </div>
   {paper('beatrix', 'Cross-sectional study')}
@@ -718,16 +759,16 @@ add('Symptoms and ferritin', 'A cross-sectional study of 554 non-anemic menstrua
 
 
 # 21 ── Endurance (2019) ───────────────────────────────────────────────────────
-add('Endurance', 'The central nervous system needs iron to function. This small study compared iron status with perceived energy and EEG findings in 23 non-anemic women aged 20 to 32, in the follicular phase. Those with a ferritin below 12 reported lower activity and endurance. The groups did not differ in intelligence or anxiety, but the deficient group took a median of 3 minutes longer to finish the assessment. Very small sample, so treat it as a signal.', LIGHT + 'padding:88px 120px 150px;display:grid;grid-template-columns:800px 1fr;grid-template-rows:minmax(0,1fr);gap:80px', f'''
+add('Endurance', 'The central nervous system needs iron to function. This small study compared iron status with perceived energy and EEG findings in 23 non-anemic women aged 20 to 32, in the follicular phase. Those with a ferritin below 12 reported lower activity and endurance. The groups did not differ in intelligence or anxiety, but the deficient group took a median of 3 minutes longer to finish the assessment. Very small sample, so treat it as a signal.', LIGHT + 'padding:88px 120px 172px;display:grid;grid-template-columns:800px 1fr;grid-template-rows:minmax(0,1fr);gap:80px', f'''
   <div style="display:flex;flex-direction:column">
     {head('Study · 2019', 'Same score.<br><em>Three more minutes.</em>', 84)}
     <div style="margin-top:auto">
-      <div style="{SERIF};font-size:210px;line-height:.9;letter-spacing:-.05em;color:{GREEN}">+3<span style="font-size:96px;letter-spacing:-.02em"> min</span></div>
+      <div class="ir-num" data-delay="700" style="{SERIF};font-size:210px;line-height:.9;letter-spacing:-.05em;color:{GREEN}">+3<span style="font-size:96px;letter-spacing:-.02em"> min</span></div>
       <p style="margin:26px 0 0;max-width:640px;{BODY}">Median extra time to finish the same intelligence test, with ferritin below 12.</p>
     </div>
   </div>
   <div style="display:flex;flex-direction:column;justify-content:space-between">
-    <img src="assets/images/neuron.webp" alt="Engraving of a neuron" style="width:620px;height:auto;display:block;align-self:flex-end" loading="eager" decoding="auto">
+    <img class="ir-ink" src="assets/images/neuron.webp" alt="Engraving of a neuron" style="--dur:1800ms;width:620px;height:auto;display:block;align-self:flex-end" loading="eager" decoding="auto">
     <div>
       {row('Intelligence and anxiety scores', 'No difference between the groups.')}
       {row('Activity and endurance', 'Reported lower with low ferritin.')}
@@ -742,8 +783,9 @@ add('Endurance', 'The central nervous system needs iron to function. This small 
 # 22 ── Executive function (2016) ──────────────────────────────────────────────
 def verdict(label, items, muted=False):
     col = MUTED if muted else GREEN
-    return (f'<div style="border-top:2px solid {LINE};padding-top:26px"><div style="{CAPS};color:{col}">{label}</div>'
-            f'<div style="margin-top:24px;display:flex;flex-direction:column;gap:30px;min-height:430px">{items}</div></div>')
+    edge = f'2px solid {LINE}' if muted else f'4px solid {GREEN}'
+    return (f'<div style="border-top:{edge};padding-top:26px"><div style="{CAPS};color:{col}">{label}</div>'
+            f'<div style="margin-top:28px;display:flex;flex-direction:column;gap:34px;min-height:440px">{items}</div></div>')
 
 
 def vitem(name, sub=''):
@@ -752,22 +794,24 @@ def vitem(name, sub=''):
 
 
 add('Executive function', '127 non-anemic females aged 18 to 35. Better iron status went with better attention, meaning faster reaction time, better inhibitory control, and better planning, with less planning time. Several other executive functions showed no link, possibly because of performance ceilings. Working memory actually appeared worse with better iron status, which the authors call paradoxical. It is a limited, observational study.', LIGHT + PAD, f'''
-  {head('Study · 2016', 'Better iron, better <em>focus</em>. Mostly.')}
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:60px">
+    {head('Study · 2016', 'Better iron, better <em>focus</em>. Mostly.')}
+    <p style="margin:0 0 8px;{BODY};text-align:right">127 non-anemic females, aged 18–35.<br>A limited study.</p>
+  </div>
   <div style="flex:1;display:grid;grid-template-columns:1fr 1fr 1fr;gap:64px;align-items:center;align-content:center">
     {verdict('Better with better iron', vitem('Attention', 'Faster reaction time') + vitem('Inhibitory control', 'Steadier reaction time') + vitem('Planning', 'Less time needed'))}
     {verdict('No link', vitem('Several other executive functions', 'Possibly a performance ceiling'), muted=True)}
     {verdict('Unexpectedly worse', vitem('Working memory', 'Appeared to worsen with better iron status'), muted=True)}
   </div>
-  <div style="font-size:25px;color:{MUTED};margin-bottom:12px">127 non-anemic females, aged 18–35. A limited study.</div>
   {paper('scott', 'Observational study')}
   {footer()}''')
 
 
 # 23 ── The open question (2011) ───────────────────────────────────────────────
-add('The open question', 'Iron deficiency disproportionately affects infants, children and women of reproductive age. This older review pointed to the need to explore how iron status interacts with cognition, emotions and behaviour. And it leaves the question we are still asking.', LIGHT + 'padding:88px 120px 150px;display:flex;flex-direction:column', f'''
+add('The open question', 'Iron deficiency disproportionately affects infants, children and women of reproductive age. This older review pointed to the need to explore how iron status interacts with cognition, emotions and behaviour. And it leaves the question we are still asking.', LIGHT + 'padding:88px 120px 172px;display:flex;flex-direction:column', f'''
   <div style="{EYEBROW}">Review · 2011</div>
   <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
-    <div style="{SERIF};font-size:112px;line-height:1.04;letter-spacing:-.035em;color:{GREEN};max-width:1560px">How low does iron have to go before it <em>matters</em>?</div>
+    <div data-words style="{SERIF};font-size:112px;line-height:1.08;letter-spacing:-.035em;color:{GREEN};max-width:1560px;text-wrap:balance">How low does iron have to go before it {ring('matters', inset='-2px -20px -8px', rot=-2, delay='1.05s', margin='0 20px 0 14px')}?</div>
     <div style="margin-top:56px;display:grid;grid-template-columns:1fr 1fr;gap:70px;max-width:1500px">
       {row('Who it affects most', 'Infants, children and women of reproductive age.')}
       {row('What to keep exploring', 'How iron interacts with cognition, emotions and behaviour.')}
@@ -782,10 +826,10 @@ divider(4, 'Treatment <em>options</em>.', 'iron-tablets-cream', 'Part 4: pill or
 # 25 ── Pill or IV ─────────────────────────────────────────────────────────────
 def route(img, alt, imgw, title, sub, items, foot):
     rows = ''.join(f'<li style="border-top:2px solid {LINE};padding:17px 0 19px;font-size:28px;line-height:1.28;letter-spacing:-.012em;color:{INK2};list-style:none">{i}</li>' for i in items)
-    return (f'<div style="display:grid;grid-template-columns:230px 1fr;gap:36px;align-items:center">'
-            f'<div style="display:flex;align-items:center;justify-content:center"><img src="assets/images/{img}.webp" alt="{alt}" style="width:{imgw}px;height:auto;display:block" loading="eager" decoding="async"></div>'
+    return (f'<div style="display:grid;grid-template-columns:230px 1fr;gap:36px;align-items:start">'
+            f'<div style="display:flex;align-items:center;justify-content:center;align-self:center"><img class="ir-ink" src="assets/images/{img}.webp" alt="{alt}" style="--ang:180deg;width:{imgw}px;height:auto;display:block" loading="eager" decoding="async"></div>'
             f'<div><div style="{SERIF};font-size:72px;line-height:1;letter-spacing:-.03em;color:{GREEN}">{title}</div>'
-            f'<div style="margin:14px 0 26px;{SERIF};font-size:34px;line-height:1.14;letter-spacing:-.018em;color:{INK}">{sub}</div>'
+            f'<div style="margin:14px 0 26px;min-height:78px;{SERIF};font-size:34px;line-height:1.14;letter-spacing:-.018em;color:{INK}">{sub}</div>'
             f'<ul style="margin:0;padding:0">{rows}</ul>'
             f'<div style="border-top:2px solid {LINE};padding-top:18px;font-size:25px;line-height:1.36;color:{MUTED}">{foot}</div></div></div>')
 
@@ -810,20 +854,25 @@ add('Dietary iron', 'Making red blood cells takes about 20 milligrams of iron a 
       <div style="border-top:2px solid {GREEN};padding-top:20px"><div style="{SERIF};font-size:50px;letter-spacing:-.025em;color:{GREEN}"><em>Heme</em> iron</div><div style="margin-top:12px;font-size:27px;line-height:1.4;color:{INK2}">From animal sources. Better absorbed, and barely affected by what you eat with it.</div></div>
       <div style="border-top:2px solid {LINE};padding-top:20px"><div style="{SERIF};font-size:50px;letter-spacing:-.025em;color:{INK}">Non-heme iron</div><div style="margin-top:12px;font-size:27px;line-height:1.4;color:{INK2}">From plants and fortified foods. Absorption depends heavily on what you eat with it.</div></div>
     </div>
-    <div style="margin-top:36px;padding-top:20px;border-top:2px solid {LINE};display:flex;align-items:baseline;gap:26px"><span style="{SERIF};font-size:84px;line-height:1;letter-spacing:-.03em;color:{GREEN}">20 mg</span><span style="font-size:27px;line-height:1.4;color:{INK2}">of iron a day goes into making red blood cells.</span></div>
+    <div style="margin-top:36px;padding-top:20px;border-top:2px solid {LINE};display:flex;align-items:baseline;gap:26px"><span class="ir-num" data-delay="900" style="{SERIF};font-size:84px;line-height:1;letter-spacing:-.03em;color:{GREEN}">20 mg</span><span style="font-size:27px;line-height:1.4;color:{INK2}">of iron a day goes into making red blood cells.</span></div>
   </div>
-  <img src="assets/images/gut-wall.webp" alt="Engraving of the gut wall, where iron is absorbed" style="width:520px;height:auto;display:block" class="dk-panel" loading="eager" decoding="auto">
+  <div class="dk-panel"><img class="ir-ink" src="assets/images/gut-wall.webp" alt="Engraving of the gut wall, where iron is absorbed" style="--dur:1700ms;width:520px;height:auto;display:block" loading="eager" decoding="auto"></div>
   {cite('cmaj', 'ods')}
   {footer()}''')
 
 
 # 27 ── Which iron ─────────────────────────────────────────────────────────────
+IRON_ROW_N = [0]
+
+
 def iron_row(name, mg, note, cost, extra=''):
-    return (f'<div style="display:grid;grid-template-columns:360px 400px 120px 1fr;align-items:center;gap:26px;border-top:2px solid {LINE};padding:13px 0">'
+    i = IRON_ROW_N[0]
+    IRON_ROW_N[0] += 1
+    return (f'<div style="display:grid;grid-template-columns:360px 400px 120px 1fr;align-items:center;gap:26px;border-top:2px solid {LINE};padding:15px 0">'
             f'<div style="{SERIF};font-size:32px;letter-spacing:-.018em">{name}</div>'
-            f'<div style="display:flex;align-items:center;gap:14px"><div style="width:280px;height:22px;background:{SAGE50}"><div class="ir-bar" style="height:100%;width:{mg / 150 * 100:.1f}%;background:{GREEN}"></div></div>'
+            f'<div style="display:flex;align-items:center;gap:14px"><div style="width:280px;height:22px;background:{SAGE50}"><div class="ir-bar" style="--d:{.4 + i * .09:.2f}s;height:100%;width:{mg / 150 * 100:.1f}%;background:{GREEN}"></div></div>'
             f'<div style="{SERIF};font-size:30px;color:{GREEN};white-space:nowrap">{mg} mg{extra}</div></div>'
-            f'<div style="font-size:25px;color:{INK2}">{cost}</div>'
+            f'<div class="ir-tnum" style="font-size:25px;color:{INK2}">{cost}</div>'
             f'<div style="font-size:24px;line-height:1.3;color:{INK2}">{note}</div></div>')
 
 
@@ -901,7 +950,7 @@ add('Close', 'Three things to take home, then questions. Educational only: pleas
       </div>
       <p style="margin:24px 0 0;font-size:23px;line-height:1.4;color:{MUTED}">For education only, not medical advice. Please talk with a clinician about your own results.</p>
     </div>
-    <div style="background:linear-gradient(160deg,{GREEN} 0%,#1C3118 100%);color:{CREAM};border-radius:8px;padding:60px 54px;display:flex;flex-direction:column;margin:10px 0 40px;box-sizing:border-box;box-shadow:0 4px 25px rgba(0,0,0,.16)">
+    <div style="background:linear-gradient(160deg,{GREEN} 0%,#1C3118 100%);color:{CREAM};border-radius:8px;padding:60px 54px;display:flex;flex-direction:column;margin:10px 0 40px;box-sizing:border-box">
       <img src="assets/logos/symbol-white.png" alt="" style="height:42px;align-self:flex-start" loading="eager" decoding="async">
       <div style="margin-top:40px;{SERIF};font-size:66px;letter-spacing:-.03em"><em>Questions?</em></div>
       <p style="margin:18px 0 0;font-size:27px;line-height:1.5;color:rgba(255,252,247,.85)">We&rsquo;re happy to talk anything through, today or after you&rsquo;ve thought it over.</p>
@@ -954,12 +1003,9 @@ numbered = [s.replace('{N}', f'{i + 2:02d} / {total}') for i, s in enumerate(sli
 # ── Talk-only motion: same vocabulary as the house engine ──────────────────────
 IRON_CSS = '''<style>
   /* ==========================================================================
-     Iron talk motion. One easing curve, no bounce, everything gated on .in-view
-     so it replays on every visit. Diagrams build from the base, the way the
-     story does; print and reduced motion show them fully drawn.
+     Iron talk diagrams. The shared tools are in talks/tools/talk_chrome.py;
+     these are the moves only this talk needs.
      ========================================================================== */
-  .ir-build { opacity: 0; }
-  deck-stage > section.in-view .ir-build { animation: dk-rise 600ms var(--deck-ease) both; animation-delay: var(--d, 0s); }
 
   /* Ferritin: the magnifier travels over the report and lands on the word */
   .ir-lens { transform: translate(380px, 240px); opacity: 0; }
@@ -976,32 +1022,13 @@ IRON_CSS = '''<style>
 
   /* The lower limit slides from where it was to where it is */
   .ir-marker { transform: translateX(-315px); opacity: 0; }
-  deck-stage > section.in-view .ir-marker { animation: ir-marker 1200ms var(--deck-ease) 700ms both; }
+  deck-stage > section.in-view .ir-marker { animation: ir-marker 1200ms var(--deck-ease) 1000ms both; }
   @keyframes ir-marker { from { transform: translateX(-315px); opacity: 0; } 15% { opacity: 1; } to { transform: none; opacity: 1; } }
 
-  /* Curves draw left to right */
-  .ir-draw { stroke-dasharray: 1; stroke-dashoffset: 1; }
-  deck-stage > section.in-view .ir-draw { animation: ir-draw 1500ms var(--deck-ease) 300ms both; }
-  @keyframes ir-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
-
-  /* Bars and connectors grow from their start */
-  .ir-bar, .ir-grow { transform-origin: left center; transform-box: fill-box; transform: scaleX(0); }
-  .ir-bar { transform-box: border-box; }
-  deck-stage > section.in-view .ir-bar,
-  deck-stage > section.in-view .ir-grow { animation: ir-grow 900ms var(--deck-ease) var(--d, .45s) both; }
-  @keyframes ir-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-
-  @media print {
-    .ir-build, .ir-lens, .ir-lens-word, .ir-marker, .ir-venn-l, .ir-venn-r, .ir-bar, .ir-grow {
+  @media print, (prefers-reduced-motion: reduce) {
+    .ir-lens, .ir-lens-word, .ir-marker, .ir-venn-l, .ir-venn-r {
       animation: none !important; opacity: 1 !important; transform: none !important;
     }
-    .ir-draw { animation: none !important; stroke-dashoffset: 0 !important; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .ir-build, .ir-lens, .ir-lens-word, .ir-marker, .ir-venn-l, .ir-venn-r, .ir-bar, .ir-grow {
-      animation: none !important; opacity: 1 !important; transform: none !important;
-    }
-    .ir-draw { animation: none !important; stroke-dashoffset: 0 !important; }
   }
 </style>
 '''
@@ -1046,6 +1073,7 @@ html = re.sub(r'the welcome screen is 01 of the printed \d+ but', f'the welcome 
 html = re.sub(r'printed "02 / \d+"', f'printed "02 / {total}"', html)
 
 sub1("dateInput.value = iso(today);", "dateInput.value = new URLSearchParams(location.search).has('static') ? '' : iso(today);  // ?static: the downloadable PDF carries no date")
+html = talk_chrome.apply(html)
 sub1('</head>', IRON_CSS + '</head>')
 
 assert 'Introductory' not in html

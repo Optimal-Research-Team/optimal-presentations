@@ -29,6 +29,8 @@ launcher's top bar: **https://optimal-research-team.github.io/optimal-presentati
 
 To add a talk, give it a folder under `talks/`, copy a row in `talks/index.html`, and add it to `TALKS` there.
 
+Every talk's build calls `talks/tools/talk_chrome.py`. That's where the rules for all talks live: no foliage on the cover screens, and the shared motion layer.
+
 ## Using it
 
 - Open the live link and click a visit. Or hover or use the arrow keys to preview one, press Enter to open it, or press its number key (`1`–`8`).
