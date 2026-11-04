@@ -1,6 +1,6 @@
 # Iron Deficiency in Women — educational talk
 
-The clinical team's 26-page draft, restyled in the house deck style. **Same slides, same order, same words.** Page N of the draft is slide N here, and only the design differs.
+The clinical team's 26-page draft, restyled in the house deck style, plus the clinical lead's marked-up edits of Nov 4, 2026. **Her words only.** The edits, including her new slide order, are listed in `tools/draft_words.json`.
 
 - **Present:** https://optimal-research-team.github.io/optimal-presentations/talks/iron-deficiency/
 - **PDF:** [`iron-deficiency-in-women.pdf`](iron-deficiency-in-women.pdf), 26 pages, linked from the selector
@@ -16,9 +16,10 @@ python3 talks/iron-deficiency/tools/build_deck.py
 The script copies the chrome (set-up screen, reveal engine, PDF export, fullscreen) from
 `../../intro/index.html`, writes the slides, and applies `../tools/talk_chrome.py`.
 
-**The build refuses to finish if a slide's words differ from that page of the draft.** The draft's
-words are in `tools/draft_words.json`, spelling included. A wording change is the clinical lead's
-to make: update that file and the slide together, and only once they've asked for it.
+**The build refuses to finish if a slide's words differ from its approved words.** Those are in
+`tools/draft_words.json`, spelling included, keyed by each slide's page in the original draft. `ORDER`
+in the build script sets the talk's order. A wording change is the clinical lead's to make: update
+that file and the slide together, and only once they've asked for it.
 
 **After any slide change, also regenerate the PDF and, if slide 1 changed, the thumbnail:**
 

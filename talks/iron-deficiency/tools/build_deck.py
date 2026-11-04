@@ -2,10 +2,10 @@
 
     python3 talks/iron-deficiency/tools/build_deck.py      # from the repo root
 
-This deck is the clinical team's 26-page draft, restyled: same slides, same order, same words.
-Only the design changes. The build refuses to finish if a slide's words differ from that page of
-the draft (tools/draft_words.json), spelling included. Don't reword anything here. Raise it with
-the clinical lead, and change it only once they've asked for it.
+This deck is the clinical team's 26-page draft, restyled, plus the clinical lead's marked-up edits
+of Nov 4 2026. The build refuses to finish if a slide's words differ from tools/draft_words.json,
+spelling included. Don't reword anything here. Raise it with the clinical lead, and change it only
+once they've asked for it. Slides are written in draft-page order; ORDER below sets the talk's order.
 
 The chrome (set-up screen, reveal engine, PDF export, fullscreen) is copied from
 ../../intro/index.html so every Optimal deck behaves the same. ../../tools/talk_chrome.py then
@@ -28,7 +28,7 @@ DECK = ROOT / 'talks' / 'iron-deficiency'
 SRC = (ROOT / 'intro' / 'index.html').read_text()
 DRAFT = json.loads((DECK / 'tools' / 'draft_words.json').read_text())['pages']
 NAME = 'Iron Deficiency in Women'
-VERSION = 'iron-deficiency-talk v2.0.0'
+VERSION = 'iron-deficiency-talk v2.1.0'
 
 # ── Tokens: the same set as the HBOT deck, at the 1920 artboard's ~2x scale ──
 CREAM, INK, INK2, MUTED = '#FFFCF7', '#040504', '#474747', '#76736D'
@@ -44,7 +44,11 @@ LIGHT = SECTION + f'background:{CREAM};color:{INK};'
 DARK = SECTION + f'background:linear-gradient(135deg,{GREEN} 0%,{DEEP} 100%);color:{CREAM};'
 RULE_D = 'rgba(255,252,247,.28)'
 
-slides = []
+# The talk's order, in draft page numbers, from the clinical lead's marked-up PDF. Draft page 10 is
+# merged into 21, and 27 is the new closing slide.
+ORDER = [1, 2, 3, 4, 5, 6, 12, 13, 7, 8, 9, 11, 14, 16, 15, 17, 18, 19, 20, 21, 23, 22, 24, 25, 26, 27]
+slides = {}
+page = 0
 
 
 def words_of(body):
@@ -53,7 +57,7 @@ def words_of(body):
 
 
 def footer(dark=False):
-    """A page number that matches the draft's, and the mark. Nothing else."""
+    """A page number and the mark. Nothing else."""
     num = '#FFFCF7' if dark else GREEN_DEEP
     mark = 'symbol-white.png' if dark else 'symbol-green-nobg.png'
     return ('<div class="dk-footer" style="position:absolute;left:120px;right:120px;bottom:44px;display:flex;justify-content:space-between;align-items:center">'
@@ -62,12 +66,13 @@ def footer(dark=False):
 
 
 def add(body, style=LIGHT, dark=False, foot=True):
-    n = len(slides) + 1
-    got, want = words_of(body), DRAFT[str(n)]
+    global page
+    page += 1
+    got, want = words_of(body), DRAFT[str(page)]
     if got != want:
-        raise SystemExit(f'Page {n} differs from the draft. Added: {dict(Counter(got) - Counter(want))}. Missing: {dict(Counter(want) - Counter(got))}')
+        raise SystemExit(f'Draft page {page} differs from its approved words. Added: {dict(Counter(got) - Counter(want))}. Missing: {dict(Counter(want) - Counter(got))}')
     cls = 'sl sl-dark' if dark else 'sl'
-    slides.append(f'<section data-label="{n}" style="{style}" class="{cls}">\n{body}\n{footer(dark) if foot else ""}\n</section>')
+    slides[page] = f'<section data-label="{{L}}" style="{style}" class="{cls}">\n{body}\n{footer(dark) if foot else ""}\n</section>'
 
 
 def bullets(items, size=33, pad=19, dark=False, serif=False, last=True):
@@ -106,11 +111,11 @@ def pyramid():
     tiers = [
         (GREEN, 'Neutraceuticals, Additional Supplements'),
         (SAGE, 'Protein, Carb, Fat intake, goal specific activity'),
-        (SAGE300, 'Quantity of Activity'),
+        (SAGE300, 'Activity'),
         (SAGE200, 'Mental Well Being'),
         (SAGE100, 'Adequate rest, caloric intake, hydration, safety'),
     ]
-    rh, gap, half = 172, 8, 420
+    rh, gap, half = 172, 8, 300
     total = 5 * rh - gap
     polys, labels = [], []
     for i, (fill, text) in enumerate(tiers):
@@ -119,12 +124,14 @@ def pyramid():
         d = f'{(4 - i) * 0.17 + 0.2:.2f}s'
         polys.append(f'<polygon class="ir-tier" style="--d:{d}" points="{half - h0:.1f},{y0} {half + h0:.1f},{y0} {half + h1:.1f},{y1} {half - h1:.1f},{y1}" fill="{fill}"/>')
         edge = f'border-top:2px solid {LINE};' if i else ''
-        labels.append(f'<div class="ir-build" style="--d:{d};height:{rh}px;box-sizing:border-box;{edge}display:flex;align-items:center;{SERIF};font-size:46px;line-height:1.12;letter-spacing:-.024em;color:{INK}">{text}</div>')
+        labels.append(f'<div class="ir-build" style="--d:{d};height:{rh}px;box-sizing:border-box;{edge}display:flex;align-items:center;{SERIF};font-size:38px;line-height:1.14;letter-spacing:-.022em;color:{INK}">{text}</div>')
     return (f'<svg viewBox="0 0 {half * 2} {total}" style="width:{half * 2}px;height:{total}px;display:block;overflow:visible" aria-hidden="true">{"".join(polys)}</svg>'
             f'<div>{"".join(labels)}</div>')
 
 
-add(pyramid(), LIGHT + 'padding:62px 120px 96px;display:grid;grid-template-columns:840px 1fr;column-gap:70px;align-items:center')
+add(f'''
+  <h2 style="margin:0;{SERIF};font-size:52px;line-height:1.14;letter-spacing:-.026em;color:{GREEN}"><em>focus on foundations,</em> without pre-existing strong foundations any money spent on neutraceuticals is going to be limited in how effective it could be.</h2>
+  {pyramid()}''', LIGHT + 'padding:62px 120px 96px;display:grid;grid-template-columns:1fr 600px 430px;column-gap:50px;align-items:center')
 
 
 # 3 ── Six around one ──────────────────────────────────────────────────────────
@@ -142,19 +149,21 @@ def hexagon():
         parts.append(f'<line class="ir-draw" pathLength="1" style="--d:{d - .16:.2f}s;--dur:460ms" x1="{ix:.1f}" y1="{iy:.1f}" x2="{ex:.1f}" y2="{ey:.1f}" stroke="{SAGE}" stroke-width="3"/>'
                      f'<g class="ir-pop" style="--d:{d:.2f}s"><circle cx="{x:.1f}" cy="{y:.1f}" r="{rc}" fill="{SAGE50}" stroke="{GREEN}" stroke-width="3"/>'
                      f'<text x="{x:.1f}" y="{y + 13:.1f}" text-anchor="middle" {SVGSER} font-size="{31 if n == "Neutraceuticals" else 38}" fill="{INK}">{n}</text></g>')
-    return (f'<svg viewBox="0 0 1000 900" style="width:1000px;height:900px;display:block;overflow:visible" aria-hidden="true">'
+    return (f'<svg viewBox="0 0 1000 900" style="width:920px;height:828px;display:block;overflow:visible" aria-hidden="true">'
             f'<g class="ir-pop" style="--d:.15s"><polygon points="{pts}" fill="{GREEN}"/>'
             f'<text x="{cx}" y="{cy + 17}" text-anchor="middle" {SVGSER} font-style="italic" font-size="52" fill="{CREAM}">dietary</text></g>'
             f'{"".join(parts)}</svg>')
 
 
-add(hexagon(), LIGHT + 'padding:50px 120px 130px;display:flex;align-items:center;justify-content:center')
+add(f'''
+  <h2 style="margin:0;{SERIF};font-size:60px;line-height:1.12;letter-spacing:-.028em;color:{INK}">Vitamins and Minerals exist as a foundational piece similar to protein/fat/carbs often over looked. <em>We will talk about why</em></h2>
+  {hexagon()}''', LIGHT + 'padding:50px 120px 110px;display:grid;grid-template-columns:1fr 920px;column-gap:50px;align-items:center')
 
 
 # 4 ── Agenda ──────────────────────────────────────────────────────────────────
 add(f'''
   <h2 style="margin:0;{SERIF};font-style:italic;font-size:150px;line-height:1;letter-spacing:-.04em;color:{CREAM}">Agenda</h2>
-  <div>{bullets(['How we evaluate iron stores', 'Iron levels', 'Consequences of high/low iron', 'Treatment Options'], 76, 40, dark=True, serif=True)}</div>''',
+  <div>{bullets(['How we evaluate iron', 'Iron roles', 'Consequences of high/low iron', 'Treatment Options'], 76, 40, dark=True, serif=True)}</div>''',
     DARK + 'padding:88px 120px 120px;display:grid;grid-template-columns:560px 1fr;column-gap:60px;align-items:center', dark=True)
 
 
@@ -289,17 +298,13 @@ add(f'''
     LIGHT + 'padding:70px 120px 96px;display:grid;grid-template-columns:1040px 570px;column-gap:70px;align-items:center')
 
 
-# 10 ── Iron Impacts on Women ──────────────────────────────────────────────────
-add(f'''
-  <h2 style="margin:0;{SERIF};font-size:104px;line-height:1.02;letter-spacing:-.035em;color:{CREAM}">Iron Impacts on <em>Women</em></h2>
-  <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
-    {bullets(['There are studies that indicate the impact on low iron or suboptimal iron can extend past anema and present much earlier than the current cut offs.',
-              'The available evidence is mixed.',
-              'Studies available have small sample sizes and look at a limited period of time',
-              'There is insufficient information to state any of these findings as strong recommendations that should be applied to everyone',
-              'There is enough evidence to say that it is an area that should be explored further and should be considered as a part of a multimodal approach to a variety of concerns.'],
-             40, 20, dark=True, serif=True)}
-  </div>''', DARK + 'padding:80px 120px 100px;display:flex;flex-direction:column', dark=True)
+# 10 ── Iron Impacts on Women: merged into page 21, as the clinical lead suggested ──
+IMPACTS = ['There are studies that indicate the impact on low iron or suboptimal iron can extend past anema and present much earlier than the current cut offs.',
+           'The available evidence is mixed.',
+           'Studies available have small sample sizes and look at a limited period of time',
+           'There is insufficient information to state any of these findings as strong recommendations that should be applied to everyone',
+           'There is enough evidence to say that it is an area that should be explored further and should be considered as a part of a multimodal approach to a variety of concerns.']
+page += 1
 
 
 # 11 ───────────────────────────────────────────────────────────────────────────
@@ -344,7 +349,7 @@ add(f'''
 
 # 15 ── Low Iron ───────────────────────────────────────────────────────────────
 add(f'''
-  <h2 style="margin:0;{SERIF};font-size:172px;line-height:.98;letter-spacing:-.045em;color:{INK}">Low <em>Iron</em></h2>
+  <h2 style="margin:0;{SERIF};font-size:96px;line-height:1.02;letter-spacing:-.04em;color:{INK}">Impact of Suboptimal <em>Iron</em></h2>
   <img class="ir-build" src="assets/draft/p15-figure.webp" alt="" style="--d:.35s;display:block;width:1190px;height:auto;background:#fff;border:2px solid {LINE};border-radius:8px" loading="eager" decoding="async">''',
     LIGHT + 'padding:60px 120px 96px;display:grid;grid-template-columns:440px 1190px;column-gap:50px;align-items:center')
 
@@ -374,9 +379,26 @@ study('Iron Status Is associated with performance on executive functioning tasks
        'Better iron status was associated with better attention (faster reaction time), inhibitory control, planning ability, and requiring less planning time,',
        'Other executive functions had no change, and working memory appeared to worsen with better iron status.', 'Limited study'], 'p20-paper', size=52, text=31, pad=15)
 
-study('Iron status and neuropsychological consequences in women of reproductive age: What do we know and where are we headed?', 2011,
-      ['iron status disproportionately affects infants, children, and women of reproductive age', 'indication to explore the interaction between iron status, cognition, emotions, and behavior',
-       'The question remains: What degree of iron deficiency associated with negative consequences?'], 'p21-paper', size=58, text=33, pad=20)
+# 21 ── Take Aways: the 2011 paper and Iron Impacts on Women together, under her new title ──
+add(f'''
+  <h2 style="margin:0 0 24px;{SERIF};font-size:92px;line-height:1;letter-spacing:-.035em;color:{INK}">Take <em>Aways</em></h2>
+  <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;column-gap:40px;min-height:0">
+    <div>
+      <div style="{SERIF};font-style:italic;font-size:46px;line-height:1;margin:6px 0 18px;color:{GREEN}">Iron Impacts on Women</div>
+      {bullets(IMPACTS, 31, 14, last=False)}
+    </div>
+    <div style="background:linear-gradient(160deg,{GREEN} 0%,{DEEP} 100%);border-radius:8px;padding:30px 40px 22px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between">
+      <div style="display:grid;grid-template-columns:1fr 270px;column-gap:28px;align-items:start">
+        <div>
+          <div style="{SERIF};font-style:italic;font-size:36px;line-height:1;color:{SAGE100}">(2011)</div>
+          <div style="margin-top:12px;{SERIF};font-size:33px;line-height:1.12;letter-spacing:-.018em;color:{CREAM}">Iron status and neuropsychological consequences in women of reproductive age: What do we know and where are we headed?</div>
+        </div>
+        <img class="ir-build" src="assets/draft/p21-paper.webp" alt="" style="--d:.45s;display:block;width:270px;height:auto;background:#fff;border-radius:6px" loading="eager" decoding="async">
+      </div>
+      <div style="margin-top:18px">{bullets(['iron status disproportionately affects infants, children, and women of reproductive age', 'indication to explore the interaction between iron status, cognition, emotions, and behavior',
+                 'The question remains: What degree of iron deficiency associated with negative consequences?'], 31, 14, dark=True, last=False)}</div>
+    </div>
+  </div>''', LIGHT + 'padding:58px 120px 96px;display:flex;flex-direction:column')
 
 
 # 22 ── Pill vs IV ─────────────────────────────────────────────────────────────
@@ -425,7 +447,7 @@ add(f'''
 add(f'''
   <div>
     <h2 style="margin:0 0 40px;{SERIF};font-size:104px;line-height:1;letter-spacing:-.04em;color:{INK}"><em>Recommendations</em></h2>
-    {bullets(['Determine elemental iron dose', 'aim for 60-110 elemental iron daily', 'Empty stomach. Avoid with calcium/magnesium', 'With Vitamin C', 'Common Side Effects'], 44, 24, serif=True)}
+    {bullets(['Determine elemental iron dose', 'aim for 60-110 elemental iron daily', 'Empty stomach. Avoid with calcium/magnesium', 'With Vitamin C', 'Common Side Effects', 'taking it daily vs. every other day'], 42, 20, serif=True)}
   </div>
   <div style="display:flex;align-items:flex-end;justify-content:space-between">
     <img class="ir-build" src="assets/draft/p26-label-a.webp" alt="" style="--d:.45s;width:390px;height:auto;display:block" loading="eager" decoding="async">
@@ -433,9 +455,25 @@ add(f'''
   </div>''', LIGHT + 'padding:70px 120px 110px;display:grid;grid-template-columns:1fr 860px;column-gap:50px;align-items:center')
 
 
-assert len(slides) == 26, 'one slide per page of the draft'
-total = len(slides)
-numbered = [s.replace('{N}', f'{i + 1:02d} / {total}') for i, s in enumerate(slides)]
+# 27 ── Close: the clinical lead's three points ─────────────────────────────────
+def close_point(n, text):
+    return (f'<div style="display:grid;grid-template-columns:120px 1fr;align-items:baseline;border-top:2px solid {RULE_D};padding:30px 0 34px">'
+            f'<div style="{SERIF};font-size:50px;color:{SAGE100}">{n}</div>'
+            f'<div style="{SERIF};font-size:54px;line-height:1.14;letter-spacing:-.024em;color:{CREAM}">{text}</div></div>')
+
+
+add(f'''
+  <h2 style="margin:0;{SERIF};font-size:104px;line-height:1.02;letter-spacing:-.035em;color:{CREAM}">Three things to <em>remember.</em></h2>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
+    {close_point('01', 'Iron is more than anemia')}
+    {close_point('02', 'Iron may affect women differently')}
+    {close_point('03', 'Focus on foundational health and support your body with a basic possibly overlooked requirement. Talk to your provider about iron intake vs. loss and supplementation options.')}
+  </div>''', DARK + 'padding:80px 120px 100px;display:flex;flex-direction:column', dark=True)
+
+
+assert sorted(ORDER) == sorted(slides), 'ORDER must list every slide once'
+total = len(ORDER)
+numbered = [slides[p].replace('{N}', f'{i + 1:02d} / {total}').replace('{L}', str(i + 1)) for i, p in enumerate(ORDER)]
 
 # ── This talk's own diagram moves: the shared tools are in talks/tools/talk_chrome.py ──
 IRON_CSS = '''<style>
@@ -487,7 +525,7 @@ sub1('<title>Introductory Meeting — Optimal Clinic, Barrie</title>', f'<title>
 html = re.sub(r'<meta name="description" content="[^"]*">', f'<meta name="description" content="{NAME}, a talk from Optimal Clinic, Barrie.">', html, count=1)
 sub1('     Introductory Meeting — Optimal Clinic, Barrie\n', f'     {NAME} — Optimal Clinic, Barrie\n     Generated by talks/iron-deficiency/tools/build_deck.py. Edit the script, not this file.\n')
 html = re.sub(r'The \d+ slides below are the design handoff recreated verbatim',
-              f'The {len(slides)} slides below are the clinical team\'s draft, page for page, restyled', html, count=1)
+              f'The {len(slides)} slides below are the clinical team\'s draft, restyled, with the clinical lead\'s Nov 4 edits', html, count=1)
 sub1('Slide copy is client-approved: change markup, not words.', 'Slide copy is the clinical team\'s, word for word: change markup, not words.')
 
 sub1('<!-- Preparation: the front desk enters the patient\'s name before walking in -->', '<!-- Preparation: the presenter sets up before the talk starts -->')
@@ -501,11 +539,11 @@ sub1('<span class="field-label">Date of meeting</span>', '<span class="field-lab
 sub1("getName() || 'Patient'", "getName() || 'Group'")
 sub1('Export PDF for records', 'Export PDF')
 sub1("'Optimal — Introductory Meeting — '", f"'Optimal — {NAME} — '")
-html = re.sub(r'Note\s+that N counts deck slides.*?printed "02 / \d+"\.', 'N is the page number on the slide and in the draft.', html, count=1, flags=re.S)
+html = re.sub(r'Note\s+that N counts deck slides.*?printed "02 / \d+"\.', 'N is the page number on the slide.', html, count=1, flags=re.S)
 sub1('</head>', IRON_CSS + '</head>')
 html = talk_chrome.apply(html)
 
 assert 'Introductory' not in html
 assert 'Sarah' not in html
 (DECK / 'index.html').write_text(html)
-print(f'wrote talks/iron-deficiency/index.html: {len(slides)} slides, each matching its page of the draft word for word')
+print(f'wrote talks/iron-deficiency/index.html: {len(slides)} slides, each matching its approved words')
