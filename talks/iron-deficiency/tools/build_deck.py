@@ -23,7 +23,7 @@ import talk_chrome  # noqa: E402
 DECK = ROOT / 'talks' / 'iron-deficiency'
 SRC = (ROOT / 'intro' / 'index.html').read_text()
 NAME = 'Iron Deficiency in Women'
-VERSION = 'iron-deficiency-talk v1.1.0'
+VERSION = 'iron-deficiency-talk v1.2.0'
 NB = '  ·  '
 
 # ── Tokens: the same set as the HBOT deck, at the 1920 artboard's ~2x scale ──
@@ -33,7 +33,7 @@ SAGE100, SAGE200, SAGE300 = '#DDE7D2', '#C3D2BE', '#A5BBA0'
 EYEBROW = f"font-size:24px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:{GREEN_DEEP}"
 EYEBROW_D = "font-size:24px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:rgba(255,252,247,.66)"
 H2 = f"margin:22px 0 0;font-family:Castoro,serif;font-weight:400;font-size:76px;line-height:1.05;letter-spacing:-.03em;color:{INK}"
-BODY = f"font-size:28px;line-height:1.5;letter-spacing:-.01em;color:{INK2}"
+BODY = f"font-size:30px;line-height:1.46;letter-spacing:-.012em;color:{INK2}"
 CAPS = f"font-size:22px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:{MUTED}"
 SERIF = "font-family:Castoro,serif;font-weight:400"
 SVGTXT = "font-family=\"Public Sans, system-ui, sans-serif\""
@@ -100,15 +100,15 @@ def footer(dark=False):
             f'{NAME} — Optimal Clinic, Barrie</div><img src="assets/logos/symbol-green-nobg.png" alt="" style="height:30px;opacity:.85" loading="eager" decoding="async"></div>')
 
 
-def head(eyebrow, title, size=76):
+def head(eyebrow, title, size=84):
     return f'<div><div style="{EYEBROW}">{eyebrow}</div><h2 style="{H2};font-size:{size}px">{title}</h2></div>'
 
 
-def row(title, body, top=True, size=34):
+def row(title, body, top=True, size=38):
     edge = f'border-top:2px solid {LINE};' if top else ''
-    return (f'<div style="{edge}padding:22px 0 24px">'
+    return (f'<div style="{edge}padding:21px 0 23px">'
             f'<div style="{SERIF};font-size:{size}px;line-height:1.12;letter-spacing:-.02em;color:{INK}">{title}</div>'
-            f'<div style="margin-top:10px;font-size:26px;line-height:1.4;letter-spacing:-.01em;color:{INK2}">{body}</div></div>')
+            f'<div style="margin-top:9px;font-size:29px;line-height:1.36;letter-spacing:-.012em;color:{INK2}">{body}</div></div>')
 
 
 slides = []
@@ -133,7 +133,7 @@ def part_ticks(n):
 
 def divider(n, title, img, notes):
     add(f'Part {n} divider', notes, DARK + 'padding:88px 120px 96px;display:flex;flex-direction:column', f'''
-  <div class="dk-panel" style="position:absolute;top:140px;right:120px;width:800px;height:800px;display:flex;align-items:center;justify-content:center">
+  <div class="dk-panel ir-breathe" style="position:absolute;top:140px;right:120px;width:800px;height:800px;display:flex;align-items:center;justify-content:center">
     <img class="ir-ink" style="--d:.2s;--dur:1700ms;max-width:100%;max-height:100%;display:block" src="assets/images/{img}.webp" alt="" loading="eager" decoding="async">
   </div>
   <div style="display:flex;align-items:center;gap:32px"><div style="{EYEBROW_D}">Part {n} of 4</div>{part_ticks(n)}</div>
@@ -145,7 +145,7 @@ def divider(n, title, img, notes):
 
 # 1 ── Title ───────────────────────────────────────────────────────────────────
 add('Title', 'Welcome the group. This is a talk about iron in women: how we measure it, what happens when it runs high or low, and what the treatment options are. Educational only.', LIGHT + 'padding:88px 120px 96px', f'''
-  <div class="dk-panel" style="position:absolute;top:96px;right:92px;width:800px;height:800px">
+  <div class="dk-panel ir-breathe" style="position:absolute;top:96px;right:92px;width:800px;height:800px">
     <img class="ir-iris" src="assets/images/blood-field.webp" alt="Illustrative blood smear seen through a microscope" style="width:100%;height:100%;object-fit:contain;display:block" loading="eager" decoding="async">
     <div style="margin-top:14px;text-align:center;font-size:20px;font-style:italic;color:{MUTED}">Blood smear, illustrative</div>
   </div>
@@ -241,12 +241,13 @@ add('Dietary building blocks', 'Diet has six building blocks: protein, water, nu
 
 
 # 4 ── Agenda ──────────────────────────────────────────────────────────────────
-def agenda_row(n, name, label, last=False):
-    bottom = f'border-bottom:2px solid {LINE};' if last else ''
-    return (f'<div style="display:grid;grid-template-columns:140px 1fr 460px;align-items:center;border-top:2px solid {LINE};{bottom}padding:40px 0">'
-            f'<div style="{SERIF};font-size:52px;color:{GREEN_DEEP}">{n}</div>'
-            f'<div style="{SERIF};font-size:52px;letter-spacing:-.02em">{name}</div>'
-            f'<div style="text-align:right;{CAPS}">{label}</div></div>')
+def agenda_part(n, img, name, label, d):
+    """Each part previews the engraving on its divider, in green ink on cream."""
+    return (f'<div style="display:flex;flex-direction:column">'
+            f'<div style="height:340px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:26px;box-sizing:border-box"><img class="ir-ink" src="assets/images/{img}.webp" alt="" style="--d:{d:.2f}s;--dur:1300ms;max-width:86%;max-height:100%;display:block" loading="eager" decoding="async"></div>'
+            f'<div style="border-top:2px solid {LINE};padding-top:22px;{SERIF};font-size:44px;line-height:1;color:{GREEN_DEEP}">{n}</div>'
+            f'<div style="margin-top:16px;min-height:150px;{SERIF};font-size:46px;line-height:1.08;letter-spacing:-.022em">{name}</div>'
+            f'<div style="margin-top:14px;{CAPS}">{label}</div></div>')
 
 
 add('Agenda', 'Four parts: how we evaluate iron stores, what iron levels mean, what happens when iron is too high or too low, and how it is treated.', LIGHT + 'padding:88px 120px 130px;display:flex;flex-direction:column', f'''
@@ -254,11 +255,11 @@ add('Agenda', 'Four parts: how we evaluate iron stores, what iron levels mean, w
     {head('Today', 'What we&rsquo;ll <em>cover</em>.')}
     <div style="{CAPS};padding-bottom:14px">4 parts</div>
   </div>
-  <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
-    {agenda_row('01', 'How we evaluate iron stores', 'Ferritin')}
-    {agenda_row('02', 'Iron levels', 'What iron does')}
-    {agenda_row('03', 'Consequences of high and low iron', 'The evidence')}
-    {agenda_row('04', 'Treatment options', 'Pill, IV, diet', last=True)}
+  <div style="flex:1;display:grid;grid-template-columns:repeat(4,1fr);column-gap:44px;align-content:center">
+    {agenda_part('01', 'test-tubes', 'How we evaluate iron stores', 'Ferritin', .3)}
+    {agenda_part('02', 'vein-red-cells', 'Iron levels', 'What iron does', .45)}
+    {agenda_part('03', 'woman-tired-armchair', 'Consequences of high and low iron', 'The evidence', .6)}
+    {agenda_part('04', 'iron-tablets', 'Treatment options', 'Pill, IV, diet', .75)}
   </div>
   {footer()}''')
 
@@ -321,7 +322,7 @@ def venn():
 def stat_big(num, body):
     return (f'<div style="border-top:2px solid {LINE};padding:20px 0 26px">'
             f'<div class="ir-num" style="{SERIF};font-size:96px;line-height:1;letter-spacing:-.03em;color:{GREEN}">{num}</div>'
-            f'<div style="margin-top:12px;font-size:27px;line-height:1.38;letter-spacing:-.01em;color:{INK2}">{body}</div></div>')
+            f'<div style="margin-top:12px;font-size:29px;line-height:1.36;letter-spacing:-.012em;color:{INK2}">{body}</div></div>')
 
 
 add('Not always anemia', 'Iron deficiency and anemia overlap but they are not the same thing. In a 2022 Ontario study of screening samples, 38 percent of nonpregnant females screened had iron deficiency without anemia and 13 percent had iron deficiency anemia. The blood count is typically normal in that first group, so without a ferritin it can be missed.', LIGHT + PAD, f'''
@@ -359,8 +360,8 @@ def scale():
 
 def zone(width, title, body):
     return (f'<div style="width:{width}px;box-sizing:border-box;padding-right:26px">'
-            f'<div style="{SERIF};font-size:34px;line-height:1.12;letter-spacing:-.015em;color:{GREEN_DEEP}">{title}</div>'
-            f'<div style="margin-top:8px;font-size:25px;line-height:1.34;color:{INK2}">{body}</div></div>')
+            f'<div style="{SERIF};font-size:38px;line-height:1.1;letter-spacing:-.018em;color:{GREEN_DEEP}">{title}</div>'
+            f'<div style="margin-top:8px;font-size:27px;line-height:1.32;letter-spacing:-.01em;color:{INK2}">{body}</div></div>')
 
 
 def treat(num, who):
@@ -457,12 +458,12 @@ def dumbbell():
 
 
 def mini(num, body):
-    return (f'<div style="border-top:2px solid {LINE};padding-top:16px"><div class="ir-num" data-delay="1250" style="{SERIF};font-size:52px;line-height:1;letter-spacing:-.025em;color:{GREEN}">{num}</div>'
-            f'<div style="margin-top:10px;font-size:23px;line-height:1.34;color:{INK2}">{body}</div></div>')
+    return (f'<div style="border-top:2px solid {LINE};padding-top:16px"><div class="ir-num" data-delay="1250" style="{SERIF};font-size:58px;line-height:1;letter-spacing:-.025em;color:{GREEN}">{num}</div>'
+            f'<div style="margin-top:10px;font-size:25px;line-height:1.3;letter-spacing:-.008em;color:{INK2}">{body}</div></div>')
 
 
 add('Raising the lower limit', 'Rochester Regional Health moved the ferritin lower limit in September 2023, from 10 in women and 22 in men to 30 for everyone. Among patients with a ferritin under 30, about 50,000 across two 18-month periods, diagnoses rose most in women. Diagnoses of iron deficiency without anemia went up 47 percent. It is a retrospective study from one US health system. Iron deficiency is globally underdiagnosed, particularly in women.', LIGHT + PAD, f'''
-  {head('Study · 2026', 'Move the line, find more <em>women</em>.')}
+  {head('Study · 2026', 'Move the line, find more <em>women</em>.', 76)}
   <div style="flex:1;display:grid;grid-template-columns:480px 1040px;gap:80px;align-items:center">
     <div>
       <div style="{CAPS}">Ferritin lower limit, women</div>
@@ -548,7 +549,7 @@ add('Iron and the cycle', 'Estrogen and progesterone directly affect how much ir
   <div style="flex:1;display:grid;grid-template-columns:1040px 1fr;gap:70px;align-items:center">
     <div>
       {cycle()}
-      <div style="margin-top:18px;display:grid;grid-template-columns:1fr 1fr;gap:40px;font-size:25px;line-height:1.38;color:{INK2}">
+      <div style="margin-top:18px;display:grid;grid-template-columns:1fr 1fr;gap:40px;font-size:28px;line-height:1.34;letter-spacing:-.01em;color:{INK2}">
         <div>Estrogen lowers hepcidin, the body&rsquo;s iron gatekeeper. <strong style="font-weight:600;color:{INK}">More iron let in.</strong></div>
         <div>Progesterone raises it. <strong style="font-weight:600;color:{INK}">Less iron let in.</strong></div>
       </div>
@@ -569,8 +570,8 @@ divider(3, 'Too much, too <em>little</em>.', 'woman-tired-armchair-cream', 'Part
 def plate(img, alt, name, body, col, d):
     return (f'<div style="grid-column:{col};display:flex;flex-direction:column">'
             f'<div style="height:310px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:20px;box-sizing:border-box"><img class="ir-ink" src="assets/images/{img}.webp" alt="{alt}" style="--d:{d:.2f}s;--dur:1300ms;max-width:92%;max-height:100%;display:block" loading="eager" decoding="async"></div>'
-            f'<div style="border-top:2px solid {LINE};padding-top:18px;{SERIF};font-size:44px;line-height:1.05;letter-spacing:-.022em;color:{INK}">{name}</div>'
-            f'<div style="margin-top:10px;font-size:25px;line-height:1.36;letter-spacing:-.01em;color:{INK2}">{body}</div></div>')
+            f'<div style="border-top:2px solid {LINE};padding-top:18px;{SERIF};font-size:48px;line-height:1.05;letter-spacing:-.022em;color:{INK}">{name}</div>'
+            f'<div style="margin-top:10px;font-size:27px;line-height:1.32;letter-spacing:-.012em;color:{INK2}">{body}</div></div>')
 
 
 def evidence_head(label, col, strong):
@@ -692,30 +693,30 @@ add('The evidence is mixed', 'Before the studies, set expectations. Some studies
 
 # 19 ── Meta-analysis (2025) ───────────────────────────────────────────────────
 def effect(label, d, i):
-    ticks = ''.join(f'<span style="position:absolute;top:0;bottom:0;left:{p}%;width:2px;background:{SAGE300}"></span>' for p in (25, 62.5))
-    return (f'<div style="display:grid;grid-template-columns:340px 1fr 90px;align-items:center;gap:20px;border-top:2px solid {LINE};padding:15px 0">'
-            f'<div style="{SERIF};font-size:33px;letter-spacing:-.018em">{label}</div>'
-            f'<div style="position:relative;height:30px;background:{SAGE50}"><div class="ir-bar" style="--d:{.4 + i * .1:.2f}s;height:100%;width:{d / 0.8 * 100:.1f}%;background:{GREEN}"></div>{ticks}</div>'
-            f'<div class="ir-num" data-delay="{400 + i * 100}" style="{SERIF};font-size:36px;color:{GREEN};text-align:right">{d:.2f}</div></div>')
+    return (f'<div style="display:grid;grid-template-columns:340px 1fr 90px;align-items:center;gap:20px;border-top:2px solid {LINE};padding:14px 0">'
+            f'<div style="{SERIF};font-size:34px;letter-spacing:-.018em">{label}</div>'
+            f'<div style="height:30px;background:{SAGE50}"><div class="ir-bar" style="--d:{.4 + i * .1:.2f}s;height:100%;width:{d / 0.8 * 100:.1f}%;background:{GREEN}"></div></div>'
+            f'<div class="ir-num" data-delay="{400 + i * 100}" style="{SERIF};font-size:38px;color:{GREEN};text-align:right">{d:.2f}</div></div>')
 
 
 def effect_scale():
-    """The rule of thumb, placed on the bars it explains."""
-    mark = lambda p, t: f'<span style="position:absolute;left:{p}%;top:0;transform:translateX(-50%);white-space:nowrap;font-size:22px;color:{MUTED}">{t}</span>'
+    """The rule of thumb, as a ruler hung under the bars it explains."""
+    mark = lambda p, t: (f'<span style="position:absolute;left:{p}%;top:-14px;width:2px;height:12px;background:{SAGE}"></span>'
+                         f'<span style="position:absolute;left:{p}%;top:2px;transform:translateX(-50%);white-space:nowrap;font-size:23px;color:{MUTED}">{t}</span>')
     labels = f'{mark(25, "0.2 small")}{mark(62.5, "0.5 medium")}{mark(100, "0.8 large")}'
-    return (f'<div style="display:grid;grid-template-columns:340px 1fr 90px;align-items:center;gap:20px;border-top:2px solid {LINE};padding:12px 0 14px">'
-            f'<div style="font-size:22px;color:{MUTED}">As a rule of thumb, d of</div>'
-            f'<div style="position:relative;height:28px">{labels}</div><div></div></div>')
+    return (f'<div style="display:grid;grid-template-columns:340px 1fr 90px;align-items:center;gap:20px;border-top:2px solid {LINE};padding:12px 0 12px">'
+            f'<div style="font-size:23px;color:{MUTED}">As a rule of thumb, d of</div>'
+            f'<div style="position:relative;height:32px">{labels}</div><div></div></div>')
 
 
 def noeffect(label, note):
-    return (f'<div style="display:grid;grid-template-columns:340px 1fr;align-items:center;gap:20px;border-top:2px solid {LINE};padding:15px 0">'
-            f'<div style="{SERIF};font-size:33px;letter-spacing:-.018em;color:{MUTED}">{label}</div>'
-            f'<div style="font-size:25px;color:{MUTED}">{note}</div></div>')
+    return (f'<div style="display:grid;grid-template-columns:340px 1fr;align-items:center;gap:20px;border-top:2px solid {LINE};padding:14px 0">'
+            f'<div style="{SERIF};font-size:34px;letter-spacing:-.018em;color:{MUTED}">{label}</div>'
+            f'<div style="font-size:27px;letter-spacing:-.01em;color:{MUTED}">{note}</div></div>')
 
 
 add('Meta-analysis', 'Despite iron being critical in energy metabolism and neurotransmitter synthesis, iron deficiency is the most common nutritional deficiency worldwide. This meta-analysis pooled 18 studies of iron supplementation in non-anemic children, adolescents and menstruating adults. In randomized trials it improved anxiety, fatigue, physical well-being, cognitive intelligence and short-term memory, but not attention or depression. Depression did improve in the pre-post studies. Key point: the effect was absent once iron-deficient participants were excluded, so this supports treating deficiency, not taking iron without one.', LIGHT + PAD, f'''
-  {head('Meta-analysis · 2025', 'Where iron was low, iron <em>helped</em>.')}
+  {head('Meta-analysis · 2025', 'Where iron was low, iron <em>helped</em>.', 76)}
   <div style="flex:1;display:grid;grid-template-columns:1040px 1fr;gap:70px;align-items:center">
     <div>
       <div style="{CAPS};margin-bottom:12px">Randomized trials, no anemia. Effect size d</div>
@@ -742,8 +743,8 @@ def level(cut, n, pctv, sym, sub, i):
     return (f'<div style="display:grid;grid-template-columns:230px 560px 1fr;align-items:center;gap:40px;border-top:2px solid {LINE};padding:30px 0">'
             f'<div><div style="{CAPS};font-size:20px">Ferritin</div><div style="margin-top:6px;{SERIF};font-size:64px;line-height:1;letter-spacing:-.03em;color:{GREEN}">≤{cut}</div></div>'
             f'<div><div style="height:44px;background:{SAGE50}"><div class="ir-bar" style="--d:{.45 + i * .16:.2f}s;height:100%;width:{pctv}%;background:{GREEN}"></div></div>'
-            f'<div style="margin-top:10px;font-size:25px;color:{INK2}">{n} women, {pctv}%</div></div>'
-            f'<div><div style="{SERIF};font-size:40px;line-height:1.1;letter-spacing:-.02em">{sym}</div><div style="margin-top:8px;font-size:25px;line-height:1.35;color:{INK2}">{sub}</div></div></div>')
+            f'<div style="margin-top:10px;font-size:27px;letter-spacing:-.01em;color:{INK2}">{n} women, {pctv}%</div></div>'
+            f'<div><div style="{SERIF};font-size:48px;line-height:1.08;letter-spacing:-.024em">{sym}</div><div style="margin-top:8px;font-size:28px;line-height:1.3;letter-spacing:-.012em;color:{INK2}">{sub}</div></div></div>')
 
 
 add('Symptoms and ferritin', 'A cross-sectional study of 554 non-anemic menstruating women in France, aged 18 to 50. Over half had a ferritin below 50. Restless legs were significantly more common at 50 or below, and recent hair loss at 20 or below. These are correlations, not causes, and only those two symptoms held up. But both sit well above the old lab cut-off of 12 to 15.', LIGHT + PAD, f'''
@@ -752,7 +753,7 @@ add('Symptoms and ferritin', 'A cross-sectional study of 554 non-anemic menstrua
     {level(50, 304, 54.9, 'Restless legs', '2.8 times the odds', 0)}
     {level(20, 103, 18.6, 'Recent hair loss', '2.3 times the odds. Also more limits from emotional problems.', 1)}
     {level(15, 60, 10.8, 'Recent hair loss', '2.2 times the odds', 2)}
-    <div style="border-top:2px solid {LINE};padding-top:18px;font-size:25px;color:{MUTED}">554 non-anemic menstruating women, aged 18–50. A correlation, measured at one point in time.</div>
+    <div style="border-top:2px solid {LINE};padding-top:18px;font-size:27px;letter-spacing:-.01em;color:{MUTED}">554 non-anemic menstruating women, aged 18–50. A correlation, measured at one point in time.</div>
   </div>
   {paper('beatrix', 'Cross-sectional study')}
   {footer()}''')
@@ -773,7 +774,7 @@ add('Endurance', 'The central nervous system needs iron to function. This small 
       {row('Intelligence and anxiety scores', 'No difference between the groups.')}
       {row('Activity and endurance', 'Reported lower with low ferritin.')}
       {row('Brain activity', 'An EEG pattern linked with withdrawal tendencies.')}
-      <div style="border-top:2px solid {LINE};padding-top:16px;font-size:25px;color:{MUTED}">23 non-anemic women, aged 20–32, in the follicular phase.</div>
+      <div style="border-top:2px solid {LINE};padding-top:16px;font-size:27px;letter-spacing:-.01em;color:{MUTED}">23 non-anemic women, aged 20–32, in the follicular phase.</div>
     </div>
   </div>
   {paper('dziem', 'Small comparison study')}
@@ -789,14 +790,14 @@ def verdict(label, items, muted=False):
 
 
 def vitem(name, sub=''):
-    extra = f'<div style="margin-top:8px;font-size:27px;line-height:1.35;color:{INK2}">{sub}</div>' if sub else ''
-    return f'<div><div style="{SERIF};font-size:50px;line-height:1.06;letter-spacing:-.024em">{name}</div>{extra}</div>'
+    extra = f'<div style="margin-top:8px;font-size:30px;line-height:1.32;letter-spacing:-.012em;color:{INK2}">{sub}</div>' if sub else ''
+    return f'<div><div style="{SERIF};font-size:58px;line-height:1.05;letter-spacing:-.026em">{name}</div>{extra}</div>'
 
 
 add('Executive function', '127 non-anemic females aged 18 to 35. Better iron status went with better attention, meaning faster reaction time, better inhibitory control, and better planning, with less planning time. Several other executive functions showed no link, possibly because of performance ceilings. Working memory actually appeared worse with better iron status, which the authors call paradoxical. It is a limited, observational study.', LIGHT + PAD, f'''
   <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:60px">
-    {head('Study · 2016', 'Better iron, better <em>focus</em>. Mostly.')}
-    <p style="margin:0 0 8px;{BODY};text-align:right">127 non-anemic females, aged 18–35.<br>A limited study.</p>
+    {head('Study · 2016', 'Better iron, better <em>focus</em>. Mostly.', 76)}
+    <p style="margin:0 0 8px;{BODY};text-align:right;white-space:nowrap;flex-shrink:0">127 non-anemic females, aged 18–35.<br>A limited study.</p>
   </div>
   <div style="flex:1;display:grid;grid-template-columns:1fr 1fr 1fr;gap:64px;align-items:center;align-content:center">
     {verdict('Better with better iron', vitem('Attention', 'Faster reaction time') + vitem('Inhibitory control', 'Steadier reaction time') + vitem('Planning', 'Less time needed'))}
@@ -825,13 +826,13 @@ divider(4, 'Treatment <em>options</em>.', 'iron-tablets-cream', 'Part 4: pill or
 
 # 25 ── Pill or IV ─────────────────────────────────────────────────────────────
 def route(img, alt, imgw, title, sub, items, foot):
-    rows = ''.join(f'<li style="border-top:2px solid {LINE};padding:17px 0 19px;font-size:28px;line-height:1.28;letter-spacing:-.012em;color:{INK2};list-style:none">{i}</li>' for i in items)
+    rows = ''.join(f'<li style="border-top:2px solid {LINE};padding:17px 0 19px;font-size:30px;line-height:1.26;letter-spacing:-.014em;color:{INK2};list-style:none">{i}</li>' for i in items)
     return (f'<div style="display:grid;grid-template-columns:230px 1fr;gap:36px;align-items:start">'
             f'<div style="display:flex;align-items:center;justify-content:center;align-self:center"><img class="ir-ink" src="assets/images/{img}.webp" alt="{alt}" style="--ang:180deg;width:{imgw}px;height:auto;display:block" loading="eager" decoding="async"></div>'
             f'<div><div style="{SERIF};font-size:72px;line-height:1;letter-spacing:-.03em;color:{GREEN}">{title}</div>'
             f'<div style="margin:14px 0 26px;min-height:78px;{SERIF};font-size:34px;line-height:1.14;letter-spacing:-.018em;color:{INK}">{sub}</div>'
             f'<ul style="margin:0;padding:0">{rows}</ul>'
-            f'<div style="border-top:2px solid {LINE};padding-top:18px;font-size:25px;line-height:1.36;color:{MUTED}">{foot}</div></div></div>')
+            f'<div style="border-top:2px solid {LINE};padding-top:18px;font-size:27px;line-height:1.32;letter-spacing:-.01em;color:{MUTED}">{foot}</div></div></div>')
 
 
 add('Pill or IV', 'Oral iron is first-line for iron deficiency without anemia, and for anemia when hemoglobin is above 100. Hemoglobin starts improving within days to weeks, and ferritin typically takes 3 to 6 months. IV iron can be used when someone cannot tolerate oral iron, when a trial of oral iron has not worked, with malabsorption, or in severe anemia to avoid a transfusion. Adverse effects with IV iron are rare, about 1 in 200, usually self-limited flushing or chest or back tightness. Anaphylaxis is under 1 in 200,000. Also address the cause, such as heavy periods.', LIGHT + PAD, f'''
@@ -872,8 +873,8 @@ def iron_row(name, mg, note, cost, extra=''):
             f'<div style="{SERIF};font-size:32px;letter-spacing:-.018em">{name}</div>'
             f'<div style="display:flex;align-items:center;gap:14px"><div style="width:280px;height:22px;background:{SAGE50}"><div class="ir-bar" style="--d:{.4 + i * .09:.2f}s;height:100%;width:{mg / 150 * 100:.1f}%;background:{GREEN}"></div></div>'
             f'<div style="{SERIF};font-size:30px;color:{GREEN};white-space:nowrap">{mg} mg{extra}</div></div>'
-            f'<div class="ir-tnum" style="font-size:25px;color:{INK2}">{cost}</div>'
-            f'<div style="font-size:24px;line-height:1.3;color:{INK2}">{note}</div></div>')
+            f'<div class="ir-tnum" style="font-size:26px;color:{INK2}">{cost}</div>'
+            f'<div style="font-size:26px;line-height:1.26;letter-spacing:-.012em;color:{INK2}">{note}</div></div>')
 
 
 def iron_group(label):
@@ -902,10 +903,10 @@ add('Which iron', 'Elemental iron per tablet and estimated daily cost come from 
 
 # 28 ── How to take it ─────────────────────────────────────────────────────────
 def rec(n, title, body):
-    return (f'<div style="display:grid;grid-template-columns:90px 1fr;align-items:baseline;border-top:2px solid {LINE};padding:19px 0 21px">'
-            f'<div style="{SERIF};font-size:36px;color:{GREEN_DEEP}">{n}</div>'
-            f'<div><div style="{SERIF};font-size:38px;line-height:1.1;letter-spacing:-.02em">{title}</div>'
-            f'<div style="margin-top:7px;font-size:25px;line-height:1.36;color:{INK2}">{body}</div></div></div>')
+    return (f'<div style="display:grid;grid-template-columns:90px 1fr;align-items:baseline;border-top:2px solid {LINE};padding:20px 0 22px">'
+            f'<div style="{SERIF};font-size:40px;color:{GREEN_DEEP}">{n}</div>'
+            f'<div><div style="{SERIF};font-size:44px;line-height:1.08;letter-spacing:-.022em">{title}</div>'
+            f'<div style="margin-top:8px;font-size:28px;line-height:1.3;letter-spacing:-.012em;color:{INK2}">{body}</div></div></div>')
 
 
 add('How to take it', 'Start by finding the elemental iron dose on the label: 300 milligrams of ferrous sulfate is only 60 of elemental iron. Aim for 60 to 110 milligrams of elemental iron daily, as your clinician advises. Take it on an empty stomach, and apart from calcium and magnesium, which interfere with absorption. Take it with vitamin C: this is common advice, although a 2020 randomized trial found vitamin C added no benefit to oral iron in anemia. The common side effects are nausea, constipation, diarrhea, indigestion and a metallic taste. Every-other-day dosing may be better tolerated, though it can make adherence harder.', LIGHT + 'padding:88px 120px 150px;display:grid;grid-template-columns:600px 1fr;gap:90px;align-items:center', f'''
@@ -935,7 +936,7 @@ def close_row(n, title, label, last=False):
     return (f'<div style="display:grid;grid-template-columns:110px 1fr;align-items:baseline;border-top:2px solid {LINE};{bottom}padding:30px 0">'
             f'<div style="{SERIF};font-size:44px;color:{GREEN_DEEP}">{n}</div>'
             f'<div><div style="{SERIF};font-size:48px;line-height:1.08;letter-spacing:-.022em">{title}</div>'
-            f'<div style="margin-top:10px;font-size:27px;line-height:1.36;color:{INK2}">{label}</div></div></div>')
+            f'<div style="margin-top:10px;font-size:29px;line-height:1.32;letter-spacing:-.012em;color:{INK2}">{label}</div></div></div>')
 
 
 add('Close', 'Three things to take home, then questions. Educational only: please talk to a clinician about your own results before starting or stopping iron.', LIGHT + 'padding:88px 120px 130px', f'''

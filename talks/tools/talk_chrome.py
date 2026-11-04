@@ -179,6 +179,12 @@ MOTION_CSS = '''<style>
     to   { clip-path: circle(72% at 50% 50%); filter: blur(0); transform: none; }
   }
 
+  /* A slide you hold on keeps a little life: its engraving breathes, too slowly to notice */
+  deck-stage > section.in-view .dk-panel.ir-breathe {
+    animation: dk-fade 900ms ease both, ir-breathe 26s ease-in-out .9s infinite alternate;
+  }
+  @keyframes ir-breathe { from { transform: scale(1); } to { transform: scale(1.04); } }
+
   /* Diagram tools. --d is the delay, --dur the duration where it varies. */
   .ir-build { opacity: 0; }
   deck-stage > section.in-view .ir-build { animation: ir-rise 700ms var(--deck-ease) var(--d, 0s) both; }
@@ -244,7 +250,7 @@ MOTION_CSS = '''<style>
   }
   @media print, (prefers-reduced-motion: reduce) {
     .ir-w, .ir-build, .ir-fade, .ir-pop, .ir-tier, .ir-spread, .ir-wipe, .ir-ink, .ir-iris,
-    .ir-bar, .ir-grow, .ir-seg, .ir-dim {
+    .ir-bar, .ir-grow, .ir-seg, .ir-dim, .ir-breathe {
       animation: none !important; opacity: 1 !important; transform: none !important;
       filter: none !important; clip-path: none !important; -webkit-mask: none !important; mask: none !important;
     }
