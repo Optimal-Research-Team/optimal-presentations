@@ -1,5 +1,7 @@
 # Cycle & Hormone Care — Patient Briefing Deck
 
+> **Nov 4, 2026 (Peter):** this deck is the **Cycle & Hormone Care Foundation Program** and states no schedule of visits: no program length, week labels or follow-up timing. Slide 15 keeps the bloodwork windows and the week-8 $100 fee, which are lab timing, not a visit schedule.
+
 Optimal Clinic patient orientation presentation for the **Cycle & Hormone Care Program**. Duplicated from the Menopause & Perimenopause Foundation Program deck and rebranded; content otherwise identical at the time of duplication.
 
 **Live:** https://optimal-research-team.github.io/optimal-presentations/cycle-hormone-care/

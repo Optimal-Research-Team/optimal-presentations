@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
-<meta name="version" content="optimal-presentations v2.2.1">
+<meta name="version" content="optimal-presentations v2.3.0">
 <meta name="theme-color" content="#FFFCF7">
 <title>Presentations — Optimal Clinic, Barrie</title>
 <link rel="icon" href="assets/logos/symbol-green-nobg.png">
@@ -174,7 +174,7 @@
   .rv { animation: rise .62s var(--ease) both; animation-delay: calc(.06s + var(--i, 0) * .05s); }
   @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
 
-  /* Laptops and 1080p TVs: tighten the rhythm so all eight visits sit above the fold. */
+  /* Laptops and 1080p TVs: tighten the rhythm so all eight visits and four sections sit above the fold. */
   @media (max-height: 1100px) and (min-width: 961px) {
     .layout { padding-top: 24px; padding-bottom: 18px; }
     h1 { font-size: clamp(40px, 3.6vw, 56px); margin-top: 10px; }
@@ -193,10 +193,10 @@
     .bar .frame { height: 56px; }
     .layout { padding-top: 18px; padding-bottom: 14px; }
     .eyebrow { font-size: 12px; }
-    h1 { font-size: 46px; }
-    .group { margin-top: 14px; }
-    .group + .group { margin-top: 10px; }
-    .row { padding-top: 5px; padding-bottom: 5px; }
+    h1 { font-size: 42px; }
+    .group { margin-top: 12px; }
+    .group + .group { margin-top: 7px; }
+    .row { padding-top: 4px; padding-bottom: 4px; }
     .name { font-size: 25px; }
     .meta { font-size: 13.5px; }
     .pv-name { font-size: 30px; }
@@ -243,8 +243,8 @@
       <div class="eyebrow rv" style="--i:1">Presentations</div>
       <h1 class="rv" style="--i:2">Which visit is <em>today</em>?</h1>
 
-      <section class="group" aria-labelledby="g-womens">
-        <h2 id="g-womens" class="rv" style="--i:3">Women's health</h2>
+      <section class="group" aria-labelledby="g-menopause">
+        <h2 id="g-menopause" class="rv" style="--i:3">Menopause &amp; Perimenopause Care</h2>
         <ul class="rows">
           <li class="rv" style="--i:4"><a class="row" data-key="1" href="menopause-foundation/">
             <span class="num">01</span>
@@ -258,37 +258,43 @@
             <span class="txt"><span class="name">Ongoing <em>Care</em></span><span class="meta">Graduation visit · end of Foundation</span></span>
             <svg class="arrow" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg>
           </a></li>
-          <li class="rv" style="--i:6"><a class="row" data-key="3" href="cycle-hormone-care/">
+        </ul>
+      </section>
+
+      <section class="group" aria-labelledby="g-cycle">
+        <h2 id="g-cycle" class="rv" style="--i:6">Cycle &amp; Hormone Care</h2>
+        <ul class="rows">
+          <li class="rv" style="--i:7"><a class="row" data-key="3" href="cycle-hormone-care/">
             <span class="num">03</span>
             <img class="mthumb" src="assets/thumbs/cycle-hormone.webp" alt="" loading="lazy" decoding="async">
-            <span class="txt"><span class="name">Cycle &amp; Hormone <em>Care</em></span><span class="meta">Nurse practitioner · 12-week program</span></span>
+            <span class="txt"><span class="name">Foundation <em>Program</em></span><span class="meta">Nurse practitioner · orientation visit</span></span>
             <svg class="arrow" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg>
           </a></li>
         </ul>
       </section>
 
       <section class="group" aria-labelledby="g-longevity">
-        <h2 id="g-longevity" class="rv" style="--i:7">Longevity Membership · Core</h2>
+        <h2 id="g-longevity" class="rv" style="--i:8">Longevity Membership · Core</h2>
         <ul class="rows">
-          <li class="rv" style="--i:8"><a class="row" data-key="4" href="tour/">
+          <li class="rv" style="--i:9"><a class="row" data-key="4" href="tour/">
             <span class="num">04</span>
             <img class="mthumb" src="assets/thumbs/walk-in.webp" alt="" loading="lazy" decoding="async">
             <span class="txt"><span class="name">Tour <em>only</em></span><span class="meta">Walk-in · care coordinator · about 15 min</span></span>
             <svg class="arrow" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg>
           </a></li>
-          <li class="rv" style="--i:9"><a class="row" data-key="5" href="intro/">
+          <li class="rv" style="--i:10"><a class="row" data-key="5" href="intro/">
             <span class="num">05</span>
             <img class="mthumb" src="assets/thumbs/intro-only.webp" alt="" loading="lazy" decoding="async">
             <span class="txt"><span class="name">Intro <em>only</em></span><span class="meta">15–25 min · intake booked for later</span></span>
             <svg class="arrow" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg>
           </a></li>
-          <li class="rv" style="--i:10"><a class="row" data-key="6" href="intro-intake/">
+          <li class="rv" style="--i:11"><a class="row" data-key="6" href="intro-intake/">
             <span class="num">06</span>
             <img class="mthumb" src="assets/thumbs/intro-intake.webp" alt="" loading="lazy" decoding="async">
             <span class="txt"><span class="name">Intro + possible <em>intake</em></span><span class="meta">Up to ~60 min · intake can be same day</span></span>
             <svg class="arrow" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg>
           </a></li>
-          <li class="rv" style="--i:11"><a class="row" data-key="7" href="intake/">
+          <li class="rv" style="--i:12"><a class="row" data-key="7" href="intake/">
             <span class="num">07</span>
             <img class="mthumb" src="assets/thumbs/intake-only.webp" alt="" loading="lazy" decoding="async">
             <span class="txt"><span class="name">Intake <em>only</em></span><span class="meta">Already had the intro · full medical intake</span></span>
@@ -298,9 +304,9 @@
       </section>
 
       <section class="group" aria-labelledby="g-wellness">
-        <h2 id="g-wellness" class="rv" style="--i:12">Longevity &amp; wellness services</h2>
+        <h2 id="g-wellness" class="rv" style="--i:13">Longevity &amp; wellness services</h2>
         <ul class="rows">
-          <li class="rv" style="--i:13"><a class="row" data-key="8" href="hbot/">
+          <li class="rv" style="--i:14"><a class="row" data-key="8" href="hbot/">
             <span class="num">08</span>
             <img class="mthumb" src="assets/thumbs/hbot.webp" alt="" loading="lazy" decoding="async">
             <span class="txt"><span class="name">Hyperbaric oxygen <em>therapy</em></span><span class="meta">HBOT briefing · physician-supervised program</span></span>
@@ -310,10 +316,10 @@
       </section>
     </div>
 
-    <aside class="preview rv" style="--i:4" aria-label="Selected presentation">
+    <aside class="preview rv" style="--i:5" aria-label="Selected presentation">
       <div class="pv-media"><img id="pv-a" class="on" src="assets/thumbs/menopause-foundation.webp" alt="" width="960" height="540"><img id="pv-b" alt="" width="960" height="540"></div>
       <div class="pv-body">
-        <div class="pv-ctx" id="pv-ctx">Women's health</div>
+        <div class="pv-ctx" id="pv-ctx">Menopause &amp; Perimenopause Care</div>
         <h2 class="pv-name" id="pv-name">Menopause <em>Foundation</em></h2>
         <dl class="pv-facts" id="pv-facts">
           <div><dt>Led by</dt><dd>Nurse Practitioner</dd></div>
@@ -329,7 +335,7 @@
   </div>
 </main>
 
-<footer class="foot rv" style="--i:14">
+<footer class="foot rv" style="--i:15">
   <div class="frame">
     <span class="keys"><kbd>↑</kbd> <kbd>↓</kbd> to choose · <kbd>Enter</kbd> to open · <kbd>1</kbd>–<kbd>8</kbd> to jump · browser Back returns here</span>
     <span>Each deck opens on its preparation screen, where you enter the patient's name.</span>
@@ -341,9 +347,9 @@
   // What each deck's title slide says about the visit, so the panel reads like a
   // preview of the slide the patient is about to see.
   const DECKS = {
-    1: { group: "Women's health", thumb: 'menopause-foundation', facts: [['Led by', 'Nurse Practitioner'], ['Initial visit', '60-min consultation'], ['Outcomes', 'Symptom relief']] },
-    2: { group: "Women's health", thumb: 'ongoing-care', facts: [['Program', '12 weeks · complete'], ['Guided by', 'Optimal'], ['Today', 'What comes next']] },
-    3: { group: "Women's health", thumb: 'cycle-hormone', facts: [['Led by', 'Nurse Practitioner'], ['Program', '12 weeks'], ['Bloodwork', 'OHIP-covered']] },
+    1: { group: 'Menopause & Perimenopause Care', thumb: 'menopause-foundation', facts: [['Led by', 'Nurse Practitioner'], ['Initial visit', '60-min consultation'], ['Outcomes', 'Symptom relief']] },
+    2: { group: 'Menopause & Perimenopause Care', thumb: 'ongoing-care', facts: [['Program', '12 weeks · complete'], ['Guided by', 'Optimal'], ['Today', 'What comes next']] },
+    3: { group: 'Cycle & Hormone Care', thumb: 'cycle-hormone', facts: [['Led by', 'Nurse Practitioner'], ['Program', 'Foundation'], ['Bloodwork', 'OHIP-covered']] },
     4: { group: 'Longevity Membership · Core', thumb: 'walk-in', facts: [['Led by', 'Care coordinator'], ["Today's visit", '~15 minutes'], ['Commitment', 'None today']] },
     5: { group: 'Longevity Membership · Core', thumb: 'intro-only', facts: [['Led by', 'Admin team & NP'], ["Today's meeting", '15–25 minutes'], ['Outcome', 'Membership decision']] },
     6: { group: 'Longevity Membership · Core', thumb: 'intro-intake', facts: [['Led by', 'Admin team & NP'], ["Today's meeting", 'Up to ~60 minutes'], ['Outcome', 'Membership & intake decision']] },

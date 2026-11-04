@@ -11,7 +11,7 @@ today's visit and that presentation opens on its own preparation screen
 |---|---|---|---|
 | 1 | Menopause Foundation | [`menopause-foundation/`](menopause-foundation/) | Nurse practitioner |
 | 2 | Ongoing Care (menopause graduation) | [`menopause-foundation/graduation-ongoing-care/`](menopause-foundation/graduation-ongoing-care/) | Nurse practitioner |
-| 3 | Cycle & Hormone Care | [`cycle-hormone-care/`](cycle-hormone-care/) | Nurse practitioner |
+| 3 | Cycle & Hormone Care – Foundation Program | [`cycle-hormone-care/`](cycle-hormone-care/) | Nurse practitioner |
 | 4 | Longevity Membership — tour only (walk-in) | [`tour/`](tour/) | Care coordinator |
 | 5 | Longevity Membership — intro only | [`intro/`](intro/) | Admin team + NP |
 | 6 | Longevity Membership — intro + possible intake | [`intro-intake/`](intro-intake/) | Admin team + NP |
