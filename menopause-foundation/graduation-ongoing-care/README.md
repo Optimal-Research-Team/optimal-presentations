@@ -14,7 +14,8 @@ Offboarding ("Graduation") visit that closes the Foundation Program.
 > visits) · 12 Pricing (two plans only) · 13 Your plan, plainly (eight policy cards) · 14 Your questions ·
 > 15 Keep your momentum · 16 Thank you. The year still comes before the price (Peter, Oct 21).
 >
-> **Peter's cuts, Nov 4:** the "Keep feeling like yourself" opener, the "Without a plan…" line, the
+> **Peter's cuts, Nov 4:** the road-ahead line and the cell-size readout on slide 3, the
+> "Keep feeling like yourself" opener, the "Without a plan…" line, the
 > pricing slide's "Prefer no plan", "Using your benefits" and "Both plans include" blocks, and the
 > scope and urgent care slide. Don't add them back. The scope and urgent care points are on the cue
 > card for the presenter to say, and in the agreement (§1, §8).
@@ -30,14 +31,14 @@ Offboarding ("Graduation") visit that closes the Foundation Program.
 > out because it isn't in the agreement). The landing page's testimonials are left out on purpose:
 > CNO no-testimonials rule.
 >
-> Prep needs only **her first name + Strong/Modest** (`CONFIG.MINIMAL_PREP`). The
+> Prep needs only **her first name** (`CONFIG.MINIMAL_PREP`). The
 > questionnaire-driven results slides and their transcription fields are **paused** behind
 > `CONFIG.QUESTIONNAIRE_SECTION` (currently `false`); flip it to `true` and uncomment the three
 > paused cues in `cue-card.html` once questionnaire data can be pulled directly. A reminder is
 > scheduled for **Nov 18, 2026**.
 
 The deck for the Offboarding ("Graduation") visit: Cheryl types the patient's first name,
-picks Strong or Modest, generates a personalized deck, presents it, optionally prints it to
+generates a personalized deck, presents it, optionally prints it to
 PDF for the chart, and closes the tab. **Nothing is ever saved by this tool.**
 
 Lives inside the `menopause-foundation-presentation` project and reuses its slide engine
@@ -56,7 +57,7 @@ Lives inside the `menopause-foundation-presentation` project and reuses its slid
 ## Operator flow (Cheryl)
 
 1. Before the visit, open the route → prep form
-2. Type her first name; pick **Strong** or **Modest** (Modest softens the road-ahead line)
+2. Type her first name
 3. **Generate** → present slides 1–16 with the printed cue card in hand (the pricing slide's figures are computed from `CONFIG`: $83 = yearly ÷ 12, $193 = monthly × 12 − yearly)
 4. Optional: `Cmd/Ctrl+P` → Save as PDF → file into the chart → **delete the local copy immediately**
 5. Record the patient's decision in the booking system (this tool records nothing)
@@ -71,10 +72,9 @@ clicking a row or stop holds it instead of turning the page.
 - **Then-test** (no intake questionnaire on file): intake-side values are the retrospective
   ratings captured at the offboarding survey. Labels change, category rows hide, and the
   hormone-picture slide auto-skips. The deck stays complete-feeling, with no gaps.
-- **Strong / Modest** (§5.4): Modest changes copy only — the road-ahead line on slide 3
-  ("The moving target") leads with "Hormone care is iterative — the first 12 weeks tell us
-  what to adjust next." (With the questionnaire section restored, Modest also retitles the
-  results slide and neutralises its delta chip.)
+- **Strong / Modest** (§5.4): hidden while the results slides are paused, because it changes
+  nothing else (Peter cut the road-ahead line on Nov 4). With the questionnaire section
+  restored, the choice returns: Modest retitles the results slide and neutralises its delta chip.
 - **Worsening guard**: if final flagged ≥ intake flagged, the form warns and suggests
   Modest; presenting Strong anyway requires ticking an explicit override.
 

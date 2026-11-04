@@ -28,13 +28,13 @@
       phone: '(437) 370-0291',
       web: 'beoptimal.ca',
     },
-    TEMPLATE_VERSION: 'ongoing-care-deck v7.1.0',
+    TEMPLATE_VERSION: 'ongoing-care-deck v7.1.1',
     /* Questionnaire/results section (slides 2–4 + their form fields).
        OFF until questionnaire data can be pulled directly — everything it
        gates is intact; flip to true to restore the full 9-slide deck.
        (Reminder scheduled for Nov 18, 2026.) */
     QUESTIONNAIRE_SECTION: false,
-    /* Minimal prep: the form asks for the first name + Strong/Modest only.
+    /* Minimal prep: the form asks for the first name only (Strong/Modest returns with the results slides).
        Program dates derive automatically (graduation day = today; 12-week program). */
     MINIMAL_PREP: true,
   };
@@ -164,15 +164,17 @@
   }
 
   /* ── Minimal prep (see CONFIG.MINIMAL_PREP) ──
-     Name + Strong/Modest only. Dates derive automatically; their fields
+     Name only (plus Strong/Modest when the results slides are on). Dates derive automatically; their fields
      hide but stay in the DOM. */
   if (CONFIG.MINIMAL_PREP) {
     [fStart, fEnd].forEach((el) => {
       const wrap = el && el.closest('.f');
       if (wrap) wrap.hidden = true;
     });
+    // Strong/Modest only changes the results slides, so don't ask while they're paused.
+    if (!CONFIG.QUESTIONNAIRE_SECTION) $('#seg-mode').closest('.f').hidden = true;
     const sub = $('.prep-sub');
-    if (sub) sub.innerHTML = 'Type her first name, pick <b>Strong</b> or <b>Modest</b>, and hit <b>Generate</b> — everything else is automatic. Present with the printed cue card in hand.';
+    if (sub) sub.innerHTML = CONFIG.QUESTIONNAIRE_SECTION ? 'Type her first name, pick <b>Strong</b> or <b>Modest</b>, and hit <b>Generate</b> — everything else is automatic.' : 'Type her first name and hit <b>Generate</b> — everything else is automatic. Present with the printed cue card in hand.';
     const hint = $('#fs-patient .hint');
     if (hint) hint.textContent = 'Just her first name — spelled the way she should see it on screen.';
   }
@@ -816,11 +818,6 @@
     }
     }  // end questionnaire gate
 
-    const modestCopy = s.mode === 'modest';
-    // ── slide 5 (§5.4 bridge) ──
-    bind('s5_bridge', modestCopy
-      ? 'Hormone care is iterative — the first 12 weeks tell us what to adjust next.'
-      : 'Hormone needs shift through perimenopause, menopause, and beyond. The plan that works today gets adjusted over time.');
 
   }
 
@@ -1121,10 +1118,10 @@
     const hypo = sec.querySelector('hypo-3d');
     const KEYS = ['before', 'after', 'therapy', 'nonhormonal'];
     const READ = {
-      before:      { estrogen: 'Cycling',  size: '100%',    flashes: 'Rare' },
-      after:       { estrogen: 'Low',      size: '194%',    flashes: '≈ 1.1 an hour' },
-      therapy:     { estrogen: 'Replaced', size: 'Smaller', flashes: 'Fewer, typically' },
-      nonhormonal: { estrogen: 'Low',      size: '194%',    flashes: 'Fewer, typically' },
+      before:      { estrogen: 'Cycling',  flashes: 'Rare' },
+      after:       { estrogen: 'Low',      flashes: 'More often' },
+      therapy:     { estrogen: 'Replaced', flashes: 'Fewer, typically' },
+      nonhormonal: { estrogen: 'Low',      flashes: 'Fewer, typically' },
     };
     const TOUR = 12;
     sec.style.setProperty('--tour', `${TOUR}s`);

@@ -881,37 +881,37 @@
       var(--cream-50);
   }
   .g35 .slide-frame { padding-bottom: 118px; }
-  .g35 .m35 { flex: 1; min-height: 0; display: grid; grid-template-columns: 640px 1fr; gap: 48px; }
+  .g35 .m35 { flex: 1; min-height: 0; display: grid; grid-template-columns: 700px 1fr; gap: 44px; }
   .g35 .m35-left { display: flex; flex-direction: column; min-height: 0; }
   .g35 .m35-lead {
-    margin-top: 26px; font-family: var(--font-sans); font-size: 25px; line-height: 1.42;
-    letter-spacing: -0.01em; color: var(--grey-600);
+    margin-top: 28px; font-family: var(--font-sans); font-size: 33px; line-height: 1.32;
+    letter-spacing: -0.014em; color: var(--grey-600); text-wrap: balance;
   }
 
   /* stage stepper — synced to the model's tour; only the live stage opens */
-  .g35 .stages35 { margin-top: 34px; counter-reset: none; }
+  .g35 .stages35 { margin-top: auto; counter-reset: none; }
   .g35 .stages35 li {
-    position: relative; display: grid; grid-template-columns: 48px 1fr; align-items: baseline;
-    padding: 16px 0 16px; border-top: 1px solid var(--bone-200);
+    position: relative; display: grid; grid-template-columns: 58px 1fr; align-items: baseline;
+    padding: 22px 0; border-top: 1px solid var(--bone-200);
   }
   .g35 .stages35 li:last-child { border-bottom: 1px solid var(--bone-200); }
   .g35 .sx {
-    font-family: var(--font-sans); font-size: 13px; font-weight: 700; letter-spacing: 0.16em;
+    font-family: var(--font-sans); font-size: 17px; font-weight: 700; letter-spacing: 0.12em;
     color: var(--grey-500); font-variant-numeric: tabular-nums; transition: color 400ms ease;
   }
   .g35 .st b {
-    display: block; font-family: var(--font-display); font-weight: 400; font-size: 27px;
-    line-height: 1.15; letter-spacing: -0.02em; color: var(--grey-500);
+    display: block; font-family: var(--font-display); font-weight: 400; font-size: 42px;
+    line-height: 1.1; letter-spacing: -0.028em; color: var(--grey-500);
     transition: color 400ms ease;
   }
   .g35 .st span {
     display: block; overflow: hidden; max-height: 0; opacity: 0; margin-top: 0;
-    font-family: var(--font-sans); font-size: 19px; line-height: 1.45; color: var(--grey-700);
+    font-family: var(--font-sans); font-size: 29px; line-height: 1.32; letter-spacing: -0.012em; color: var(--grey-700);
     transition: max-height 560ms cubic-bezier(.3,.6,.2,1), opacity 400ms ease 120ms, margin-top 560ms cubic-bezier(.3,.6,.2,1);
   }
   .g35 .stages35 li.on .sx { color: var(--forest-700); }
   .g35 .stages35 li.on .st b { color: var(--forest-700); }
-  .g35 .stages35 li.on .st span { max-height: 90px; opacity: 1; margin-top: 8px; }
+  .g35 .stages35 li.on .st span { max-height: 90px; opacity: 1; margin-top: 10px; }
   .g35 .prog {
     position: absolute; left: 0; right: 0; top: -1px; height: 2px;
     background: var(--forest-700); transform: scaleX(0); transform-origin: left center;
@@ -919,18 +919,6 @@
   .g35 .stages35 li.on .prog { animation: progFill var(--tour, 12s) linear forwards; }
   .g35 .stages35 li.done .prog { transform: scaleX(0); }
   @keyframes progFill { to { transform: scaleX(1); } }
-
-  .g35 .bridge35 { margin-top: auto; display: grid; grid-template-columns: 48px 1fr; align-items: baseline; padding-top: 24px; }
-  .g35 .b35-tag {
-    grid-column: 1 / -1;
-    font-family: var(--font-sans); font-size: 13px; font-weight: 700;
-    letter-spacing: 0.2em; text-transform: uppercase; color: var(--terracotta-600);
-  }
-  .g35 .b35-text {
-    grid-column: 1 / -1; margin-top: 10px;
-    font-family: var(--font-display); font-style: italic; font-size: 27px;
-    line-height: 1.3; letter-spacing: -0.02em; color: var(--forest-700);
-  }
 
   /* the model + its readouts */
   .g35 .viz35 { position: relative; margin: 0; display: flex; flex-direction: column; min-height: 0; }
@@ -947,22 +935,22 @@
   .g35.no-3d[data-stage="therapy"] .viz35-stage::before { background-image: url("../assets/images/hypo3d-therapy.webp"); }
   .g35.no-3d[data-stage="nonhormonal"] .viz35-stage::before { background-image: url("../assets/images/hypo3d-nonhormonal.webp"); }
   .g35 .read35 {
-    display: grid; grid-template-columns: repeat(3, auto); justify-content: start; column-gap: 56px;
-    padding-top: 18px; border-top: 1px solid var(--bone-200);
+    display: grid; grid-template-columns: repeat(2, auto); justify-content: start; column-gap: 88px;
+    padding-top: 20px; border-top: 1px solid var(--bone-200);
   }
   .g35 .read35 span {
-    display: block; font-family: var(--font-sans); font-size: 12px; font-weight: 700;
-    letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey-500);
+    display: block; font-family: var(--font-sans); font-size: 17px; font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--grey-500);
   }
   .g35 .read35 b {
     display: block; margin-top: 6px; font-family: var(--font-display); font-weight: 400;
-    font-size: 30px; letter-spacing: -0.02em; color: var(--forest-700);
+    font-size: 44px; letter-spacing: -0.028em; color: var(--forest-700);
     font-variant-numeric: lining-nums tabular-nums; transition: opacity 300ms ease;
   }
   .g35 .read35 b.swap { opacity: 0; }
   .g35 .viz35 figcaption {
-    margin-top: 14px; font-family: var(--font-sans); font-size: 14px; line-height: 1.45;
-    color: var(--grey-500); max-width: 860px;
+    margin-top: 16px; font-family: var(--font-sans); font-size: 20px; line-height: 1.4;
+    color: var(--grey-500);
   }
 
   /* ════════════ Slide 11 — Your choice ════════════ */
@@ -1169,24 +1157,22 @@
 
   /* ════════════ Slide 4 — What happens after week 12 ════════════ */
   .g10 .slide-frame { padding: 84px 120px 120px; }
-  .g10-grid { flex: 1; min-height: 0; display: grid; grid-template-columns: 620px 1fr; gap: 72px; }
+  .g10-grid { flex: 1; min-height: 0; display: grid; grid-template-columns: 600px 1fr; gap: 60px; }
   .g10-left { display: flex; flex-direction: column; min-height: 0; }
-  .g10-lead { margin-top: 26px; font-size: 26px; line-height: 1.42; letter-spacing: -0.01em; color: var(--grey-600); }
+  .g10-lead { margin-top: 26px; font-size: 31px; line-height: 1.34; letter-spacing: -0.01em; color: var(--grey-600); }
   .g10-photos { position: relative; flex: 1; min-height: 0; margin-top: 34px; }
   .g10-photos figure { position: absolute; margin: 0; overflow: hidden; border-radius: 16px; background: var(--bone-100); box-shadow: var(--shadow-photo); }
   .g10-photos img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .g10-photos .p-a { left: 0; top: 0; width: 470px; bottom: 26px; }
-  .g10-photos .p-b { right: 0; bottom: 0; width: 210px; height: 74%; outline: 6px solid var(--cream-50); }
-  .g10-cap { margin-top: 24px; font-size: 21px; line-height: 1.45; color: var(--grey-600); text-wrap: pretty; }
-  .g10-cap b { display: block; margin-bottom: 4px; font-size: 14px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--forest-700); }
-  .g10-cmp { display: grid; grid-template-columns: 1fr 1.16fr; align-items: stretch; min-height: 0; }
-  .g10-cmp h3 { font-family: var(--font-display); font-weight: 400; font-size: 38px; letter-spacing: -0.025em; line-height: 1; }
-  .g10-cmp ul { flex: 1; display: grid; grid-auto-rows: 1fr; margin-top: 26px; }
+  .g10-photos .p-a { left: 0; top: 0; width: 450px; bottom: 30px; }
+  .g10-photos .p-b { right: 0; bottom: 0; width: 214px; height: 66%; outline: 6px solid var(--cream-50); }
+  .g10-cmp { display: grid; grid-template-columns: 1fr 1.24fr; align-items: stretch; min-height: 0; }
+  .g10-cmp h3 { font-family: var(--font-display); font-weight: 400; font-size: 46px; letter-spacing: -0.025em; line-height: 1; }
+  .g10-cmp ul { flex: 1; display: grid; grid-auto-rows: 1fr; margin-top: 24px; }
   .g10-cmp li { display: flex; flex-direction: column; justify-content: center; gap: 6px; border-top: 1px solid; }
-  .g10-cmp .cl { font-size: 14px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
-  .g10-cmp .ct { font-size: 24px; line-height: 1.3; letter-spacing: -0.01em; text-wrap: pretty; }
-  .g10-cmp .c-foot { text-wrap: balance; padding-top: 22px; font-family: var(--font-display); font-size: 25px; line-height: 1.2; letter-spacing: -0.015em; }
-  .c-stop { display: flex; flex-direction: column; padding: 34px 34px 28px 0; }
+  .g10-cmp .cl { font-size: 16px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+  .g10-cmp .ct { font-size: 30px; line-height: 1.22; letter-spacing: -0.01em; text-wrap: pretty; }
+  .g10-cmp .c-foot { text-wrap: balance; padding-top: 22px; font-family: var(--font-display); font-size: 31px; line-height: 1.2; letter-spacing: -0.015em; }
+  .c-stop { display: flex; flex-direction: column; padding: 34px 32px 28px 0; }
   .c-stop h3, .c-stop .c-foot { color: var(--grey-600); }
   .c-stop li { border-color: var(--bone-200); }
   .c-stop .cl { color: var(--grey-500); }
@@ -1200,9 +1186,9 @@
   }
   .c-go h3, .c-go .c-foot { color: var(--cream-50); }
   .c-go li { border-color: rgba(255,252,247,.16); }
-  .c-go .cl { color: #A4C29D; padding-left: 32px; }
-  .c-go .ct { position: relative; padding-left: 32px; color: var(--cream-50); }
-  .c-go .ct svg { position: absolute; left: 0; top: 5px; width: 20px; height: 20px; }
+  .c-go .cl { color: #A4C29D; padding-left: 36px; }
+  .c-go .ct { position: relative; padding-left: 36px; color: var(--cream-50); }
+  .c-go .ct svg { position: absolute; left: 0; top: 6px; width: 24px; height: 24px; }
   .c-go .ct svg path { fill: none; stroke: #A4C29D; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
   /* ════════════ Slide 6 — Care that keeps up with you (silk + phone) ════════════ */
@@ -2122,26 +2108,21 @@
             <div class="eyebrow ar">The moving target</div>
             <h2 class="display display-md ar" style="--d:.08s">Your hormones don't stand <span class="italic ring-word">still</span>.</h2>
           </div>
-          <p class="m35-lead ar" style="--d:.18s">As estrogen shifts, so does the brain's temperature switch — a cluster of cells deep in the hypothalamus.</p>
+          <p class="m35-lead ar" style="--d:.18s">Estrogen acts on the brain cells that help control body heat.</p>
           <ol class="stages35 ar" style="--d:.3s">
-            <li data-stage="before" class="on"><span class="sx">01</span><div class="st"><b>Before menopause</b><span>Estrogen keeps these cells small and calm. Everyday warmth passes unnoticed.</span></div><i class="prog"></i></li>
-            <li data-stage="after"><span class="sx">02</span><div class="st"><b>After menopause</b><span>With little estrogen, the cells swell and signal more often — a small wander tips the switch into a hot flash.</span></div><i class="prog"></i></li>
-            <li data-stage="therapy"><span class="sx">03</span><div class="st"><b>Hormone therapy, where it suits</b><span>Estrogen is replaced; the cells quieten and the switch moves back from its edge.</span></div><i class="prog"></i></li>
-            <li data-stage="nonhormonal"><span class="sx">04</span><div class="st"><b>A non-hormonal option</b><span>The cells still signal, but a receptor blocker stops the switch receiving it.</span></div><i class="prog"></i></li>
+            <li data-stage="before" class="on"><span class="sx">01</span><div class="st"><b>Before menopause</b><span>Estrogen keeps these cells calm.</span></div><i class="prog"></i></li>
+            <li data-stage="after"><span class="sx">02</span><div class="st"><b>After menopause</b><span>With less estrogen, they swell and signal more.</span></div><i class="prog"></i></li>
+            <li data-stage="therapy"><span class="sx">03</span><div class="st"><b>Hormone therapy</b><span>Estrogen is replaced, and they quieten.</span></div><i class="prog"></i></li>
+            <li data-stage="nonhormonal"><span class="sx">04</span><div class="st"><b>Non-hormonal option</b><span>A blocker stops the signal getting through.</span></div><i class="prog"></i></li>
           </ol>
-          <div class="bridge35 ar" style="--d:.5s">
-            <div class="b35-tag">The road ahead</div>
-            <div class="b35-text" data-bind="s5_bridge"></div>
-          </div>
         </div>
         <figure class="viz35 ap" style="--d:.15s">
           <div class="viz35-stage"><hypo-3d autotour paused stage="before" role="img" aria-label="A 3-D model of the hypothalamus: estrogen, the KNDy cells and the heat-loss centre, before and after menopause and with treatment"></hypo-3d></div>
           <div class="read35">
             <div><span>Estrogen</span><b data-r="estrogen">Cycling</b></div>
-            <div><span>KNDy cell size</span><b data-r="size">100%</b></div>
             <div><span>Hot flashes</span><b data-r="flashes">Rare</b></div>
           </div>
-          <figcaption>Inside the hypothalamus · the mechanism, not an expected result. Neither option is for everyone — your provider reviews safety with you.</figcaption>
+          <figcaption>Not an expected result. Neither option suits everyone; your NP reviews safety with you.</figcaption>
         </figure>
       </div>
     </div>
@@ -2166,28 +2147,27 @@
             <figure class="p-a ap" style="--d:.2s"><img class="kb" style="--kb-s:1.06; --kb-x:-1%; --kb-dur:34s" src="assets/lander/evening-talk.webp" alt="A member evening at the clinic, with a speaker presenting to a seated group"><i class="grain" aria-hidden="true"></i></figure>
             <figure class="p-b ap" style="--d:.34s"><img src="assets/lander/coffee.webp" alt="Two people talking over coffee at a small table"></figure>
           </div>
-          <p class="g10-cap ar" style="--d:.5s"><b>Every month</b> Member evenings with local speakers: our NPs, Barrie health coaches and more, at the clinic.</p>
         </div>
         <div class="g10-cmp">
           <div class="c-stop">
             <h3 class="ar" style="--d:.22s">If I stop here</h3>
             <ul>
-            <li class="ar" style="--d:0.30s"><span class="cl">Your dose</span><span class="ct">Reviewed only if you remember to book.</span></li>
-            <li class="ar" style="--d:0.38s"><span class="cl">Prescriptions</span><span class="ct">Renewals are on you to arrange.</span></li>
-            <li class="ar" style="--d:0.46s"><span class="cl">Your provider</span><span class="ct">A new provider means starting over.</span></li>
-            <li class="ar" style="--d:0.54s"><span class="cl">Between visits</span><span class="ct">No one to ask.</span></li>
-            <li class="ar" style="--d:0.62s"><span class="cl">Member events</span><span class="ct">No member events.</span></li>
+            <li class="ar" style="--d:0.30s"><span class="cl">Your dose</span><span class="ct">Only if you remember to book</span></li>
+            <li class="ar" style="--d:0.38s"><span class="cl">Prescriptions</span><span class="ct">On you to arrange</span></li>
+            <li class="ar" style="--d:0.46s"><span class="cl">Your provider</span><span class="ct">A new provider means starting over</span></li>
+            <li class="ar" style="--d:0.54s"><span class="cl">Between visits</span><span class="ct">No one to ask</span></li>
+            <li class="ar" style="--d:0.62s"><span class="cl">Member events</span><span class="ct">None</span></li>
             </ul>
-            <p class="c-foot ar" style="--d:.72s">You can still book single visits at <span data-bind="VISIT"></span> each.</p>
+            <p class="c-foot ar" style="--d:.72s">Single visits: <span data-bind="VISIT"></span> each.</p>
           </div>
           <div class="c-go ar" style="--d:.66s">
             <h3>If I continue</h3>
             <ul>
-            <li class="ar" style="--d:0.80s"><span class="cl">Your dose</span><span class="ct"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>Reviewed every 3 months, with a body scan.</span></li>
-            <li class="ar" style="--d:0.90s"><span class="cl">Prescriptions</span><span class="ct"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>Renewed at every visit, sent to your pharmacy.</span></li>
-            <li class="ar" style="--d:1.00s"><span class="cl">Your provider</span><span class="ct"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>Same NP wherever possible, with your full history.</span></li>
-            <li class="ar" style="--d:1.10s"><span class="cl">Between visits</span><span class="ct"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>Message your care coordinator any time.</span></li>
-            <li class="ar" style="--d:1.20s"><span class="cl">Member events</span><span class="ct"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>Monthly evenings with local speakers.</span></li>
+            <li class="ar" style="--d:0.80s"><span class="cl">Your dose</span><span class="ct"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>Reviewed every 3 months</span></li>
+            <li class="ar" style="--d:0.90s"><span class="cl">Prescriptions</span><span class="ct"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>Renewed at every visit</span></li>
+            <li class="ar" style="--d:1.00s"><span class="cl">Your provider</span><span class="ct"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>Same NP, wherever possible</span></li>
+            <li class="ar" style="--d:1.10s"><span class="cl">Between visits</span><span class="ct"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>Message your care coordinator</span></li>
+            <li class="ar" style="--d:1.20s"><span class="cl">Member events</span><span class="ct"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5"/></svg>Monthly evenings</span></li>
             </ul>
             <p class="c-foot ar" style="--d:1.35s">One plan. One care team. All year.</p>
           </div>
